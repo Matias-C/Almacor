@@ -1,0 +1,35 @@
+:root {
+    --main-color: #00c099;
+    --tab-color: #f4811f;
+    --shadow: 0 0 5px rgba(0, 0, 0, .20);
+}
+
+* {
+    overflow: hidden;
+    font-family: "Roboto";
+}
+
+body {
+    margin: 0;
+    background-color: #e9ecef;
+}
+
+
+/* Globals */
+
+
+h1, h2, h3, p {
+    margin: 0;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+p {
+    font-size: 12px;
+}

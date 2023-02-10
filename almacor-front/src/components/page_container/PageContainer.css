@@ -1,0 +1,35 @@
+.page-cont {
+    display: flex;
+}
+
+.sidebar-state {
+    background-color: var(--main-color);
+
+    padding: 5px 15px;
+    height: 100vh;
+    width: fit-content;
+}
+
+.sidebar-state.active {
+    width: 260px;
+}
+
+.page-content-cont {
+    padding-top: 15px;
+    width: 100%;
+}
+
+.page-content-header {
+    font-size: 32px;
+    margin: 0 0 15px 15px;
+}
+
+.header-deposit {
+    font-weight: 600;
+    color: rgb(70, 70, 70);
+}
+
+.header-zone {
+    font-weight: 400;
+    color: rgb(110, 110, 110);
+}
