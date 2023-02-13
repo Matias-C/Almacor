@@ -59,35 +59,44 @@ function ZoneMenu() {
     }
 
     return (
-        <Box sx={{ width: '100%' }}>
 
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange}>
+        <>
 
-                    <Tab className='zone-menu-tab' label="Órdenes" {...a11yProps(0)} onClick={() => setColor('#f4811f')} />
-                    <Tab label="Ubicar" {...a11yProps(1)} onClick={() => setColor('#9cc92d')} />
-                    <Tab label="Quitar" {...a11yProps(2)} onClick={() => setColor('#d11c24')} />
-                    <Tab label="Iventario" {...a11yProps(3)} onClick={() => setColor('#e7e80f')} />
-                    
-                </Tabs>
+            <h1 className="page-content-header"><span className="header-deposit">Secos</span> <span className="header-zone">/ Zona 1</span></h1>
+
+            <Box sx={{ width: '100%' }}>
+
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange}>
+
+                        <Tab className='zone-menu-tab' label="Órdenes" {...a11yProps(0)} onClick={() => setColor('#f4811f')} />
+                        <Tab label="Ubicar" {...a11yProps(1)} onClick={() => setColor('#9cc92d')} />
+                        <Tab label="Quitar" {...a11yProps(2)} onClick={() => setColor('#d11c24')} />
+                        <Tab label="Iventario" {...a11yProps(3)} onClick={() => setColor('#e7e80f')} />
+                        
+                    </Tabs>
+                </Box>
+
+                <TabPanel value={value} index={0}>
+                    Item One
+                </TabPanel>
+
+                <TabPanel value={value} index={1}>
+                    Item Two
+                </TabPanel>
+
+                <TabPanel value={value} index={2}>
+                    Item Three
+                </TabPanel>
+
+                <TabPanel value={value} index={3}>
+                    Item Four
+                </TabPanel>
             </Box>
 
-            <TabPanel value={value} index={0}>
-                Item One
-            </TabPanel>
+        </>
 
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
-
-            <TabPanel value={value} index={3}>
-                Item Four
-            </TabPanel>
-        </Box>
+        
     );
 }
 

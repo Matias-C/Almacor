@@ -5,3 +5,13 @@
 .MuiTabs-indicator {
     background-color: var(--tab-color) !important;
 }
+
+.header-deposit {
+    font-weight: 600;
+    color: rgb(70, 70, 70);
+}
+
+.header-zone {
+    font-weight: 400;
+    color: rgb(110, 110, 110);
+}

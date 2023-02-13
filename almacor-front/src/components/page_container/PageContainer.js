@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Outlet } from "react-router-dom";
+
 import Sidebar from "../sidebar/Sidebar";
 
 import "./PageContainer.css"
@@ -22,9 +24,7 @@ function PageContainer({ children }) {
 
             <div className="page-content-cont">
 
-                <h1 className="page-content-header"><span className="header-deposit">Secos</span> <span className="header-zone">/ Zona 1</span></h1>
-
-                {children}
+                <Outlet />
 
             </div>
         </div>

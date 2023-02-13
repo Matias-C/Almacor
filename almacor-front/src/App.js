@@ -15,18 +15,20 @@ function App() {
     const router = createBrowserRouter([
         {
           path: "/",
-          element: <ZoneMenu />
+          element: <PageContainer />,
+          children: [
+            {
+              path: "Secos/Zona1",
+              element: <ZoneMenu />,
+            },
+          ],
         },
       ]);
 
     return(
 
         <>
-            <PageContainer>
-
-                <RouterProvider router={router} />
-
-            </PageContainer>
+            <RouterProvider router={router} />
         </>
 
     );
