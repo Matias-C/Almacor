@@ -1,0 +1,23 @@
+.order-button-cont {
+    background-color: #fff;
+    color: var(--main-font);
+    border: unset;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 10px;
+    width: 100%;
+
+    cursor: pointer;
+}
+
+.order-number {
+    background-color: var(--main-color);
+    color: #fff;
+    border-radius: 8px;
+
+    padding: 7px 10px;
+    margin-right: 10px;
+}

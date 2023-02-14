@@ -1,6 +1,10 @@
 :root {
-    --main-color: #00c099;
+    --main-color: rgb(0, 192, 153);
     --tab-color: #f4811f;
+
+    --dark-font: rgb(35, 35, 35);
+    --medium-font: rgb(70, 70, 70);
+    --light-font: rgb(105, 105, 105);
     --shadow: 0 0 5px rgba(0, 0, 0, .20);
 }
 

@@ -6,7 +6,7 @@ import {
 
 import PageContainer from "./components/page_container/PageContainer.js";
 
-import ZoneMenu from "./pages/zone-menu/ZoneMenu.js";
+import ZoneMenu from "./components/zone-menu/ZoneMenu.js";
 
 import './styles/styles.css'
 
@@ -18,7 +18,7 @@ function App() {
           element: <PageContainer />,
           children: [
             {
-              path: "Secos/Zona1",
+              path: ":deposit/:zone",
               element: <ZoneMenu />,
             },
           ],

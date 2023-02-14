@@ -5,6 +5,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
+import Orders from '../../pages/orders/Orders';
+import OrderDetails from '../../pages/orders/OrderDetails';
+
 import "./ZoneMenu.css"
 
 function TabPanel(props) {
@@ -16,15 +19,16 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <h2>{children}</h2>
+
+                <Box>
+                    {children}
                 </Box>
+
             )}
+
         </div>
     );
 
@@ -35,16 +39,6 @@ TabPanel.propTypes = {
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
 };
-
-function a11yProps(index) {
-    return {
-
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-
-    };
-}
-
 
 function ZoneMenu() {
     
@@ -64,34 +58,39 @@ function ZoneMenu() {
 
             <h1 className="page-content-header"><span className="header-deposit">Secos</span> <span className="header-zone">/ Zona 1</span></h1>
 
-            <Box sx={{ width: '100%' }}>
+            <Box className="zone-menu-tab-cont">
 
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange}>
 
-                        <Tab className='zone-menu-tab' label="Órdenes" {...a11yProps(0)} onClick={() => setColor('#f4811f')} />
-                        <Tab label="Ubicar" {...a11yProps(1)} onClick={() => setColor('#9cc92d')} />
-                        <Tab label="Quitar" {...a11yProps(2)} onClick={() => setColor('#d11c24')} />
-                        <Tab label="Iventario" {...a11yProps(3)} onClick={() => setColor('#e7e80f')} />
+                        <Tab label="Órdenes" onClick={() => setColor('#f4811f')} />
+                        <Tab label="Ubicar"  onClick={() => setColor('#9cc92d')} />
+                        <Tab label="Quitar"  onClick={() => setColor('#d11c24')} />
+                        <Tab label="Iventario"  onClick={() => setColor('#e7e80f')} />
                         
                     </Tabs>
                 </Box>
 
-                <TabPanel value={value} index={0}>
-                    Item One
+                <TabPanel className="zone-menu-tab" value={value} index={0}>
+
+                    <Orders />
+                    
                 </TabPanel>
 
-                <TabPanel value={value} index={1}>
-                    Item Two
+                <TabPanel className="zone-menu-tab" value={value} index={1}>
+                    
+                    <OrderDetails />
+
                 </TabPanel>
 
-                <TabPanel value={value} index={2}>
+                <TabPanel className="zone-menu-tab" value={value} index={2}>
                     Item Three
                 </TabPanel>
 
-                <TabPanel value={value} index={3}>
+                <TabPanel className="zone-menu-tab" value={value} index={3}>
                     Item Four
                 </TabPanel>
+                
             </Box>
 
         </>

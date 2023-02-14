@@ -15,3 +15,8 @@
     font-weight: 400;
     color: rgb(110, 110, 110);
 }
+
+.zone-menu-tab {
+    padding: 15px;
+    height: 100%;
+}

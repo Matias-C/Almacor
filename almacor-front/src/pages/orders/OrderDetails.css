@@ -1,0 +1,15 @@
+.order-details-header {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.order-details-number {
+    background-color: var(--main-color);
+    color: #fff;
+    border-radius: 12px;
+
+    padding: 7px 10px;
+    margin-right: 10px;
+}

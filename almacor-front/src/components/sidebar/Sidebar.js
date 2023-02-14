@@ -29,11 +29,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     <DropButton
                         sidebarOpen={sidebarOpen}
                         button="Secos"
+                        deposit="Secos"
                     />
 
                     <DropButton
                         sidebarOpen={sidebarOpen}
                         button="Lácteos"
+                        deposit="Lacteos"
                     />
                 
                 </div>

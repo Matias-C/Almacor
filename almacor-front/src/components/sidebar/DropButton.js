@@ -33,10 +33,14 @@ function DropButton(props) {
 
                                 <ZoneButton 
                                     zoneButton="Zona 1"
+                                    deposit={props.deposit}
+                                    zone="Zona-1"
                                 />
 
                                 <ZoneButton 
                                     zoneButton="Zona 2"
+                                    deposit={props.deposit}
+                                    zone="Zona-2"
                                 />
 
                             </div>
