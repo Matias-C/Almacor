@@ -1,0 +1,38 @@
+.remove-page-cont {
+    display: flex;
+    flex-direction: column;
+
+    background-color: #fff;
+    color: var(--dark-font);
+    border-radius: 12px;
+
+    padding: 15px;
+    max-width: 300px;
+}
+
+.remove-page-header {
+    color: var(--dark-font);
+    margin-bottom: 15px;
+}
+
+.remove-page-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.remove-page-button {
+    background-color: var(--main-color);
+    color: #fff;
+    border: unset;
+    border-radius: 8px;
+
+    padding: 10px 15px;
+    margin-top: 15px;
+    width: fit-content;
+
+    cursor: pointer;
+}
+
+.remove-page-button:hover {
+    background-color: var(--main-color-hover);
+}

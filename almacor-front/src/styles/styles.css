@@ -1,5 +1,7 @@
 :root {
     --main-color: rgb(0, 192, 153);
+    --main-color-hover: rgb(0, 214, 171);
+    
     --tab-color: #f4811f;
 
     --dark-font: rgb(35, 35, 35);
@@ -36,4 +38,13 @@ h2 {
 
 p {
     font-size: 12px;
+}
+
+
+.separator {
+    border: 3px solid var(--main-color);
+    border-radius: 3px;
+
+    margin: 10px 0;
+    width: 20px;
 }

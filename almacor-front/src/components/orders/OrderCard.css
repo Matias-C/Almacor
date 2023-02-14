@@ -14,14 +14,6 @@
     font-weight: 400;
 }
 
-.order-card-hr {
-    border: 3px solid var(--main-color);
-    border-radius: 3px;
-
-    margin: 10px 0;
-    width: 20px;
-}
-
 .order-card-table-cont {
     color: var(--dark-font);
     font-weight: 500;
@@ -49,4 +41,10 @@
 
     padding: 10px 15px;
     margin-top: 10px;
+
+    cursor: pointer;
+}
+
+.order-card-button:hover {
+    background-color: var(--main-color-hover);
 }

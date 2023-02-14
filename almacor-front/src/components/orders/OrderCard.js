@@ -10,7 +10,7 @@ function OrderCard() {
             <div className="order-card-cont">
 
                     <h2 className='order-card-header'>Partida: <span className='number'>123456</span></h2>
-                    <hr className='order-card-hr' />
+                    <hr className='separator' />
 
                 <div className='order-card-table-cont'>
 

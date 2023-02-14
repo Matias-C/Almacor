@@ -8,7 +8,7 @@ function ZoneButton(props) {
 
     return(
 
-        <button className="zone-btn-cont" onClick={() => { navigate(`/${props.deposit}/${props.zone}`); }}>
+        <button className="zone-btn-cont" onClick={() => { navigate(`/depositos/${props.deposit}/${props.zone}/ordenes`); }}>
             <h2>{props.zoneButton}</h2>
         </button>
 

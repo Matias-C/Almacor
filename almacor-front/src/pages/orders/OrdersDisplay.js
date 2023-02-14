@@ -2,9 +2,9 @@ import Grid from '@mui/material/Grid';
 
 import OrderButton from "../../components/orders/OrderButton";
 
-import "./Orders.css"
+import "./OrdersDisplay.css"
 
-function Orders() {
+function OrdersDisplay() {
     return(
 
         <div className="orders">
@@ -13,13 +13,10 @@ function Orders() {
 
             <Grid container spacing={2} className="orders-grid">
 
-                <OrderButton />
-                <OrderButton />
-                <OrderButton />
-                <OrderButton />
-                <OrderButton />
-                <OrderButton />
-                <OrderButton />
+                <OrderButton 
+                    orderNumber="0123"
+                    orderStore="Local 0123"
+                />
                 
             </Grid> 
 
@@ -28,4 +25,4 @@ function Orders() {
     );
 }
 
-export default Orders;
+export default OrdersDisplay;
