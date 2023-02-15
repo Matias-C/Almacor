@@ -1,12 +1,13 @@
 .page-cont {
     display: flex;
+    
+    height: 100vh;
 }
 
 .sidebar-state {
     background-color: var(--main-color);
 
     padding: 5px 15px;
-    height: 100vh;
     width: fit-content;
 }
 
@@ -15,7 +16,8 @@
 }
 
 .page-content-cont {
-    padding-top: 15px;
+    padding: 15px 0;
+    max-height: 100vh;
     width: 100%;
 }
 

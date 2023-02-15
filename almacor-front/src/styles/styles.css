@@ -11,13 +11,14 @@
 }
 
 * {
-    overflow: hidden;
+    max-height: 100vh;
     font-family: "Roboto";
 }
 
 body {
     margin: 0;
     background-color: #e9ecef;
+    max-height: 100vh;
 }
 
 
@@ -40,11 +41,18 @@ p {
     font-size: 12px;
 }
 
-
 .separator {
     border: 3px solid var(--main-color);
     border-radius: 3px;
 
     margin: 10px 0;
     width: 20px;
+}
+
+
+/* Scroll */
+
+
+::-webkit-scrollbar {
+    display: none;
 }

@@ -1,32 +1,79 @@
-import Grid from '@mui/material/Grid';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; 
+
+import Grid from '@mui/material/Unstable_Grid2';
 
 import OrderCard from '../../components/orders/OrderCard';
 
 import "./OrderDetails.css"
 
 function OrderDetails() {
+
+    const location = useLocation();
+
+    const [details, setDetails] = useState([]);
+
+    useEffect(() => {
+        const getDetails = async () => {
+          const token = await JSON.parse(localStorage.getItem("token"));
+          if (token) {
+            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ordenpartidasdt/?id_orden_carga=${location.state.n_id_orden_de_carga}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token.access_token}`
+              },
+            })
+            const data = await res.json();
+            setDetails(data);
+            console.log(data);
+          }
+        };
+        getDetails();
+    }, []);
+
     return(
 
-        <div className="order-details">
+        <div className="order-details-cont">
 
             <div className="order-details-header">
                 <div className="order-details-number">
 
-                    <h1>0000</h1>
+                    <h1>{location.state.n_id_orden_de_carga}</h1>
 
                 </div>
                 
-                <h1>Local 1</h1>
+                <h1>{location.state.c_descripcion}</h1>
             </div>
 
-            <Grid container spacing={2} className="orders-details-grid">
+            <div className='order-details-cards'>
 
-                <OrderCard />
-                <OrderCard />
-                <OrderCard />
-                <OrderCard />
+                <Grid container spacing={2}>
 
-            </Grid>
+                    {
+                        details.map((detail) => {
+
+                            return (
+
+                                <OrderCard
+                                    key={detail.n_id_pk}
+                                    orderDeparture={detail.n_id_partida}
+                                    orderDeposit={detail.ubicacion.deposito}
+                                    orderZone={detail.ubicacion.zona}
+                                    orderHall={detail.ubicacion.pasillo}
+                                    orderCol={detail.ubicacion.columna}
+                                    orderRow={detail.ubicacion.fila}
+                                />
+
+                            );
+
+
+                        })
+                    }
+
+                </Grid>
+
+            </div>
 
         </div>
 

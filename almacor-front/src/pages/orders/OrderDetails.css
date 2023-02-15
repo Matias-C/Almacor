@@ -13,3 +13,12 @@
     padding: 7px 10px;
     margin-right: 10px;
 }
+
+.order-details-cards {
+    border-radius: 12px;
+
+    height: 67vh;
+    
+    overflow-x: hidden;
+    overflow-y: auto;
+}

@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import "./Sidebar.css"
 
-function Sidebar({ sidebarOpen, setSidebarOpen }) {
+function Sidebar({ sidebarOpen, setSidebarOpen, deposits }) {
 
     const OpenSidebar = () => {
         setSidebarOpen(!sidebarOpen)
@@ -26,17 +26,24 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
                 <div className='sidebar-buttons-cont'>
 
-                    <DropButton
-                        sidebarOpen={sidebarOpen}
-                        button="Secos"
-                        deposit="secos"
-                    />
+                    {
+                        deposits.map((deposit) => {
 
-                    <DropButton
-                        sidebarOpen={sidebarOpen}
-                        button="Lácteos"
-                        deposit="lacteos"
-                    />
+                            return (
+
+                                <DropButton
+                                    key={deposit.n_id_deposito}
+                                    sidebarOpen={sidebarOpen}
+                                    button={deposit.c_descripcion}
+                                    deposit={deposit.c_descripcion}
+                                    idDeposit={deposit.n_id_deposito}
+                                />
+
+                            );
+
+
+                        })
+                    }
                 
                 </div>
 
