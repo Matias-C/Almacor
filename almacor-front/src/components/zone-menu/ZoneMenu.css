@@ -1,11 +1,3 @@
-.Mui-selected {
-    color: var(--tab-color) !important;
-}
-
-.MuiTabs-indicator {
-    background-color: var(--tab-color) !important;
-}
-
 .header-deposit {
     font-weight: 600;
     color: rgb(70, 70, 70);
@@ -18,4 +10,5 @@
 
 .zone-menu-content {
     padding: 15px;
+    width: 100%;
 }

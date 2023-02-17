@@ -1,6 +1,11 @@
 import TextField from '@mui/material/TextField';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import "./AddPage.css"
+import { CardActions } from '@mui/material';
 
 function AddPage() {
     return(
@@ -8,26 +13,26 @@ function AddPage() {
         <>
             <div className='add-page-header'>
 
-                <h1>Ubicar Pallet</h1>
+                <Typography variant='h2' className='orders-header'>Ubicar Pallet</Typography>
 
             </div>
 
-            <div className='add-page-cont'>
+            <Card variant="outlined" className='add-page-card'>
+                <CardContent>
 
-                <div className='add-page-content'>
-
-                    <h2>Ingrese el código del pallet</h2>
+                    <Typography variant='h4'>Ingrese el código del pallet</Typography>
 
                     <hr className='separator' />
 
                     <TextField className='add-page-input' label="Código" variant="standard" />
 
-                    <button className='add-page-button'><h2>Añadir</h2></button>
+                </CardContent>
+                <CardActions>
 
-                </div>
-
-            </div>
-
+                    <Button size="small" variant="contained" className='add-page-button' disableElevation><h2>Añadir</h2></Button>
+                    
+                </CardActions>
+            </Card>
         </>
         
 

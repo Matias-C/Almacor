@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'; 
 
 import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@mui/material';
 
 import OrderCard from '../../components/orders/OrderCard';
 
@@ -39,11 +40,11 @@ function OrderDetails() {
             <div className="order-details-header">
                 <div className="order-details-number">
 
-                    <h1>{location.state.n_id_orden_de_carga}</h1>
+                    <Typography variant='h2'>Orden {location.state.n_id_orden_de_carga}</Typography>
 
                 </div>
                 
-                <h1>{location.state.c_descripcion}</h1>
+                <Typography variant='h2'>{location.state.c_descripcion}</Typography>
             </div>
 
             <div className='order-details-cards'>
@@ -57,7 +58,7 @@ function OrderDetails() {
 
                                 <OrderCard
                                     key={detail.n_id_pk}
-                                    orderDeparture={detail.n_id_partida}
+                                    orderConteiner={detail.c_numero}
                                     orderDeposit={detail.ubicacion.deposito}
                                     orderZone={detail.ubicacion.zona}
                                     orderHall={detail.ubicacion.pasillo}

@@ -5,6 +5,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
+import PageContainer from '../page_container/PageContainer';
+
 import "./ZoneMenu.css"
 
 
@@ -38,13 +40,13 @@ function ZoneMenu() {
 
         <>
 
-            <h1 className="page-content-header"><span className="header-deposit">Secos</span> <span className="header-zone">/ Zona 1</span></h1>
+          <PageContainer>
 
-            <Box sx={{ width: '100%' }}>
-                <Tabs value={value} onChange={handleChange}>
+            <Box sx={{ flexGrow: 1, display: 'flex', height: "100%" }}>
+                <Tabs orientation="vertical" value={value} onChange={handleChange} sx={{ borderRight: 1, borderColor: 'divider' }}>
 
                     <LinkTab label="Órdenes" onClick={() => { navigate("ordenes"); setColor("#f4811f")}} />
-                    <LinkTab label="Añadir" onClick={() => { navigate("añadir"); setColor("#9cc92d")}} />
+                    <LinkTab label="Ubicar" onClick={() => { navigate("ubicar"); setColor("#9cc92d")}} />
                     <LinkTab label="Remover" onClick={() => { navigate("remover"); setColor("#d11c24")}} />
                     <LinkTab label="Inventario"  />
 
@@ -57,6 +59,8 @@ function ZoneMenu() {
                 </div>
 
             </Box>
+
+          </PageContainer>
 
         </>
 

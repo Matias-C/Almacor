@@ -1,21 +1,8 @@
-.order-card-cont {
-    background-color: #fff;
-    border-radius: 12px;
-
-    padding: 15px;
-}
-
-.order-card-header {
-    color: var(--dark-font);
-}
-
 .order-card-header .number {
-    color: var(--medium-font);
     font-weight: 400;
 }
 
 .order-card-table-cont {
-    color: var(--dark-font);
     font-weight: 500;
 }
 
@@ -25,26 +12,13 @@
 }
 
 .order-card-table-item .number {
-    color: var(--medium-font);
     font-weight: 400;
 }
 
 .order-card-item {
-    margin-bottom: 7px;
+    margin-bottom: 7px !important;
 }
 
 .order-card-button {
-    background-color: var(--main-color);
-    color: #fff;
-    border: unset;
-    border-radius: 8px;
-
-    padding: 10px 15px;
-    margin-top: 10px;
-
-    cursor: pointer;
-}
-
-.order-card-button:hover {
-    background-color: var(--main-color-hover);
+    border-radius: 8px !important;
 }

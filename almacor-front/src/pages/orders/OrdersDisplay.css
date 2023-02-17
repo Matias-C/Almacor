@@ -1,4 +1,4 @@
 .orders-header {
     color: var(--main-font);
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
 }

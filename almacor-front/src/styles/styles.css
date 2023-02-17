@@ -1,5 +1,5 @@
 :root {
-    --main-color: rgb(0, 192, 153);
+    --main-color: #009c7d;
     --main-color-hover: rgb(0, 214, 171);
     
     --tab-color: #f4811f;
@@ -17,8 +17,6 @@
 
 body {
     margin: 0;
-    background-color: #e9ecef;
-    max-height: 100vh;
 }
 
 

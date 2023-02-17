@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import Grid from '@mui/material/Grid';
+import { Typography } from '@mui/material';
 
 import OrderButton from "../../components/orders/OrderButton";
 
@@ -33,7 +34,7 @@ function OrdersDisplay() {
 
         <div className="orders">
 
-            <h1 className='orders-header'>Ordenes Activas</h1>
+            <Typography variant='h2' className='orders-header'>Ordenes Activas</Typography>
 
             <Grid container spacing={2} className="orders-grid">
 
