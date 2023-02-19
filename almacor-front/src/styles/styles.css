@@ -11,33 +11,19 @@
 }
 
 * {
-    max-height: 100vh;
     font-family: "Roboto";
 }
 
-body {
+html, body {
+    width: 100%;
+    height: 100%;
     margin: 0;
+    padding: 0;
 }
 
 
 /* Globals */
 
-
-h1, h2, h3, p {
-    margin: 0;
-}
-
-h1 {
-    font-size: 24px;
-}
-
-h2 {
-    font-size: 16px;
-}
-
-p {
-    font-size: 12px;
-}
 
 .separator {
     border: 3px solid var(--main-color);

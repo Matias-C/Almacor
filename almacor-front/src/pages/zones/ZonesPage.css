@@ -1,9 +1,11 @@
 .zones-page-cont {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    padding: 80px 15px 15px;
-    height: calc(100vh - 95px);
+    padding: 15px;
+    height: 75vh;
 }
 
 .zones-page-header {
@@ -23,12 +25,13 @@
     margin: 0 auto;
     width: 100%;
     max-width: 450px;
-    height: 100%;
-    max-height: 500px;
+    height: fit-content;
+    max-height: 400px;
 
     overflow: auto;
 }
 
 .zones-page-zone-button {
+    padding: 12px !important;
     margin-bottom: 15px !important;
 }

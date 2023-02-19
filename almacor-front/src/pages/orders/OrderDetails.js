@@ -58,12 +58,15 @@ function OrderDetails() {
 
                                 <OrderCard
                                     key={detail.n_id_pk}
+                                    idPartida={detail.n_id_partida}
                                     orderConteiner={detail.c_numero}
+                                    orderRemito={detail.c_remito}
                                     orderDeposit={detail.ubicacion.deposito}
                                     orderZone={detail.ubicacion.zona}
                                     orderHall={detail.ubicacion.pasillo}
                                     orderCol={detail.ubicacion.columna}
                                     orderRow={detail.ubicacion.fila}
+                                    orderDespacho={detail.b_quitado}
                                 />
 
                             );

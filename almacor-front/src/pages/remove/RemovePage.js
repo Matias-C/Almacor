@@ -1,4 +1,10 @@
 import TextField from '@mui/material/TextField';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
+import { CardActions } from '@mui/material';
 
 import "./RemovePage.css"
 
@@ -6,28 +12,28 @@ function RemovePage() {
     return(
 
         <>
-            <div className='remove-page-header'>
+            <div className='add-page-header'>
 
-                <h1>Remover Pallet</h1>
+                <Typography variant='h2' className='orders-header'>Remover Pallet</Typography>
 
             </div>
 
-            <div className='remove-page-cont'>
+            <Card variant="outlined" className='add-page-card'>
+                <CardContent>
 
-                <div className='remove-page-content'>
-
-                    <h2>Ingrese el código del pallet</h2>
+                    <Typography variant='h4'>Ingrese el código del pallet</Typography>
 
                     <hr className='separator' />
 
-                    <TextField className='remove-page-input' label="Código" variant="standard" />
+                    <TextField className='add-page-input' label="Código" variant="standard" />
 
-                    <button className='remove-page-button'><h2>Remover</h2></button>
+                </CardContent>
+                <CardActions>
 
-                </div>
-
-            </div>
-
+                    <Button size="medium" variant="contained" className='add-page-button' disableElevation>Remover</Button>
+                    
+                </CardActions>
+            </Card>
         </>
         
 

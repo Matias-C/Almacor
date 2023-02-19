@@ -13,6 +13,7 @@ import ZoneMenu from "./components/zone-menu/ZoneMenu.js";
 import OrdersDisplay from "./pages/orders/OrdersDisplay.js";
 import OrderDetails from "./pages/orders/OrderDetails.js";
 import AddPage from "./pages/add/AddPage.js";
+import RemovePage from "./pages/remove/RemovePage.js";
 
 import './styles/styles.css'
 
@@ -104,7 +105,8 @@ function App() {
             }
             ,
             {
-                path: "inventario"
+                path: "remover",
+                element: <RemovePage />,
             }
         ]
         }

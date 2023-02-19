@@ -1,9 +1,13 @@
+.order-card-header{ 
+    font-weight: 400 !important;
+}
+
 .order-card-header .number {
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .order-card-table-cont {
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .order-card-table-item {
@@ -12,7 +16,7 @@
 }
 
 .order-card-table-item .number {
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .order-card-item {
