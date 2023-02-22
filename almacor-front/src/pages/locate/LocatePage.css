@@ -3,12 +3,17 @@
 }
 
 .add-page-header {
-    color: var(--dark-font);
     margin-bottom: 15px;
 }
 
 .add-page-button {
     border-radius: 8px !important;
+}
+
+.add-page-inputs-cont{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .add-page-input {

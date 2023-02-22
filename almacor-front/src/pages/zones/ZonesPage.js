@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
 import { Typography, Button } from "@mui/material";
 
 import PageContainer from "../../components/page_container/PageContainer";
 
+import ContextConnected from "../../context/ContextConnected";
+
 import "./ZonesPage.css";
 
 function ZonesPage() {
 
+    const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -51,12 +54,14 @@ function ZonesPage() {
                                 return (
 
                                     <Button
-                                        className="zones-page-zone-button"
+                                        key={zone.n_id_zona}
                                         variant="contained"
                                         size="large"
-                                        onClick={() => { navigate(`${zone.c_descripcion}/ordenes`, {state: zone}); }}
-                                        
-                                        key={zone.n_id_zona}
+                                        className="zones-page-zone-button"
+                                        onClick={() => { 
+                                            navigate(`${zone.c_descripcion}/ordenes`, {state: zone});
+                                            Connected.setLocalZone(zone.n_id_zona)
+                                        }}
                                     >{zone.c_descripcion}</Button>
 
                                 );

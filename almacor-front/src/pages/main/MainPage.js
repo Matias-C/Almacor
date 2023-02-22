@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { Typography, Button } from "@mui/material";
 
 import PageContainer from "../../components/page_container/PageContainer";
 
+import ContextConnected from "../../context/ContextConnected";
+
 import "./MainPage.css"
 
 function ZonesPage(props) {
 
+    const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
     const [deposits, setDeposits] = useState([]);
@@ -50,13 +53,15 @@ function ZonesPage(props) {
 
                                 return (
 
-                                    <Button 
-                                        className="main-page-deposit-button"
+                                    <Button
+                                        key={deposit.n_id_deposito}
                                         variant="contained"
                                         size="large"
-                                        onClick={() => { navigate(`deposito=${deposit.c_descripcion}`, {state: deposit}); }}
-
-                                        key={deposit.n_id_deposito}
+                                        className="main-page-deposit-button"
+                                        onClick={() => { 
+                                            navigate(`deposito=${deposit.c_descripcion}`, {state: deposit});
+                                            Connected.setLocalDeposit(deposit.n_id_deposito)
+                                        }}
                                     >{deposit.c_descripcion}</Button>
 
                                 );

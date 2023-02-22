@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
     createBrowserRouter,
     RouterProvider,
@@ -10,10 +12,17 @@ import MainPage from "./pages/main/MainPage.js";
 import ZonesPage from "./pages/zones/ZonesPage.js";
 
 import ZoneMenu from "./components/zone-menu/ZoneMenu.js";
+
 import OrdersDisplay from "./pages/orders/OrdersDisplay.js";
 import OrderDetails from "./pages/orders/OrderDetails.js";
-import AddPage from "./pages/add/AddPage.js";
+
+import LocatePageStep1 from "./pages/locate/LocatePageStep1.js";
+import LocatePageStep2 from "./pages/locate/LocatePageStep2.js";
+import LocatePageStep3 from "./pages/locate/LocatePageStep3.js";
+
 import RemovePage from "./pages/remove/RemovePage.js";
+
+import ContextConnected from "./context/ContextConnected.js";
 
 import './styles/styles.css'
 
@@ -72,6 +81,34 @@ const theme = createTheme({
 
 function App() {
 
+    const [currentCompany, setCurrentCompany] = useState("3")
+    const [currentDeposit, setCurrentDeposit] = useState(
+      localStorage.getItem("deposit")
+    );
+
+    const setLocalDeposit = value => {
+      try {
+        setCurrentDeposit(value)
+        localStorage.setItem("deposit", value)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const [currentZone, setCurrentZone] = useState(
+      localStorage.getItem("zone")
+    );
+
+
+    const setLocalZone = value => {
+      try {
+        setCurrentZone(value)
+        localStorage.setItem("zone", value)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     const router = createBrowserRouter([
         {
             path: "/",
@@ -98,15 +135,21 @@ function App() {
             {
                 path: "ordenes/:order",
                 element: <OrderDetails />,
-            },
-            {
-                path: "ubicar",
-                element: <AddPage />,
             }
             ,
             {
-                path: "remover",
-                element: <RemovePage />,
+                path: "ubicar",
+                element: <LocatePageStep1 />,
+            }
+            ,
+            {
+              path: "ubicar/:pallet",
+              element: <LocatePageStep2 />,
+            }
+            ,
+            {
+                path: "ubicar/:pallet/ubicacion",
+                element: <LocatePageStep3 />,
             }
         ]
         }
@@ -115,11 +158,24 @@ function App() {
     return(
 
         <>
-            <ThemeProvider theme={theme}>
+            <ContextConnected.Provider value={{
+                currentCompany,
+                currentDeposit,
+                currentZone,
+                setCurrentCompany,
+                setCurrentDeposit,
+                setCurrentZone,
+                setLocalDeposit,
+                setLocalZone,
+            }}>
 
-                <RouterProvider router={router} />
+                <ThemeProvider theme={theme}>
 
-            </ThemeProvider>
+                    <RouterProvider router={router} />
+
+                </ThemeProvider>
+
+            </ContextConnected.Provider>
         </>
 
     );

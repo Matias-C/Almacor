@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
@@ -13,7 +14,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 
-import "./AddPage.css"
+import "./LocatePage.css"
 
 const PalletMask = React.forwardRef(function PalletMask(props, ref) {
 
@@ -37,12 +38,14 @@ const PalletMask = React.forwardRef(function PalletMask(props, ref) {
     onChange: PropTypes.func.isRequired,
   };
 
-function AddPage() {
+function LocatePageStep1() {
 
-    const [error, setError] = React.useState(false);
-    const [disabled, setDisabled] = React.useState(true);
-    const [validPallet, setValidPallet] = React.useState(false);
-    const [validPalletLength, setValidLength] = React.useState(false);
+    const navigate = useNavigate();
+
+    const [error, setError] = useState(false);
+    const [disabled, setDisabled] = useState(true);
+    const [validPallet, setValidPallet] = useState(false);
+    const [validPalletLength, setValidLength] = useState(false);
 
     const [value, setValue] = React.useState("");
     
@@ -51,35 +54,21 @@ function AddPage() {
         
         if (e.target.value.substr(0,2) === "PL") {
             setValidPallet(true);
-            setDisabled(false);
-            setError(false)
+            if (e.target.value.length > 9) {
+                setValidLength(true);
+                setDisabled(false);
+                setError(false)
+            } else {
+                setValidLength(false);
+                setDisabled(true);
+                setError(true);
+            }
         } else {
             setValidPallet(false)
+            setDisabled(true);
             setError(true);
         };
 
-    };
-
-    const sendPallet = async (e) => {
-        e.preventDefault();
-
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-
-            const c_numero = value.substr(2,10);
-
-            var formdata = new FormData();
-            formdata.append("c_numero", c_numero);
-
-            await fetch(`http://127.0.0.1:8000/api/v1/deposito/partidas/?numero=${value}`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token.access_token}`
-                },
-                body: formdata
-            })
-
-        }
     };
 
     return(
@@ -97,16 +86,24 @@ function AddPage() {
                     <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                        <FormControl variant="standard" className="add-page-input">
-                            <InputLabel htmlFor="pallet-code">Código</InputLabel>
-                            <Input
-                                id="pallet-code"
-                                value={value}
-                                error={error}
-                                onChange={handleChange}
-                                inputComponent={PalletMask}
-                            />
-                            <FormHelperText>{error ? "Código no valido" : ""}</FormHelperText>
+                    <FormControl variant="standard" className="add-page-input">
+                        <InputLabel htmlFor="pallet-code">Código</InputLabel>
+                        <Input
+                            id="pallet-code"
+                            value={value}
+                            error={error}
+                            onChange={handleChange}
+                            inputComponent={PalletMask}
+                        />
+                        <FormHelperText>
+                            {
+                                error ? 
+                                    !validPallet ? "El código no es valido" : 
+                                        !validPalletLength ? "El código es demasiado corto" 
+                                    : "" 
+                                : ""
+                            }
+                        </FormHelperText>
                     </FormControl>
 
                 </CardContent>
@@ -116,19 +113,19 @@ function AddPage() {
                         disabled={disabled}
                         variant="contained" 
                         size="medium"
-                        className='add-page-button' 
                         disableElevation
-                        onClick={sendPallet}
+                        className='add-page-button' 
+                        onClick={() => { navigate(value , {state: value}); }}
                     >
-                        Suiguiente
+                        Siguiente
                     </Button>
                     
                 </CardActions>
             </Card>
+            
         </>
         
-
     );
 }
 
-export default AddPage;
+export default LocatePageStep1;
