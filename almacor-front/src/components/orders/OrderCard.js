@@ -35,7 +35,7 @@ function OrderCard(props) {
 
         <Grid xs={12} sm={6} md={3}>
 
-            <Card variant='outlined' className="order-card-cont">
+            <Card variant='outlined' className={props.orderDespacho ? "despachado" : "no-despachado"}>
 
                 <CardContent>
 
@@ -77,19 +77,24 @@ function OrderCard(props) {
                     </div>
 
                 </CardContent>
-                <CardActions>
 
-                    <Button 
-                        variant='contained' 
-                        size='medium' 
-                        className='order-card-button' 
-                        disableElevation
-                        onClick={(e) => sendRemoved(e)}
-                    >
-                        Quitar
-                    </Button>
+                    {
+                        !props.orderDespacho ? 
 
-                </CardActions>
+                            <CardActions>
+                                <Button 
+                                    variant='contained' 
+                                    size='medium' 
+                                    className='order-card-button' 
+                                    disableElevation
+                                    onClick={(e) => sendRemoved(e)}
+                                >
+                                    Quitar
+                                </Button>
+                            </CardActions>
+                        :
+                            null
+                    }
 
             </Card>
 

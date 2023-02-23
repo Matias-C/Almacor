@@ -1,3 +1,6 @@
+.despachado {
+    background-color: rgb(177, 255, 177) !important;
+}
 .order-card-header{ 
     font-weight: 400 !important;
 }
