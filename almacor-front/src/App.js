@@ -151,6 +151,11 @@ function App() {
                 path: "ubicar/:pallet/ubicacion",
                 element: <LocatePageStep3 />,
             }
+            ,
+            {
+                path: "remover",
+                element: <RemovePage />
+            }
         ]
         }
     ]);
