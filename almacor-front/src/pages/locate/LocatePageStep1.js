@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
@@ -47,7 +48,7 @@ function LocatePageStep1() {
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = useState("");
     
     const handleChange = (e) => {
         setValue(e.target.value);

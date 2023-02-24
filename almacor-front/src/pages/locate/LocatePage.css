@@ -20,3 +20,7 @@
     width: 100%;
     max-width: 300px;
 }
+
+.add-page-label {
+    margin-top: 5px !important;
+}

@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
-    createBrowserRouter,
-    RouterProvider,
-    Navigate
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
 } from "react-router-dom";
 
 import { createTheme, ThemeProvider } from "@mui/material";
+
+import Login from "./pages/login/Login.js";
 
 import MainPage from "./pages/main/MainPage.js";
 import ZonesPage from "./pages/zones/ZonesPage.js";
@@ -24,167 +26,184 @@ import RemovePage from "./pages/remove/RemovePage.js";
 
 import ContextConnected from "./context/ContextConnected.js";
 
-import './styles/styles.css'
+import "./styles/styles.css";
 
 const theme = createTheme({
-    palette: {
-        mode: 'light',
-        primary: {
-          main: '#009c7d',
-        },
-        secondary: {
-          main: '#de1c47',
-        },
-        background: {
-          default: '#e9ecef',
-        },
-      },
-      shape: {
-        borderRadius: 12,
-      },
-      typography: {
-        h1: {
-          fontWeight: 700,
-          fontSize: 32,
-          lineHeight: 1.2,
-        },
-        h2: {
-          fontSize: 28,
-          fontWeight: 700,
-        },
-        h3: {
-          fontSize: 24,
-          fontWeight: 500,
-        },
-        h4: {
-          fontSize: 20,
-          fontWeight: 500,
-        },
-        h5: {
-            fontSize: 16,
-            fontWeight: 500
-        },
-        button: {
-          fontSize: 16,
-        },
-        body1: {
-          fontSize: 16,
-          fontWeight: 300,
-        },
-        body2: {
-          fontSize: 12,
-          fontWeight: 300,
-        },
-      },
-  }
-);
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#009c7d",
+    },
+    secondary: {
+      main: "#de1c47",
+    },
+    background: {
+      default: "#e9ecef",
+    },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+  typography: {
+    h1: {
+      fontWeight: 700,
+      fontSize: 32,
+      lineHeight: 1.2,
+    },
+    h2: {
+      fontSize: 28,
+      fontWeight: 700,
+    },
+    h3: {
+      fontSize: 24,
+      fontWeight: 500,
+    },
+    h4: {
+      fontSize: 20,
+      fontWeight: 500,
+    },
+    h5: {
+      fontSize: 16,
+      fontWeight: 500,
+    },
+    button: {
+      fontSize: 16,
+    },
+    body1: {
+      fontSize: 16,
+      fontWeight: 300,
+    },
+    body2: {
+      fontSize: 12,
+      fontWeight: 300,
+    },
+  },
+});
 
 function App() {
+  const [userInfo, setUserInfo] = useState(null);
 
-    const [currentCompany, setCurrentCompany] = useState("3")
-    const [currentDeposit, setCurrentDeposit] = useState(
-      localStorage.getItem("deposit")
-    );
+  const [currentCompany, setCurrentCompany] = useState("");
+  const [currentDeposit, setCurrentDeposit] = useState(
+    localStorage.getItem("deposit")
+  );
 
-    const setLocalDeposit = value => {
-      try {
-        setCurrentDeposit(value)
-        localStorage.setItem("deposit", value)
-      } catch (error) {
-        console.log(error);
-      }
+  const setLocalDeposit = (value) => {
+    try {
+      setCurrentDeposit(value);
+      localStorage.setItem("deposit", value);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const [currentZone, setCurrentZone] = useState(
-      localStorage.getItem("zone")
-    );
+  const [currentZone, setCurrentZone] = useState(localStorage.getItem("zone"));
 
-
-    const setLocalZone = value => {
-      try {
-        setCurrentZone(value)
-        localStorage.setItem("zone", value)
-      } catch (error) {
-        console.log(error);
-      }
+  const setLocalZone = (value) => {
+    try {
+      setCurrentZone(value);
+      localStorage.setItem("zone", value);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const router = createBrowserRouter([
+  useEffect(() => {
+    const loadUserFromLocalStorage = async () => {
+      const token = await JSON.parse(localStorage.getItem("token"));
+      if (token) {
+        const res = await fetch(
+          "https://apicd.almacorweb.com/api/v1/auth/user/",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token.access_token}`,
+            },
+          }
+        );
+        const data = await res.json();
+        setUserInfo(data);
+        setCurrentCompany(data.n_id_empresa)
+        console.log(data)
+      }
+    };
+    loadUserFromLocalStorage();
+  }, []);
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Navigate to={userInfo === null ? "/login" : "/depositos"} />,
+    },
+    {
+      path: "login",
+      element: <Login />,
+    },
+    {
+      path: "depositos",
+      element: <MainPage />,
+    },
+    {
+      path: "depositos/:deposit",
+      element: <ZonesPage />,
+    },
+    {
+      path: "depositos/:deposit/:zone",
+      element: <ZoneMenu />,
+      children: [
         {
-            path: "/",
-            element: <Navigate to="/depositos" />,
-        }
-        ,
-        {
-            path: "depositos/",
-            element: <MainPage />,
-        }
-        ,
-        {
-            path: "depositos/:deposit",
-            element: <ZonesPage />,
+          path: "ordenes",
+          element: <OrdersDisplay />,
         },
         {
-            path: "depositos/:deposit/:zone",
-            element: <ZoneMenu />,
-            children: [{
-                path: "ordenes",
-                element: <OrdersDisplay />,
-            }
-            ,
-            {
-                path: "ordenes/:order",
-                element: <OrderDetails />,
-            }
-            ,
-            {
-                path: "ubicar",
-                element: <LocatePageStep1 />,
-            }
-            ,
-            {
-              path: "ubicar/:pallet",
-              element: <LocatePageStep2 />,
-            }
-            ,
-            {
-                path: "ubicar/:pallet/ubicacion",
-                element: <LocatePageStep3 />,
-            }
-            ,
-            {
-                path: "remover",
-                element: <RemovePage />
-            }
-        ]
-        }
-    ]);
+          path: "ordenes/:order",
+          element: <OrderDetails />,
+        },
+        {
+          path: "ubicar",
+          element: <LocatePageStep1 />,
+        },
+        {
+          path: "ubicar/:pallet",
+          element: <LocatePageStep2 />,
+        },
+        {
+          path: "ubicar/:pallet/ubicacion",
+          element: <LocatePageStep3 />,
+        },
+        {
+          path: "remover",
+          element: <RemovePage />,
+        },
+      ],
+    },
+  ]);
 
-    return(
+  return (
+    <>
+      <ContextConnected.Provider
+        value={{
+          userInfo,
+          setUserInfo,
 
-        <>
-            <ContextConnected.Provider value={{
-                currentCompany,
-                currentDeposit,
-                currentZone,
-                setCurrentCompany,
-                setCurrentDeposit,
-                setCurrentZone,
-                setLocalDeposit,
-                setLocalZone,
-            }}>
+          currentCompany,
+          setCurrentCompany,
+          currentDeposit,
+          setCurrentDeposit,
+          currentZone,
+          setCurrentZone,
 
-                <ThemeProvider theme={theme}>
-
-                    <RouterProvider router={router} />
-
-                </ThemeProvider>
-
-            </ContextConnected.Provider>
-        </>
-
-    );
-
+          setLocalDeposit,
+          setLocalZone,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </ContextConnected.Provider>
+    </>
+  );
 }
 
 export default App;

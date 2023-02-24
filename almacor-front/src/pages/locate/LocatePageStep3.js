@@ -1,75 +1,120 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
+import { IMaskInput } from 'react-imask';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
+
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 import ContextConnected from '../../context/ContextConnected';
 
 import "./LocatePage.css"
+
+const PalletMask = React.forwardRef(function PalletMask(props, ref) {
+
+    const { onChange, ...other } = props;
+
+    return (
+        <IMaskInput
+            {...other}
+            mask="##0000000000"
+            definitions={{
+                '#': /[A-Z]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { value } })}
+            overwrite
+        />
+    );
+  });
+  
+  PalletMask.propTypes = {
+    onChange: PropTypes.func.isRequired,
+  };
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function LocatePageStep3() {
 
     const Connected = useContext(ContextConnected);
     const location = useLocation();
 
+    const deposit = parseInt(Connected.currentDeposit);
+    const zone = parseInt(Connected.currentZone);
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
 
-    const [palletLocation, setPalletLocation] = useState([]);
-    const [locationGenerated, setLocationGenerated] = useState(false);
-    const [palletChecked, setPalletChecked] = useState([]);
+    const [locationChecked, setLocationChecked] = useState([]);
 
-    const generateLocation = async (e) => {
+    useEffect(() => {
+        const generateLocation = async () => {
+
+            const token = await JSON.parse(localStorage.getItem("token"));
+            if (token) {
+
+                const id_empresa = Connected.currentCompany;
+                const id_deposito = Connected.currentDeposit;
+                const id_zona = Connected.currentZone;
+                const tipo_peso = location.state.n_tipopeso;
+                const tipo_altura = location.state.n_tipoaltura;
+
+                var formdata = new FormData();
+                formdata.append("id_empresa", id_empresa);
+                formdata.append("id_deposito", id_deposito);
+                formdata.append("id_zona", id_zona);
+                formdata.append("tipo_peso", tipo_peso);
+                formdata.append("tipo_altura", tipo_altura);
+
+                const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/generar_ubic_pallet/", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token.access_token}`
+                    },
+                    body: formdata
+                })
+                const data = await response.json();
+                setHall(data.n_id_pasillo);
+                setCol(data.n_id_columna);
+                setRow(data.n_id_fila);
+                console.log(data);
+
+            }
+        };
+        generateLocation();
+    }, []);
+
+    const checkLocation = async (e) => {
         e.preventDefault();
 
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
+        const url = value.substr(2,10);
 
-            const id_empresa = Connected.currentCompany;
-            const id_deposito = Connected.currentDeposit;
-            const id_zona = Connected.currentZone;
-            const tipo_peso = location.state.n_tipopeso;
-            const tipo_altura = location.state.n_tipoaltura;
-
-            var formdata = new FormData();
-            formdata.append("id_empresa", id_empresa);
-            formdata.append("id_deposito", id_deposito);
-            formdata.append("id_zona", id_zona);
-            formdata.append("tipo_peso", tipo_peso);
-            formdata.append("tipo_altura", tipo_altura);
-
-            const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/generar_ubic_pallet/", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token.access_token}`
-                },
-                body: formdata
-            })
-            const data = await response.json();
-            setPalletLocation(data);
-            console.log(data);
-
-        }
-    };
-
-    const checkLocation = async () => {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             
-            const palletLocationCheck = Connected.currentCompany + 
-                                        Connected.currentDeposit + 
-                                        Connected.currentDeposit + 
-                                        palletLocation.n_id_pasillo + 
-                                        palletLocation.n_id_columna + 
-                                        palletLocation.n_id_fila;
-            
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ubic_pallet/?ubic=UB${palletLocationCheck}`, {
+            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ubic_pallet/?ubic=UB${url}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -77,9 +122,12 @@ function LocatePageStep3() {
                 },
             })
             const data = await res.json();
-            setPalletChecked(data);
-            console.log(data);
-            console.log(palletLocationCheck);
+            if (data.status === "Esta posicion se encuentra vacia") {
+                setLocationChecked(true);
+            } else {
+                setLocationChecked(false)
+            }
+            console.log(data, locationChecked);
         }
     };
 
@@ -89,11 +137,11 @@ function LocatePageStep3() {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
-            const n_id_deposito = document.querySelector("#id-deposit").value;
-            const n_id_zona = document.querySelector("#id-zone").value;
-            const n_id_pasillo = document.querySelector("#id-hall").value;
-            const n_id_columna = document.querySelector("#id-col").value;
-            const n_id_fila = document.querySelector("#id-row").value;
+            const n_id_deposito = deposit;
+            const n_id_zona = zone;
+            const n_id_pasillo = hall;
+            const n_id_columna = col;
+            const n_id_fila = row;
 
             var formdata = new FormData();
             formdata.append("id_deposito", n_id_deposito);
@@ -110,10 +158,86 @@ function LocatePageStep3() {
                 body: formdata
             })
             const data = await response.json();
-            setPalletLocation(data);
             console.log(data);
 
         }
+    };
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openAlert, setOpenAlert] = useState(false);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+
+    const handleOpenAlert = () => {
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAlert(false);
+    };
+
+
+    const [error, setError] = useState(false);
+    const [disabled, setDisabled] = useState(true);
+    const [validPallet, setValidPallet] = useState(false);
+    const [validDeposit, setValidDeposit] = useState(false);
+    const [validZone, setValidZone] = useState(false);
+    const [validPalletLength, setValidLength] = useState(false);
+
+    const [value, setValue] = useState("");
+    
+    const handleChange = (e) => {
+        setValue(e.target.value);
+        
+        if (e.target.value.substr(0,2) === "UB") {
+            setValidPallet(true);
+            
+            if (parseInt(e.target.value.substr(2,2)) === deposit) {
+                setValidDeposit(true);
+
+                if (parseInt(e.target.value.substr(4,2)) === zone) {
+                    setValidZone(true);
+
+                    if (e.target.value.length > 11) {
+                        setValidLength(true);
+                        setDisabled(false);
+                        setError(false)
+                        
+                    } else {
+                        setValidLength(false);
+                        setDisabled(true);
+                        setError(true);
+                    };
+                } else {
+                    setValidZone(false);
+                    setDisabled(true);
+                    setError(true);
+                }
+                
+            } else {
+                setValidDeposit(false);
+                setDisabled(true);
+                setError(true);
+            };
+
+        } else {
+            setValidPallet(false);
+            setDisabled(true);
+            setError(true);
+        };
+
+        console.log(deposit, zone);
+
     };
 
     return(
@@ -138,7 +262,7 @@ function LocatePageStep3() {
                         <TextField 
                             id="id-deposit"
                             variant="standard"
-                            defaultValue={Connected.currentDeposit}
+                            defaultValue={deposit}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -149,18 +273,18 @@ function LocatePageStep3() {
                         <TextField 
                             id="id-zone"
                             variant="standard"
-                            defaultValue={Connected.currentZone}
+                            defaultValue={zone}
                             InputProps={{
                                 readOnly: true,
                             }}
                             className='add-page-input'
                         />
 
-                        <Typography variant='h5' className='add-page-label'>Pasillo</Typography>
+                        <Typography variant='h5' className='add-page-label'>Pasillo (Se puede cambiar)</Typography>
                         <TextField
                             id="id-hall"
                             variant="standard"
-                            value={locationGenerated ? palletLocation.n_id_pasillo : hall}
+                            value={hall}
                             onChange={(event) => {
                                 setHall(event.target.value);
                             }}
@@ -168,11 +292,11 @@ function LocatePageStep3() {
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Columna</Typography>
+                        <Typography variant='h5' className='add-page-label'>Columna (Se puede cambiar)</Typography>
                         <TextField
                             id="id-col"
                             variant="standard"
-                            value={locationGenerated ? palletLocation.n_id_columna : col}
+                            value={col}
                             onChange={(event) => {
                                 setCol(event.target.value);
                             }}
@@ -180,11 +304,11 @@ function LocatePageStep3() {
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Fila</Typography>
+                        <Typography variant='h5' className='add-page-label'>Nivelx| (Se puede cambiar)</Typography>
                         <TextField
                             id="id-row"
                             variant="standard"
-                            value={locationGenerated ? palletLocation.n_id_fila : row}
+                            value={row}
                             onChange={(event) => {
                                 setRow(event.target.value);
                             }}
@@ -213,15 +337,90 @@ function LocatePageStep3() {
                         size="medium"
                         className='add-page-button' 
                         disableElevation
-                        onClick={(e) => {
-                            generateLocation(e);
-                            setLocationGenerated(true);
-                        }}
+                        onClick={handleOpenDialog}
                     >
-                        Generar Ubicación
+                        Cambiar Ubicación
                     </Button>
                     
                 </CardActions>
+                <Dialog open={openDialog} onClose={handleCloseDialog}>
+
+                    <DialogTitle>Cambiar Ubicación</DialogTitle>
+                    <DialogContent>
+
+                        <DialogContentText>
+                            Para cambiar la ubicación puede ingresar un código, o cambiar los valores a mano.
+                        </DialogContentText>
+
+                        <FormControl variant="standard" fullWidth margin='dense'>
+                            <InputLabel htmlFor="pallet-code">Código</InputLabel>
+                            <Input
+                                id="pallet-code"
+                                value={value}
+                                error={error}
+                                autoFocus
+                                onChange={handleChange}
+                                inputComponent={PalletMask}
+                            />
+                            <FormHelperText>
+                                {
+                                    error ? 
+                                        !validPallet ? 
+                                            "Código no válido" 
+                                        : !validDeposit ? 
+                                            "El depósito no coincide con tu depósito actual"
+                                        : !validZone ?
+                                            "La zona no coincide con tu zona actual"
+                                        : !validPalletLength ? 
+                                            "El código es demasiado corto"
+                                        :""
+                                    : ""
+                                }
+                            </FormHelperText>
+                        </FormControl>
+                    </DialogContent>
+
+                    <DialogActions>
+                        <Button
+                            disabled={disabled}
+                            className='add-page-button' 
+                            onClick={(e) => {
+
+                                const newHall = parseInt(value.substr(6,2));
+                                const newCol = parseInt(value.substr(8,2));
+                                const newRow = parseInt(value.substr(10,2));
+
+                                setHall(newHall);
+                                setCol(newCol);
+                                setRow(newRow);
+
+                                checkLocation(e)
+                                
+                                handleOpenAlert();
+                                handleCloseDialog();
+                            }}
+                        >
+                            Aceptar
+                        </Button>
+                        <Button 
+                            variant="outlined" 
+                            className='add-page-button' 
+                            onClick={(e) => {
+                                setValue("")
+                                handleCloseDialog()
+                            }}
+                        >
+                            Cancelar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={locationChecked ? "success" : "error"} sx={{ width: '100%' }}>
+                        {locationChecked ? "Ubicación disponilbe" : "Ubicación no disponilbe"}
+                    </Alert>
+                </Snackbar>
+                
             </Card>
             
         </>
