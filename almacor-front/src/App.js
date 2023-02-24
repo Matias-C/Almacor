@@ -83,7 +83,6 @@ const theme = createTheme({
 function App() {
   const [userInfo, setUserInfo] = useState(null);
 
-  const [currentCompany, setCurrentCompany] = useState("");
   const [currentDeposit, setCurrentDeposit] = useState(
     localStorage.getItem("deposit")
   );
@@ -97,7 +96,9 @@ function App() {
     }
   };
 
-  const [currentZone, setCurrentZone] = useState(localStorage.getItem("zone"));
+  const [currentZone, setCurrentZone] = useState(
+    localStorage.getItem("zone")
+  );
 
   const setLocalZone = (value) => {
     try {
@@ -124,7 +125,6 @@ function App() {
         );
         const data = await res.json();
         setUserInfo(data);
-        setCurrentCompany(data.n_id_empresa)
         console.log(data)
       }
     };
@@ -187,8 +187,6 @@ function App() {
           userInfo,
           setUserInfo,
 
-          currentCompany,
-          setCurrentCompany,
           currentDeposit,
           setCurrentDeposit,
           currentZone,

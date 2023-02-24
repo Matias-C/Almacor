@@ -19,22 +19,22 @@ function ZonesPage() {
 
     useEffect(() => {
         const getZones = async () => {
-          const token = await JSON.parse(localStorage.getItem("token"));
-          if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/zonas/?id_numero_deposito=${location.state.n_id_deposito}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token.access_token}`
-              },
-            })
-            const data = await res.json();
-            setZones(data);
-            console.log(data);
-          }
+            const token = await JSON.parse(localStorage.getItem("token"));
+            if (token) {
+                const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/zonas/?id_numero_deposito=${location.state.n_id_deposito}&id_numero_empresa=${Connected.userInfo.n_id_empresa}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+                })
+                const data = await res.json();
+                setZones(data);
+                console.log(data);
+            }
         };
         getZones();
-    }, []);
+    }, [Connected.userInfo]);
 
     return(
         
