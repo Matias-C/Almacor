@@ -137,18 +137,22 @@ function LocatePageStep3() {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
-            const n_id_deposito = deposit;
-            const n_id_zona = zone;
-            const n_id_pasillo = hall;
-            const n_id_columna = col;
-            const n_id_fila = row;
+            const id_empresa = Connected.userInfo.n_id_empresa;
+            const id_deposito = deposit;
+            const id_zona = zone;
+            const id_pasillo = hall;
+            const id_columna = col;
+            const id_fila = row;
+            const id_partida = location.state.n_id_partida;
 
             var formdata = new FormData();
-            formdata.append("id_deposito", n_id_deposito);
-            formdata.append("id_zona", n_id_zona);
-            formdata.append("id_pasillo", n_id_pasillo);
-            formdata.append("id_columna", n_id_columna);
-            formdata.append("id_fila", n_id_fila);
+            formdata.append("id_empresa", id_empresa);
+            formdata.append("id_deposito", id_deposito);
+            formdata.append("id_zona", id_zona);
+            formdata.append("id_pasillo", id_pasillo);
+            formdata.append("id_columna", id_columna);
+            formdata.append("id_fila", id_fila);
+            formdata.append("id_partida", id_partida);
 
             const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/ubicar_pallet_en_posicion/", {
                 method: "POST",
