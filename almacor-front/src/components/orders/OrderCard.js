@@ -14,6 +14,10 @@ import "./OrderCard.css"
 
 function OrderCard(props) {
 
+    const refreshPage = () => {
+        window.location.reload(false);
+    }
+
     const sendRemoved = async (e) => {
         e.preventDefault();
 
@@ -68,7 +72,7 @@ function OrderCard(props) {
                         </div>
                         <div className='order-card-table-item'>
 
-                            <Typography variant='body'>Fila</Typography>
+                            <Typography variant='body'>Nivel</Typography>
                             <Typography variant='body' className='number'>{props.orderRow}</Typography>
 
                         </div>
@@ -86,7 +90,10 @@ function OrderCard(props) {
                                 size='medium' 
                                 className='order-card-button' 
                                 disableElevation
-                                onClick={(e) => sendRemoved(e)}
+                                onClick={(e) => {
+                                    sendRemoved(e);
+                                    refreshPage();
+                                }}
                             >
                                 Despachar
                             </Button>

@@ -63,7 +63,7 @@ function OrderDetails() {
                                     orderRemito={detail.c_remito}
                                     orderDeposit={detail.ubicacion.deposito}
                                     orderZone={detail.ubicacion.zona}
-                                    orderHall={detail.ubicacion.pasillo}
+                                    orderHall={detail.ubicacion.c_pasillo}
                                     orderCol={detail.ubicacion.columna}
                                     orderRow={detail.ubicacion.fila}
                                     orderDespacho={detail.b_quitado}
