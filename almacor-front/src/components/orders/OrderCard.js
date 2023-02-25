@@ -1,9 +1,14 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 import Grid from '@mui/material/Unstable_Grid2';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
+
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
+import Alert from '@mui/material/Alert';
 
 import "./OrderCard.css"
 
@@ -63,14 +68,8 @@ function OrderCard(props) {
                         </div>
                         <div className='order-card-table-item'>
 
-                            <Typography variant='body' className='order-card-item'>Fila</Typography>
+                            <Typography variant='body'>Fila</Typography>
                             <Typography variant='body' className='number'>{props.orderRow}</Typography>
-
-                        </div>
-                        <div className='order-card-table-item'>
-
-                            <Typography variant='body'>Despachado</Typography>
-                            <Typography variant='body' className='number'>{props.orderDespacho ? "SI" : "NO"}</Typography>
 
                         </div>
 
@@ -78,23 +77,32 @@ function OrderCard(props) {
 
                 </CardContent>
 
+                <CardActions>
                     {
                         !props.orderDespacho ? 
 
-                            <CardActions>
-                                <Button 
-                                    variant='contained' 
-                                    size='medium' 
-                                    className='order-card-button' 
-                                    disableElevation
-                                    onClick={(e) => sendRemoved(e)}
-                                >
-                                    Quitar
-                                </Button>
-                            </CardActions>
+                            <Button 
+                                variant='contained' 
+                                size='medium' 
+                                className='order-card-button' 
+                                disableElevation
+                                onClick={(e) => sendRemoved(e)}
+                            >
+                                Despachar
+                            </Button>
                         :
-                            null
+                            <Button 
+                                variant='outlined' 
+                                size='medium' 
+                                className='order-card-button despachado' 
+                                disableElevation
+                                disabled
+                                startIcon={<CheckCircleIcon />}
+                            >
+                                Despachado
+                            </Button>
                     }
+                </CardActions>
 
             </Card>
 

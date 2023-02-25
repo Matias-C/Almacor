@@ -75,7 +75,7 @@ function LocatePageStep3() {
             const token = await JSON.parse(localStorage.getItem("token"));
             if (token) {
 
-                const id_empresa = Connected.currentCompany;
+                const id_empresa = Connected.userInfo.n_id_empresa;
                 const id_deposito = Connected.currentDeposit;
                 const id_zona = Connected.currentZone;
                 const tipo_peso = location.state.n_tipopeso;
@@ -104,7 +104,7 @@ function LocatePageStep3() {
             }
         };
         generateLocation();
-    }, []);
+    }, [Connected.userInfo]);
 
     const checkLocation = async (e) => {
         e.preventDefault();
@@ -167,6 +167,8 @@ function LocatePageStep3() {
     const [openAlert, setOpenAlert] = useState(false);
 
     const handleOpenDialog = () => {
+        setValue("");
+        setError(false);
         setOpenDialog(true);
     };
 
@@ -235,8 +237,6 @@ function LocatePageStep3() {
             setDisabled(true);
             setError(true);
         };
-
-        console.log(deposit, zone);
 
     };
 
@@ -406,8 +406,7 @@ function LocatePageStep3() {
                             variant="outlined" 
                             className='add-page-button' 
                             onClick={(e) => {
-                                setValue("")
-                                handleCloseDialog()
+                                handleCloseDialog();
                             }}
                         >
                             Cancelar

@@ -1,5 +1,5 @@
 .despachado {
-    background-color: rgb(177, 255, 177) !important;
+    background-color: rgb(210, 255, 210) !important;
 }
 .order-card-header{ 
     font-weight: 400 !important;
@@ -28,4 +28,9 @@
 
 .order-card-button {
     border-radius: 8px !important;
+}
+
+.despachado:disabled {
+    border-color: var(--main-color) !important;
+    color: var(--main-color) !important;
 }

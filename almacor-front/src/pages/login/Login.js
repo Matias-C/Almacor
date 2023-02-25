@@ -50,6 +50,10 @@ function Login() {
         setOpenAlert(false);
     };
 
+    const refreshPage = () => {
+        window.location.reload(false);
+    }
+
     const login = async (username, password) => {
 
         if(password !== "" && username !== "") {
@@ -62,25 +66,26 @@ function Login() {
                 },
             })
     
-          const res = await response.json();
-          console.log(res.user)
-    
-          if(response.status === 200) {
+            const res = await response.json();
+            console.log(res.user)
+        
+            if (response.status === 200) {
 
-            Connected.setUserInfo(res.user);
-            const newToken = { access_token: res.access_token, refresh_token: res.refresh_token }
-            localStorage.setItem("token", JSON.stringify(newToken));
-            navigate("/depositos");
+                Connected.setUserInfo(res.user);
+                const newToken = { access_token: res.access_token, refresh_token: res.refresh_token }
+                localStorage.setItem("token", JSON.stringify(newToken));
+                navigate("/depositos");
+                refreshPage();
 
-          } else {
-                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
-                        Nombre de usuario o Contraseña incorrectos.
-                    </Alert>
-                </Snackbar>
-          }   
+            } else {
+                    <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                        <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+                            Nombre de usuario o Contraseña incorrectos.
+                        </Alert>
+                    </Snackbar>
+            }   
         }
-      }
+    }
 
     return(
 
