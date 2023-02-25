@@ -8,7 +8,7 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import Alert from '@mui/material/Alert';
+import SaveIcon from '@mui/icons-material/Save';
 
 import "./OrderCard.css"
 
@@ -95,7 +95,7 @@ function OrderCard(props) {
                                     refreshPage();
                                 }}
                             >
-                                Despachar
+                                Quitar
                             </Button>
                         :
                             <Button 
@@ -106,7 +106,7 @@ function OrderCard(props) {
                                 disabled
                                 startIcon={<CheckCircleIcon />}
                             >
-                                Despachado
+                                Quitado
                             </Button>
                     }
                 </CardActions>
