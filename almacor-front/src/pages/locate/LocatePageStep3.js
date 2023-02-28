@@ -48,9 +48,9 @@ const PalletMask = React.forwardRef(function PalletMask(props, ref) {
     );
   });
   
-  PalletMask.propTypes = {
+PalletMask.propTypes = {
     onChange: PropTypes.func.isRequired,
-  };
+};
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -61,13 +61,13 @@ function LocatePageStep3() {
     const Connected = useContext(ContextConnected);
     const location = useLocation();
 
-    const deposit = parseInt(Connected.currentDeposit);
-    const zone = parseInt(Connected.currentZone);
+    const deposit = parseInt(Connected.currentDepositId);
+    const zone = parseInt(Connected.currentZoneId);
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
 
-    const [locationChecked, setLocationChecked] = useState([]);
+    const [locationChecked, setLocationChecked] = useState(false);
 
     useEffect(() => {
         const generateLocation = async () => {
@@ -76,8 +76,8 @@ function LocatePageStep3() {
             if (token) {
 
                 const id_empresa = Connected.userInfo.n_id_empresa;
-                const id_deposito = Connected.currentDeposit;
-                const id_zona = Connected.currentZone;
+                const id_deposito = deposit;
+                const id_zona = zone;
                 const tipo_peso = location.state.n_tipopeso;
                 const tipo_altura = location.state.n_tipoaltura;
 
@@ -125,7 +125,7 @@ function LocatePageStep3() {
             if (data.status === "Esta posicion se encuentra vacia") {
                 setLocationChecked(true);
             } else {
-                setLocationChecked(false)
+                setLocationChecked(false);
             }
             console.log(data, locationChecked);
         }
@@ -180,7 +180,6 @@ function LocatePageStep3() {
         setOpenDialog(false);
     };
 
-
     const handleOpenAlert = () => {
         setOpenAlert(true);
     };
@@ -191,7 +190,6 @@ function LocatePageStep3() {
         }
         setOpenAlert(false);
     };
-
 
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
@@ -250,14 +248,14 @@ function LocatePageStep3() {
         
             <div className='add-page-header'>
 
-                <Typography variant='h2' className='orders-header'>Ubicar Pallet</Typography>
+                <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
 
             </div>
 
             <Card variant="outlined" className='add-page-card'>
                 <CardContent>
 
-                    <Typography variant='h4'>Ubicaion</Typography>
+                    <Typography variant='h4'>Ubicación</Typography>
                     <hr className='separator' />
 
                     <div className='add-page-inputs-cont'>
@@ -308,7 +306,7 @@ function LocatePageStep3() {
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Nivelx| (Se puede cambiar)</Typography>
+                        <Typography variant='h5' className='add-page-label'>Nivel (Se puede cambiar)</Typography>
                         <TextField
                             id="id-row"
                             variant="standard"
@@ -417,14 +415,14 @@ function LocatePageStep3() {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
-                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity={locationChecked ? "success" : "error"} sx={{ width: '100%' }}>
-                        {locationChecked ? "Ubicación disponilbe" : "Ubicación no disponilbe"}
-                    </Alert>
-                </Snackbar>
                 
             </Card>
+
+            <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={locationChecked ? "success" : "error"} sx={{ width: '100%' }}>
+                    {locationChecked ? "Ubicación disponilbe" : "Ubicación no disponilbe"}
+                </Alert>
+            </Snackbar>
             
         </>
     );

@@ -1,13 +1,18 @@
-.add-page-card {
-    max-width: 500px;
-}
-
 .add-page-header {
     margin-bottom: 15px;
 }
 
-.add-page-button {
-    border-radius: 8px !important;
+.add-page-card {
+    max-width: 500px;
+}
+
+.add-page-card-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-page-label {
+    margin-top: 5px !important;
 }
 
 .add-page-inputs-cont{
@@ -18,9 +23,8 @@
 
 .add-page-input {
     width: 100%;
-    max-width: 300px;
 }
 
-.add-page-label {
-    margin-top: 5px !important;
+.add-page-button {
+    border-radius: 8px !important;
 }

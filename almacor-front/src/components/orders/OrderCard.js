@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -8,11 +10,28 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import SaveIcon from '@mui/icons-material/Save';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+
+import Divider from '@mui/material/Divider';
 
 import "./OrderCard.css"
 
 function OrderCard(props) {
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const refreshPage = () => {
         window.location.reload(false);
@@ -52,24 +71,27 @@ function OrderCard(props) {
                     <hr className='separator' />
 
                     <div className='order-card-table-cont'>
-                    <div className='order-card-table-item'>
+                        <div className='order-card-table-item'>
 
                             <Typography variant='body' className='order-card-item'>Remito</Typography>
                             <Typography variant='body' className='number'>{props.orderRemito}</Typography>
 
                         </div>
+                        <Divider />
                         <div className='order-card-table-item'>
 
                             <Typography variant='body' className='order-card-item'>Pasillo</Typography>
                             <Typography variant='body' className='number'>{props.orderHall}</Typography>
 
                         </div>
+                        <Divider />
                         <div className='order-card-table-item'>
 
                             <Typography variant='body' className='order-card-item'>Columna</Typography>
                             <Typography variant='body' className='number'>{props.orderCol}</Typography>
 
                         </div>
+                        <Divider />
                         <div className='order-card-table-item'>
 
                             <Typography variant='body'>Nivel</Typography>
@@ -90,10 +112,7 @@ function OrderCard(props) {
                                 size='medium' 
                                 className='order-card-button' 
                                 disableElevation
-                                onClick={(e) => {
-                                    sendRemoved(e);
-                                    refreshPage();
-                                }}
+                                onClick={handleOpen}
                             >
                                 Quitar
                             </Button>
@@ -112,6 +131,38 @@ function OrderCard(props) {
                 </CardActions>
 
             </Card>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle>
+                    {"Está seguro?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        No podrá revertir esta acción.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        className='order-card-button'
+                        onClick={(e) => {
+                            sendRemoved(e);
+                            handleClose()
+                            refreshPage();
+                        }}
+                    >
+                        Aceptar
+                    </Button>
+                    <Button variant='outlined'  onClick={handleClose} autoFocus className='order-card-button'>
+                        Cancelar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
 
         </Grid>
 

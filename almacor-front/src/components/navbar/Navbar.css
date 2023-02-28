@@ -1,0 +1,19 @@
+.nav-cont {
+    display: flex;
+    justify-content: center;
+    
+    height: var(--nav-height);
+}
+
+.nav {
+    padding: 20px !important;
+}
+
+.nav-icon-button {
+    margin-right: 20px !important;
+    padding: 10px !important;
+}
+
+.nav-icon {
+    font-size: 30px !important;
+}

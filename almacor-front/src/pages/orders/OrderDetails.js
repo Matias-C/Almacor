@@ -40,11 +40,11 @@ function OrderDetails() {
             <div className="order-details-header">
                 <div className="order-details-number">
 
-                    <Typography variant='h2'>Orden {location.state.n_id_orden_de_carga}</Typography>
+                    <Typography variant='h3'>Orden {location.state.n_id_orden_de_carga}</Typography>
 
                 </div>
                 
-                <Typography variant='h2'>{location.state.c_descripcion}</Typography>
+                <Typography variant='h3'>{location.state.c_descripcion}</Typography>
             </div>
 
             <div className='order-details-cards'>

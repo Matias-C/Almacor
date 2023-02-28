@@ -15,8 +15,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 import "./LocatePage.css"
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const PalletMask = React.forwardRef(function PalletMask(props, ref) {
 
     const { onChange, ...other } = props;
@@ -72,12 +78,42 @@ function LocatePageStep1() {
 
     };
 
+    const checkPallet = async () => {
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+                method: "GET",
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token.access_token}`
+                },
+            });
+            const data = await res.json();
+            data.error && handleOpenAlert();
+            data.status && navigate(value, {state: value});
+            console.log(data);
+            }
+    };
+
+    const [openAlert, setOpenAlert] = useState(false);
+
+    const handleOpenAlert = () => {
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAlert(false);
+    };
+
     return(
 
         <>
             <div className='add-page-header'>
 
-                <Typography variant='h2' className='orders-header'>Ubicar Pallet</Typography>
+                <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
 
             </div>
 
@@ -116,13 +152,21 @@ function LocatePageStep1() {
                         size="medium"
                         disableElevation
                         className='add-page-button' 
-                        onClick={() => { navigate(value , {state: value}); }}
+                        onClick={() => {
+                            checkPallet()
+                        }}
                     >
                         Siguiente
                     </Button>
                     
                 </CardActions>
             </Card>
+
+            <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+                    "El pallet ingresado no existe"
+                </Alert>
+            </Snackbar>
             
         </>
         

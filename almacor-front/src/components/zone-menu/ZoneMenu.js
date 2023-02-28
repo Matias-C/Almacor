@@ -1,64 +1,122 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
+
+import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
+import AddLocationAltRoundedIcon from '@mui/icons-material/AddLocationAltRounded';
+import WrongLocationRoundedIcon from '@mui/icons-material/WrongLocationRounded';
+import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 
 import PageContainer from '../page_container/PageContainer';
 
+import ContextConnected from '../../context/ContextConnected';
+
 import "./ZoneMenu.css"
-
-
-function LinkTab(props) {
-    return (
-      <Tab
-        component="a"
-        onClick={(event) => {
-          event.preventDefault();
-        }}
-        {...props}
-      />
-    );
-  }
   
 function ZoneMenu() {
 
+    const [windowSize, setWindowSize] = useState([
+      window.innerWidth,
+      window.innerHeight,
+    ]);
+
+    useEffect(() => {
+      const handleWindowResize = () => {
+        setWindowSize([window.innerWidth, window.innerHeight]);
+      };
+
+      window.addEventListener('resize', handleWindowResize);
+
+      return () => {
+        window.removeEventListener('resize', handleWindowResize);
+      };
+    });
+
+    const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
-    const [value, setValue] = useState(0);
-  
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
-
-    function setColor(color) {
-        document.documentElement.style.setProperty('--tab-color', color)
-    }
-  
+    const [page, setPage] = useState("orders")
+    
     return (
 
         <>
 
           <PageContainer>
 
-            <Box sx={{ flexGrow: 1, display: 'flex', height: "100%" }}>
-                <Tabs orientation="vertical" value={value} onChange={handleChange} sx={{ borderRight: 1, borderColor: 'divider' }}>
+            <div className='zone-menu-cont'>
 
-                    <LinkTab label="Órdenes" onClick={() => { navigate("ordenes"); setColor("#f4811f")}} />
-                    <LinkTab label="Ubicar" onClick={() => { navigate("ubicar"); setColor("#9cc92d")}} />
-                    <LinkTab label="Remover" onClick={() => { navigate("remover"); setColor("#d11c24")}} />
-                    <LinkTab label="Inventario"  />
+              <div className={Connected.openSideBar ? 'zone-menu-side-bar open' : "zone-menu-side-bar"}>
 
-                </Tabs>
+                <Button 
+                  variant={page === "orders" ? "contained" : "text"}
+                  size="large"
+                  disableElevation
+                  fullWidth
+                  className='zone-menu-side-bar-button'
+                  onClick={() => {
+                    navigate("ordenes")
+                    setPage("orders")
+                  }}
+                >
+                  <LocalShippingRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
+                  {Connected.openSideBar ? 'Órdenes' : ""}
+                </Button>
 
-                <div className='zone-menu-content'>
+                <Button 
+                  variant={page === "locate" ? "contained" : "text"}
+                  size="large"
+                  disableElevation
+                  fullWidth
+                  className='zone-menu-side-bar-button'
+                  onClick={() => {
+                    navigate("ubicar")
+                    setPage("locate")
+                  }}
+                >
+                  <AddLocationAltRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
+                  {Connected.openSideBar ? 'Ubicar' : ""}
+                </Button>
+
+                <Button 
+                  variant={page === "remove" ? "contained" : "text"}
+                  size="large"
+                  disableElevation
+                  fullWidth
+                  className='zone-menu-side-bar-button'
+                  onClick={() => {
+                    navigate("remover")
+                    setPage("remove")
+                  }}
+                >
+                  <WrongLocationRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
+                  {Connected.openSideBar ? 'Remover' : ""}
+                </Button>
+
+                <Button 
+                  variant={page === "inventory" ? "contained" : "text"}
+                  size="large"
+                  disableElevation
+                  fullWidth
+                  className='zone-menu-side-bar-button'
+                >
+                  <ViewQuiltRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
+                  {Connected.openSideBar ? 'Inventario' : ""}
+                </Button>
+
+              </div>
+
+              <div className='zone-menu-content'>
+
+                    <Typography variant="h1" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
 
                     <Outlet />
                     
                 </div>
 
-            </Box>
+            </div>
+
 
           </PageContainer>
 

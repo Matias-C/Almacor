@@ -34,7 +34,7 @@ function OrdersDisplay() {
 
         <div className="orders">
 
-            <Typography variant='h2' className='orders-header'>Ordenes Activas</Typography>
+            <Typography variant='h3' className='orders-header'>Ordenes de carga activas</Typography>
 
             <Grid container spacing={2} className="orders-grid">
 

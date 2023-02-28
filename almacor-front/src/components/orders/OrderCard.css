@@ -10,6 +10,10 @@
 }
 
 .order-card-table-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    
     font-weight: 400;
 }
 
@@ -20,10 +24,6 @@
 
 .order-card-table-item .number {
     font-weight: 500;
-}
-
-.order-card-item {
-    margin-bottom: 7px !important;
 }
 
 .order-card-button {

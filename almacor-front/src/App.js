@@ -47,7 +47,7 @@ const theme = createTheme({
   typography: {
     h1: {
       fontWeight: 700,
-      fontSize: 32,
+      fontSize: 40,
       lineHeight: 1.2,
     },
     h2: {
@@ -56,7 +56,7 @@ const theme = createTheme({
     },
     h3: {
       fontSize: 24,
-      fontWeight: 500,
+      fontWeight: 700,
     },
     h4: {
       fontSize: 20,
@@ -83,27 +83,39 @@ const theme = createTheme({
 function App() {
   const [userInfo, setUserInfo] = useState(null);
 
+  const [openSideBar, setOpenSideBar] = useState(false);
+
+  const [currentDepositId, setCurrentDepositId] = useState(
+    localStorage.getItem("id-deposit")
+  );
   const [currentDeposit, setCurrentDeposit] = useState(
     localStorage.getItem("deposit")
   );
 
-  const setLocalDeposit = (value) => {
+  const setLocalDeposit = (idKey, id, nameKey, name) => {
     try {
-      setCurrentDeposit(value);
-      localStorage.setItem("deposit", value);
+      setCurrentDepositId(id);
+      localStorage.setItem(idKey, id);
+      setCurrentDeposit(name);
+      localStorage.setItem(nameKey, name);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const [currentZoneId, setCurrentZoneId] = useState(
+    localStorage.getItem("id-zone")
+  );
   const [currentZone, setCurrentZone] = useState(
     localStorage.getItem("zone")
   );
 
-  const setLocalZone = (value) => {
+  const setLocalZone = (idKey, id, nameKey, name) => {
     try {
-      setCurrentZone(value);
-      localStorage.setItem("zone", value);
+      setCurrentZoneId(id);
+      localStorage.setItem(idKey, id);
+      setCurrentZone(name);
+      localStorage.setItem(nameKey, name);
     } catch (error) {
       console.log(error);
     }
@@ -187,8 +199,16 @@ function App() {
           userInfo,
           setUserInfo,
 
+          openSideBar,
+          setOpenSideBar,
+
+          currentDepositId,
+          setCurrentDepositId,
           currentDeposit,
           setCurrentDeposit,
+
+          currentZoneId,
+          setCurrentZoneId,
           currentZone,
           setCurrentZone,
 

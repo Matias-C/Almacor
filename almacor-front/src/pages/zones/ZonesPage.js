@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 
+import Paper from '@mui/material/Paper';
 import { Typography, Button } from "@mui/material";
 
 import PageContainer from "../../components/page_container/PageContainer";
@@ -41,35 +42,37 @@ function ZonesPage() {
         <>
             <PageContainer>
                 <div className="zones-page-cont">
-                    <div className="zones-page-header">
 
-                        <Typography variant="h1" color="primary">Seleccione su Zona</Typography>
+                    <Typography variant="h1" className='zones-page-header'>{Connected.currentDeposit}</Typography>
 
-                    </div>
+                    <Paper variant='outlined' className="zones-page-card">
 
-                    <div className="zones-page-zone-buttons">
-                        {
-                            zones.map((zone) => {
+                        <Typography variant="h2">Zonas disponibles</Typography>
+                        <hr className="bold-separator"></hr>
+                        <div className='zones-page-buttons-cont'>
+                            {
+                                zones.map((zone) => {
 
-                                return (
+                                    return (
 
-                                    <Button
-                                        key={zone.n_id_zona}
-                                        variant="contained"
-                                        size="large"
-                                        className="zones-page-zone-button"
-                                        onClick={() => { 
-                                            navigate(`${zone.c_descripcion}/ordenes`, {state: zone});
-                                            Connected.setLocalZone(zone.n_id_zona)
-                                        }}
-                                    >{zone.c_descripcion}</Button>
+                                        <Button
+                                            key={zone.n_id_zona}
+                                            variant="contained"
+                                            size="large"
+                                            className="zones-page-zone-button"
+                                            onClick={() => { 
+                                                navigate(`${zone.c_descripcion}/ordenes`, {state: zone});
+                                                Connected.setLocalZone("id-zone", zone.n_id_zona, "zone", zone.c_descripcion)
+                                            }}
+                                        >{zone.c_descripcion}</Button>
 
-                                );
+                                    );
 
 
-                            })
-                        }
-                    </div>
+                                })
+                            }
+                        </div>
+                    </Paper>
 
                 </div>
             </PageContainer>

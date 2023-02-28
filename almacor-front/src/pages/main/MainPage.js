@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 
+import Paper from '@mui/material/Paper';
 import { Typography, Button } from "@mui/material";
 
 import PageContainer from "../../components/page_container/PageContainer";
@@ -35,47 +36,54 @@ function ZonesPage(props) {
         getDeposits();
     }, [Connected.userInfo]);
 
-    return(
+    if (Connected.userInfo === null) {
+        return null;
+    } else {
+
+        return(
         
-        <>
             <PageContainer>
 
                 <div className="main-page-cont">
-                    <div className="main-page-header">
 
-                        <Typography variant="h1" color="primary">Seleccione su Depósito</Typography>
+                    <Typography variant="h1" className="main-page-header">Bienvenido {Connected.userInfo.username}</Typography>
 
-                    </div>
+                    <Paper variant='outlined' className="main-page-card">
+                    
+                        <Typography variant="h2">Tus depósitos</Typography>
+                        <hr className="bold-separator"></hr>
 
-                    <div className="main-page-deposit-buttons">
-                        {
-                            deposits.map((deposit) => {
+                        <div className="main-page-buttons-cont">
+                            {
+                                deposits.map((deposit) => {
 
-                                return (
+                                    return (
 
-                                    <Button
-                                        key={deposit.n_id_deposito}
-                                        variant="contained"
-                                        size="large"
-                                        className="main-page-deposit-button"
-                                        onClick={() => { 
-                                            navigate(`deposito=${deposit.c_descripcion}`, {state: deposit});
-                                            Connected.setLocalDeposit(deposit.n_id_deposito)
-                                        }}
-                                    >{deposit.c_descripcion}</Button>
+                                        <Button
+                                            key={deposit.n_id_deposito}
+                                            variant="contained"
+                                            size="large"
+                                            disableElevation
+                                            className="main-page-deposit-button"
+                                            onClick={() => { 
+                                                navigate(`deposito=${deposit.c_descripcion}`, {state: deposit});
+                                                Connected.setLocalDeposit("id-deposit", deposit.n_id_deposito, "deposit", deposit.c_descripcion)
+                                            }}
+                                        >{deposit.c_descripcion}</Button>
 
-                                );
+                                    );
 
 
-                            })
-                        }
-                        
-                    </div>
+                                })
+                            }
+                        </div>
+                    </Paper>
 
                 </div>
             </PageContainer>
-        </>
-    );
+        );
+
+    }
 }
 
 export default ZonesPage;

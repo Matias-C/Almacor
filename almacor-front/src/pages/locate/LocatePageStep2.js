@@ -11,14 +11,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import "./LocatePage.css"
-
 function LocatePageStep2() {
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const [pallet, setPallet] = useState(null);
+    const [status, setStatus] = useState("");
     
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
@@ -46,13 +45,14 @@ function LocatePageStep2() {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token.access_token}`
               },
-            })
+            });
             const data = await res.json();
             setPallet(data.data[0]);
+            setStatus(data.status);
             setWeight(data.data[0].n_tipopeso);
             setHeight(data.data[0].n_tipoaltura);
             setRotation(data.data[0].n_nivelrotacion);
-            console.log(data.data);
+            console.log(data);
           }
         };
         getPallet();
@@ -96,14 +96,19 @@ function LocatePageStep2() {
             
                 <div className='add-page-header'>
     
-                    <Typography variant='h2' className='orders-header'>Ubicar Pallet</Typography>
+                    <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
     
                 </div>
     
                 <Card variant="outlined" className='add-page-card'>
                     <CardContent>
 
-                        <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
+                        <div className='add-page-card-header'>
+                        
+                            <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
+                            <Typography variant='h4'>{status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? "No ubicado" : "Ya fue ubicado"}</Typography>
+
+                        </div>
                         <hr className='separator' />
 
                         <div className='add-page-inputs-cont'>

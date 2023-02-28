@@ -1,4 +1,4 @@
-import Navbar from "../navbar/Navbrar";
+import Navbar from "../navbar/Navbar";
 
 import "./PageContainer.css"
 

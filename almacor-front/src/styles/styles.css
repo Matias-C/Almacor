@@ -8,6 +8,8 @@
     --medium-font: rgb(70, 70, 70);
     --light-font: rgb(105, 105, 105);
     --shadow: 0 0 5px rgba(0, 0, 0, .20);
+
+    --nav-height: 70px;
 }
 
 * {
@@ -31,6 +33,14 @@ html, body {
 
     margin: 5px 0 10px 0;
     width: 20px;
+}
+
+.bold-separator {
+    border: 5px solid var(--main-color);
+    border-radius: 4px;
+
+    margin: 7px 0 10px 0;
+    width: 30px;
 }
 
 
