@@ -81,6 +81,7 @@ const theme = createTheme({
 });
 
 function App() {
+  
   const [userInfo, setUserInfo] = useState(null);
 
   const [openSideBar, setOpenSideBar] = useState(false);
@@ -192,42 +193,36 @@ function App() {
     },
   ]);
 
-  if (userInfo === null) {
-    return null;
-  } else {
+  return (
+    <>
+      <ContextConnected.Provider
+        value={{
+          userInfo,
+          setUserInfo,
 
-    return (
-      <>
-        <ContextConnected.Provider
-          value={{
-            userInfo,
-            setUserInfo,
-  
-            openSideBar,
-            setOpenSideBar,
-  
-            currentDepositId,
-            setCurrentDepositId,
-            currentDeposit,
-            setCurrentDeposit,
-  
-            currentZoneId,
-            setCurrentZoneId,
-            currentZone,
-            setCurrentZone,
-  
-            setLocalDeposit,
-            setLocalZone,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </ContextConnected.Provider>
-      </>
-    );
+          openSideBar,
+          setOpenSideBar,
 
-  }
+          currentDepositId,
+          setCurrentDepositId,
+          currentDeposit,
+          setCurrentDeposit,
+
+          currentZoneId,
+          setCurrentZoneId,
+          currentZone,
+          setCurrentZone,
+
+          setLocalDeposit,
+          setLocalZone,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </ContextConnected.Provider>
+    </>
+  );
 
 }
 

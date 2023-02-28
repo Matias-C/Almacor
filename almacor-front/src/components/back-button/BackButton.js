@@ -12,8 +12,8 @@ function BackButton() {
 
     return( 
 
-        <IconButton color="primary" className="back-button">
-            <ArrowBackIosNewRoundedIcon className="back-button-icon" onClick={() => navigate(-1)}/>
+        <IconButton color="primary" className="back-button" onClick={() => navigate(-1)}>
+            <ArrowBackIosNewRoundedIcon className="back-button-icon" />
         </IconButton>
 
     )
