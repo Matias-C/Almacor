@@ -40,8 +40,9 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    navigate("ordenes")
-                    setPage("orders")
+                    Connected.setOpenSideBar(false);
+                    navigate("ordenes");
+                    setPage("orders");
                   }}
                 >
                   <LocalShippingRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
@@ -55,8 +56,9 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    navigate("ubicar")
-                    setPage("locate")
+                    Connected.setOpenSideBar(false);
+                    navigate("ubicar");
+                    setPage("locate");
                   }}
                 >
                   <AddLocationAltRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
@@ -70,8 +72,9 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    navigate("remover")
-                    setPage("remove")
+                    Connected.setOpenSideBar(false);
+                    navigate("remover");
+                    setPage("remove");
                   }}
                 >
                   <WrongLocationRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>

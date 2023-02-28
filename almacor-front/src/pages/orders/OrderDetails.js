@@ -52,21 +52,44 @@ function OrderDetails() {
                 <Grid container spacing={2}>
 
                     {
-                        details.map((detail) => {
+                        details.filter(detail => detail.b_quitado.toString().includes("f")).map(filteredDetail => {
 
                             return (
 
                                 <OrderCard
-                                    key={detail.n_id_pk}
-                                    idPartida={detail.n_id_partida}
-                                    orderConteiner={detail.c_numero}
-                                    orderRemito={detail.c_remito}
-                                    orderDeposit={detail.ubicacion.deposito}
-                                    orderZone={detail.ubicacion.zona}
-                                    orderHall={detail.ubicacion.c_pasillo}
-                                    orderCol={detail.ubicacion.columna}
-                                    orderRow={detail.ubicacion.fila}
-                                    orderDespacho={detail.b_quitado}
+                                    key={filteredDetail.n_id_pk}
+                                    idPartida={filteredDetail.n_id_partida}
+                                    orderConteiner={filteredDetail.c_numero}
+                                    orderRemito={filteredDetail.c_remito}
+                                    orderDeposit={filteredDetail.ubicacion.deposito}
+                                    orderZone={filteredDetail.ubicacion.zona}
+                                    orderHall={filteredDetail.ubicacion.c_pasillo}
+                                    orderCol={filteredDetail.ubicacion.columna}
+                                    orderRow={filteredDetail.ubicacion.fila}
+                                    orderDespacho={filteredDetail.b_quitado}
+                                />
+
+                            );
+
+
+                        })
+                    }
+                    {
+                        details.filter(detail => detail.b_quitado.toString().includes("t")).map(filteredDetail => {
+
+                            return (
+
+                                <OrderCard
+                                    key={filteredDetail.n_id_pk}
+                                    idPartida={filteredDetail.n_id_partida}
+                                    orderConteiner={filteredDetail.c_numero}
+                                    orderRemito={filteredDetail.c_remito}
+                                    orderDeposit={filteredDetail.ubicacion.deposito}
+                                    orderZone={filteredDetail.ubicacion.zona}
+                                    orderHall={filteredDetail.ubicacion.c_pasillo}
+                                    orderCol={filteredDetail.ubicacion.columna}
+                                    orderRow={filteredDetail.ubicacion.fila}
+                                    orderDespacho={filteredDetail.b_quitado}
                                 />
 
                             );
