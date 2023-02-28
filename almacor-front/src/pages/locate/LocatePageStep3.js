@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
+import Grid from '@mui/material/Unstable_Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -260,27 +262,37 @@ function LocatePageStep3() {
 
                     <div className='add-page-inputs-cont'>
 
-                        <Typography variant='h5' className='add-page-label'>Depósito</Typography>
-                        <TextField 
-                            id="id-deposit"
-                            variant="standard"
-                            defaultValue={deposit}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                        />
+                        <Grid container spacing={2}>
+                            <Grid xs={6} md={6}>
 
-                        <Typography variant='h5' className='add-page-label'>Zona</Typography>
-                        <TextField 
-                            id="id-zone"
-                            variant="standard"
-                            defaultValue={zone}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                        />
+                            <Typography variant='h5' className='add-page-label'>Depósito</Typography>
+                            <TextField 
+                                id="id-deposit"
+                                variant="standard"
+                                defaultValue={deposit}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                className='add-page-input'
+                            />
+
+                            </Grid>
+
+                            <Grid xs={6} md={6}>
+
+                                <Typography variant='h5' className='add-page-label'>Zona</Typography>
+                                <TextField 
+                                    id="id-zone"
+                                    variant="standard"
+                                    defaultValue={zone}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    className='add-page-input'
+                                />
+
+                            </Grid>
+                        </Grid>
 
                         <Typography variant='h5' className='add-page-label'>Pasillo (Se puede cambiar)</Typography>
                         <TextField
@@ -341,7 +353,7 @@ function LocatePageStep3() {
                         disableElevation
                         onClick={handleOpenDialog}
                     >
-                        Cambiar Ubicación
+                        Cambiar
                     </Button>
                     
                 </CardActions>
@@ -351,7 +363,7 @@ function LocatePageStep3() {
                     <DialogContent>
 
                         <DialogContentText>
-                            Para cambiar la ubicación puede ingresar un código, o cambiar los valores a mano.
+                            Para cambiar la ubicación podés ingresar un código, o cambiar los valores a mano.
                         </DialogContentText>
 
                         <FormControl variant="standard" fullWidth margin='dense'>

@@ -47,7 +47,7 @@ const theme = createTheme({
   typography: {
     h1: {
       fontWeight: 700,
-      fontSize: 40,
+      fontSize: 36,
       lineHeight: 1.2,
     },
     h2: {
@@ -192,36 +192,43 @@ function App() {
     },
   ]);
 
-  return (
-    <>
-      <ContextConnected.Provider
-        value={{
-          userInfo,
-          setUserInfo,
+  if (userInfo === null) {
+    return null;
+  } else {
 
-          openSideBar,
-          setOpenSideBar,
+    return (
+      <>
+        <ContextConnected.Provider
+          value={{
+            userInfo,
+            setUserInfo,
+  
+            openSideBar,
+            setOpenSideBar,
+  
+            currentDepositId,
+            setCurrentDepositId,
+            currentDeposit,
+            setCurrentDeposit,
+  
+            currentZoneId,
+            setCurrentZoneId,
+            currentZone,
+            setCurrentZone,
+  
+            setLocalDeposit,
+            setLocalZone,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </ContextConnected.Provider>
+      </>
+    );
 
-          currentDepositId,
-          setCurrentDepositId,
-          currentDeposit,
-          setCurrentDeposit,
+  }
 
-          currentZoneId,
-          setCurrentZoneId,
-          currentZone,
-          setCurrentZone,
-
-          setLocalDeposit,
-          setLocalZone,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </ContextConnected.Provider>
-    </>
-  );
 }
 
 export default App;

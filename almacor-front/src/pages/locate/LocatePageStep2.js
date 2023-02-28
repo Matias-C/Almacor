@@ -106,7 +106,6 @@ function LocatePageStep2() {
                         <div className='add-page-card-header'>
                         
                             <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
-                            <Typography variant='h4'>{status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? "No ubicado" : "Ya fue ubicado"}</Typography>
 
                         </div>
                         <hr className='separator' />

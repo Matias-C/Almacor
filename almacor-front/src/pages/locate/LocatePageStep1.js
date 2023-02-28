@@ -50,6 +50,7 @@ function LocatePageStep1() {
     const navigate = useNavigate();
 
     const [error, setError] = useState(false);
+    const [errorAlert, setErrorAlert] = useState("");
     const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
@@ -89,15 +90,17 @@ function LocatePageStep1() {
                 },
             });
             const data = await res.json();
-            data.error && handleOpenAlert();
-            data.status && navigate(value, {state: value});
+            data.error && handleOpenAlert("Este pallet no existe");
+            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(value, {state: value}) : 
+            data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado");
             console.log(data);
             }
     };
 
     const [openAlert, setOpenAlert] = useState(false);
 
-    const handleOpenAlert = () => {
+    const handleOpenAlert = (error) => {
+        setErrorAlert(error)
         setOpenAlert(true);
     };
 
@@ -164,7 +167,7 @@ function LocatePageStep1() {
 
             <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
-                    "El pallet ingresado no existe"
+                    {errorAlert}
                 </Alert>
             </Snackbar>
             

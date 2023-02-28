@@ -17,7 +17,7 @@
 .order-details-cards {
     border-radius: 12px;
 
-    height: 75vh;
+    height: calc(100vh - var(--nav-height) - 161px);
     
     overflow-x: hidden;
     overflow-y: auto;

@@ -139,7 +139,7 @@ function OrderCard(props) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle>
-                    {"Está seguro?"}
+                    {"Estás seguro?"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
