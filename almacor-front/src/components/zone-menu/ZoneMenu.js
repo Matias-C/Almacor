@@ -10,29 +10,13 @@ import WrongLocationRoundedIcon from '@mui/icons-material/WrongLocationRounded';
 import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 
 import PageContainer from '../page_container/PageContainer';
+import BackButton from '../back-button/BackButton';
 
 import ContextConnected from '../../context/ContextConnected';
 
 import "./ZoneMenu.css"
   
 function ZoneMenu() {
-
-    const [windowSize, setWindowSize] = useState([
-      window.innerWidth,
-      window.innerHeight,
-    ]);
-
-    useEffect(() => {
-      const handleWindowResize = () => {
-        setWindowSize([window.innerWidth, window.innerHeight]);
-      };
-
-      window.addEventListener('resize', handleWindowResize);
-
-      return () => {
-        window.removeEventListener('resize', handleWindowResize);
-      };
-    });
 
     const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
@@ -109,7 +93,12 @@ function ZoneMenu() {
 
               <div className='zone-menu-content'>
 
-                    <Typography variant="h1" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
+                    <div className='page-header'>
+
+                      <BackButton />
+                      <Typography variant="h1" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
+
+                    </div>
 
                     <Outlet />
                     

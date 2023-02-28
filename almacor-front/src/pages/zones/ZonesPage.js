@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import { Typography, Button } from "@mui/material";
 
 import PageContainer from "../../components/page_container/PageContainer";
+import BackButton from '../../components/back-button/BackButton';
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -43,7 +44,10 @@ function ZonesPage() {
             <PageContainer>
                 <div className="zones-page-cont">
 
-                    <Typography variant="h1" className='zones-page-header'>{Connected.currentDeposit}</Typography>
+                    <div className='page-header'>
+                        <BackButton />
+                        <Typography variant="h1" className='zones-page-header'>{Connected.currentDeposit}</Typography>
+                    </div>
 
                     <Paper variant='outlined' className="zones-page-card">
 

@@ -1,0 +1,9 @@
+.back-button {
+    margin-right: 10px !important;
+    width: fit-content;
+    height: fit-content;
+}
+
+.back-button-icon {
+    font-size: 25px !important;
+}

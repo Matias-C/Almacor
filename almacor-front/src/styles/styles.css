@@ -27,6 +27,13 @@ html, body {
 /* Globals */
 
 
+.page-header {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
 .separator {
     border: 3px solid var(--main-color);
     border-radius: 3px;

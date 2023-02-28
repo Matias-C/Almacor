@@ -6,10 +6,6 @@
     height: calc(100vh - var(--nav-height) - 40px);
 }
 
-.zones-page-header {
-    margin-bottom: 20px !important;
-}
-
 .zones-page-card {
     display: flex;
     flex-direction: column;
