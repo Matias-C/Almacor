@@ -56,6 +56,16 @@ function OrderCard(props) {
                 body: formdata
             })
 
+            const response = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+            })
+
+            const data = await response.json();
+            console.log(data);
+
         }
     };
 
@@ -152,7 +162,6 @@ function OrderCard(props) {
                         onClick={(e) => {
                             sendRemoved(e);
                             handleClose()
-                            refreshPage();
                         }}
                     >
                         Aceptar

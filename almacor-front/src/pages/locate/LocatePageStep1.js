@@ -39,11 +39,11 @@ const PalletMask = React.forwardRef(function PalletMask(props, ref) {
             overwrite
         />
     );
-  });
+});
   
-  PalletMask.propTypes = {
+PalletMask.propTypes = {
     onChange: PropTypes.func.isRequired,
-  };
+};
 
 function LocatePageStep1() {
 
@@ -116,7 +116,7 @@ function LocatePageStep1() {
         <>
             <div className='add-page-header'>
 
-                <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
+                <Typography variant='h3'>Ubicar Pallet</Typography>
 
             </div>
 

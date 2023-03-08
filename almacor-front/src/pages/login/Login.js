@@ -78,11 +78,7 @@ function Login() {
                 refreshPage();
 
             } else {
-                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
-                        Nombre de usuario o Contraseña incorrectos.
-                    </Alert>
-                </Snackbar>
+                handleOpenAlert();
             }   
         }
     }
@@ -135,6 +131,12 @@ function Login() {
                     </Button>
                 </CardActions>
             </Card>
+
+            <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+                    Nombre de usuario o contraseña incorrectos.
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
