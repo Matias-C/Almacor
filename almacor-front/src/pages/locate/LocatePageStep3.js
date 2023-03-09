@@ -124,8 +124,10 @@ function LocatePageStep3() {
             const data = await res.json();
             if (data.status === "Esta posicion se encuentra vacia") {
                 setLocationChecked(true);
+                handleOpenAlert("Ubicación disponible", "success");
             } else {
                 setLocationChecked(false);
+                handleOpenAlert("Ubicación mo disponible", "error");
             }
             console.log(data, locationChecked);
         }
@@ -162,6 +164,7 @@ function LocatePageStep3() {
                 body: formdata
             })
             const data = await response.json();
+            data.success && handleOpenAlert("Pallet ubicado correctamente", "success");
             console.log(data);
 
         }
@@ -169,6 +172,8 @@ function LocatePageStep3() {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
+    const [alertType, setAlertType] = useState("")
+    const [alert, setAlert] = useState("");
 
     const handleOpenDialog = () => {
         setValue("");
@@ -180,7 +185,9 @@ function LocatePageStep3() {
         setOpenDialog(false);
     };
 
-    const handleOpenAlert = () => {
+    const handleOpenAlert = (alert, type) => {
+        setAlertType(type);
+        setAlert(alert);
         setOpenAlert(true);
     };
 
@@ -375,8 +382,7 @@ function LocatePageStep3() {
                                 setRow(newRow);
 
                                 checkLocation(e)
-                                
-                                handleOpenAlert();
+
                                 handleCloseDialog();
                             }}
                         >
@@ -397,8 +403,8 @@ function LocatePageStep3() {
             </Card>
 
             <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                <Alert onClose={handleCloseAlert} severity={locationChecked ? "success" : "error"} sx={{ width: '100%' }}>
-                    {locationChecked ? "Ubicación disponilbe" : "Ubicación no disponilbe"}
+                <Alert onClose={handleCloseAlert} severity={alertType} sx={{ width: '100%' }}>
+                    {alert}
                 </Alert>
             </Snackbar>
             

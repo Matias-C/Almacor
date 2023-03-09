@@ -47,14 +47,12 @@ PalletMask.propTypes = {
 function RemovePage() {
 
     const [error, setError] = useState(false);
-    const [errorAlert, setErrorAlert] = useState("");
     const [disabled, setDisabled] = useState(true);
     const [type, setType] = useState("");
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
     const [value, setValue] = useState("");
-    const [numero, setNumero] = useState("")
     
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -86,9 +84,12 @@ function RemovePage() {
     };
 
     const [openAlert, setOpenAlert] = useState(false);
+    const [alertType, setAlertType] = useState("")
+    const [alert, setAlert] = useState("");
 
-    const handleOpenAlert = (error) => {
-        setErrorAlert(error)
+    const handleOpenAlert = (alert, type) => {
+        setAlertType(type);
+        setAlert(alert);
         setOpenAlert(true);
     };
 
@@ -99,40 +100,41 @@ function RemovePage() {
         setOpenAlert(false);
     };
 
-    const getPallet = async () => {
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-          const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token.access_token}`
-            },
-          });
-          const data = await res.json();
-          setNumero(data.data[0].numero);
-          console.log(value);
-        }
-    };
-
     const removePallet = async (e) => {
         e.preventDefault();
-
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
             var formdata = new FormData();
 
-            const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/ubicar_pallet_en_posicion/", {
-                method: "POST",
+            const response = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+                method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
                 },
                 body: formdata
             })
             const data = await response.json();
+            data.succes && handleOpenAlert("Pallet removido correctamente", "success");
             console.log(data);
+        }
+    };
 
+    const getPallet = async (e) => {
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+          const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token.access_token}`
+            },
+            });
+            const data = await res.json();
+            data.error && handleOpenAlert("Este pallet no existe", "error");
+            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no fue ubicado", "error");
+            data.status === "El Pallet ingresado se encuentra en una ubicacion" && removePallet(e);
+            console.log(data);
         }
     };
 
@@ -189,6 +191,12 @@ function RemovePage() {
                     
                 </CardActions>
             </Card>
+
+            <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alertType} sx={{ width: '100%' }}>
+                    {alert}
+                </Alert>
+            </Snackbar>
         </>
         
 
