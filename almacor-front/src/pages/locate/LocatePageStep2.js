@@ -16,9 +16,8 @@ function LocatePageStep2() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [pallet, setPallet] = useState(null);
-    const [status, setStatus] = useState("");
-    
+    const [pallet, setPallet] = useState([]);
+
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
     const [rotation, setRotation] = useState("");
@@ -48,7 +47,6 @@ function LocatePageStep2() {
             });
             const data = await res.json();
             setPallet(data.data[0]);
-            setStatus(data.status);
             setWeight(data.data[0].n_tipopeso);
             setHeight(data.data[0].n_tipoaltura);
             setRotation(data.data[0].n_nivelrotacion);
@@ -65,8 +63,6 @@ function LocatePageStep2() {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
-            const n_id_partida = pallet.n_id_partida;
-
             const n_tipopeso = weight;
             const n_tipoaltura = height;
             const n_nivelrotacion = rotation;
@@ -76,7 +72,7 @@ function LocatePageStep2() {
             formdata.append("n_tipoaltura", n_tipoaltura);
             formdata.append("n_nivelrotacion", n_nivelrotacion);
 
-            await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/${n_id_partida}`, {
+            await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/${pallet.n_id_partida}`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -87,101 +83,109 @@ function LocatePageStep2() {
         }
     };
 
-    if (pallet === null) {
-        return null;
-    } else {
-
-        return(
-
-            <>
-            
-                <div className='add-page-header'>
+    useEffect(() => {
+        const keyDownHandler = (e) => {
+            console.log('User pressed: ', e.key);
     
-                    <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                changePallet(e);
+                navigate("ubicacion", {state: pallet});
+            }
+        };
     
-                </div>
+        document.addEventListener('keydown', keyDownHandler);
     
-                <Card variant="outlined" className='add-page-card'>
-                    <CardContent>
+        return () => {
+            document.removeEventListener('keydown', keyDownHandler);
+        };
+    }, [pallet]);
 
-                        <div className='add-page-card-header'>
-                        
-                            <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
 
-                        </div>
-                        <hr className='separator' />
+    return (
+        <>
+            <div className='add-page-header'>
 
-                        <div className='add-page-inputs-cont'>
+                <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
 
-                            <Typography variant='h5' className='add-page-label'>Peso (Se puede cambiar)</Typography>
-                        
-                            <FormControl variant="standard" className='add-page-input'>
-                                <Select
-                                    id="pallet-weight"
-                                    value={weight}
-                                    onChange={handleWeight}
-                                >
-                                    <MenuItem value={1}>1 - Liviano</MenuItem>
-                                    <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                    <MenuItem value={3}>3 - Pesado</MenuItem>
-                                </Select>
-                            </FormControl>
+            </div>
 
-                            <Typography variant='h5' className='add-page-label'>Altura (Se puede cambiar)</Typography>
+            <Card variant="outlined" className='add-page-card'>
+                <CardContent>
 
-                            <FormControl variant="standard" className='add-page-input'>
-                                <Select
-                                    id="pallet-height"
-                                    value={height}
-                                    onChange={handleHeight}
-                                >
-                                    <MenuItem value={1}>1 - Bajo</MenuItem>
-                                    <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                    <MenuItem value={3}>3 - Intermedio</MenuItem>
-                                </Select>
-                            </FormControl>
+                    <div className='add-page-card-header'>
+                    
+                        <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
 
-                            <Typography variant='h5' className='add-page-label'>Nivel de Rotación (Se puede cambiar)</Typography>
+                    </div>
+                    <hr className='separator' />
 
-                            <FormControl variant="standard" className='add-page-input'>
-                                <Select
-                                    id="pallet-rotation"
-                                    value={rotation}
-                                    onChange={handleRotation}
-                                >
-                                    <MenuItem value={1}>1</MenuItem>
-                                    <MenuItem value={2}>2</MenuItem>
-                                    <MenuItem value={3}>3</MenuItem>
-                                </Select>
-                            </FormControl>
+                    <div className='add-page-inputs-cont'>
 
-                        </div>
-                    </CardContent>
-                    <CardActions>
-    
-                        <Button
-                            variant="contained" 
-                            size="medium"
-                            className='add-page-button' 
-                            disableElevation
-                            onClick={(e) => {
-                                changePallet(e);
-                                navigate("ubicacion", {state: pallet});
-                            }}
-                        >
-                            Siguiente
-                        </Button>
-                        
-                    </CardActions>
-                </Card>
-                
-            </>
-            
-    
-        );
+                        <Typography variant='h5' className='add-page-label'>Peso (Se puede cambiar)</Typography>
+                    
+                        <FormControl variant="standard" className='add-page-input'>
+                            <Select
+                                id="pallet-weight"
+                                value={weight}
+                                onChange={handleWeight}
+                            >
+                                <MenuItem value={1}>1 - Liviano</MenuItem>
+                                <MenuItem value={2}>2 - Intermedio</MenuItem>
+                                <MenuItem value={3}>3 - Pesado</MenuItem>
+                            </Select>
+                        </FormControl>
 
-    };
+                        <Typography variant='h5' className='add-page-label'>Altura (Se puede cambiar)</Typography>
 
+                        <FormControl variant="standard" className='add-page-input'>
+                            <Select
+                                id="pallet-height"
+                                value={height}
+                                onChange={handleHeight}
+                            >
+                                <MenuItem value={1}>1 - Bajo</MenuItem>
+                                <MenuItem value={2}>2 - Intermedio</MenuItem>
+                                <MenuItem value={3}>3 - Intermedio</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <Typography variant='h5' className='add-page-label'>Nivel de Rotación (Se puede cambiar)</Typography>
+
+                        <FormControl variant="standard" className='add-page-input'>
+                            <Select
+                                id="pallet-rotation"
+                                value={rotation}
+                                onChange={handleRotation}
+                            >
+                                <MenuItem value={1}>1</MenuItem>
+                                <MenuItem value={2}>2</MenuItem>
+                                <MenuItem value={3}>3</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                    </div>
+                </CardContent>
+                <CardActions>
+
+                    <Button
+                        variant="contained"
+                        size="medium"
+                        className='add-page-button'
+                        disableElevation
+                        onClick={(e) => {
+                            changePallet(e);
+                            navigate("ubicacion", {state: pallet});
+                        }}
+                    >
+                        Siguiente
+                    </Button>
+                    
+                </CardActions>
+            </Card>
+        </>
+    );
 }
 
 export default LocatePageStep2;

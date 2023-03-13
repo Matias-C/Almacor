@@ -111,6 +111,13 @@ function LocatePageStep1() {
         setOpenAlert(false);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+        checkPallet();
+          console.log('do validate');
+        }
+    }
+
     return(
 
         <>
@@ -133,6 +140,9 @@ function LocatePageStep1() {
                             value={value}
                             error={error}
                             onChange={handleChange}
+                            onKeyDown={(e) => {
+                                handleKeyDown(e)
+                            }}
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>

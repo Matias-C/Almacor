@@ -16,7 +16,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-
 import Divider from '@mui/material/Divider';
 
 import "./OrderCard.css"
@@ -48,7 +47,7 @@ function OrderCard(props) {
             var formdata = new FormData();
             formdata.append("b_quitado", b_quitado);
 
-            await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`, {
+            const result = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -63,9 +62,10 @@ function OrderCard(props) {
                 },
             })
 
-            const data = await response.json();
-            console.log(data);
+            const newDetail = await result.json();
+            props.setDetails(oldDetail => [...oldDetail, newDetail])
 
+            console.log(newDetail);
         }
     };
 

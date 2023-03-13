@@ -198,6 +198,12 @@ function LocatePageStep3() {
         setOpenAlert(false);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          console.log('do validate');
+        }
+    }
+
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);
@@ -267,7 +273,7 @@ function LocatePageStep3() {
 
                     <div className='add-page-inputs-cont'>
 
-                        <Typography variant='h5' className='add-page-label'>Pasillo (Se puede cambiar)</Typography>
+                        <Typography variant='h5' className='add-page-label'>Pasillo</Typography>
                         <TextField
                             id="id-hall"
                             variant="standard"
@@ -275,11 +281,14 @@ function LocatePageStep3() {
                             onChange={(event) => {
                                 setHall(event.target.value);
                             }}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                             className='add-page-input'
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Columna (Se puede cambiar)</Typography>
+                        <Typography variant='h5' className='add-page-label'>Columna</Typography>
                         <TextField
                             id="id-col"
                             variant="standard"
@@ -287,17 +296,23 @@ function LocatePageStep3() {
                             onChange={(event) => {
                                 setCol(event.target.value);
                             }}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                             className='add-page-input'
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Nivel (Se puede cambiar)</Typography>
+                        <Typography variant='h5' className='add-page-label'>Nivel</Typography>
                         <TextField
                             id="id-row"
                             variant="standard"
                             value={row}
                             onChange={(event) => {
                                 setRow(event.target.value);
+                            }}
+                            InputProps={{
+                                readOnly: true,
                             }}
                             className='add-page-input'
                             >
@@ -317,16 +332,6 @@ function LocatePageStep3() {
                         }}
                     >
                         Ubicar
-                    </Button>
-
-                    <Button
-                        variant="outlined" 
-                        size="medium"
-                        className='add-page-button' 
-                        disableElevation
-                        onClick={handleOpenDialog}
-                    >
-                        Cambiar
                     </Button>
                     
                 </CardActions>

@@ -67,6 +67,7 @@ function OrderDetails() {
                                     orderCol={filteredDetail.ubicacion.columna}
                                     orderRow={filteredDetail.ubicacion.fila}
                                     orderDespacho={filteredDetail.b_quitado}
+                                    setDetails={setDetails}
                                 />
 
                             );
