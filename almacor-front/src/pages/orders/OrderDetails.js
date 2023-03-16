@@ -16,19 +16,19 @@ function OrderDetails() {
 
     useEffect(() => {
         const getDetails = async () => {
-          const token = await JSON.parse(localStorage.getItem("token"));
-          if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ordenpartidasdt/?id_orden_carga=${location.state.n_id_orden_de_carga}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token.access_token}`
-              },
-            })
-            const data = await res.json();
-            setDetails(data);
-            console.log(data);
-          }
+            const token = await JSON.parse(localStorage.getItem("token"));
+            if (token) {
+                const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ordenpartidasdt/?id_orden_carga=${location.state.n_id_orden_de_carga}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token.access_token}`
+                    },
+                })
+                const data = await res.json();
+                setDetails(data);
+                console.log(data);
+            }
         };
         getDetails();
     }, []);

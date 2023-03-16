@@ -65,7 +65,12 @@ function LocatePageStep1() {
             if (e.target.value.length > 9) {
                 setValidLength(true);
                 setDisabled(false);
-                setError(false)
+                setError(false);
+                if (e.target.value.length === 10) {
+                    checkPallet(e.target.value);
+                } else {
+                    return null;
+                }
             } else {
                 setValidLength(false);
                 setDisabled(true);
@@ -76,13 +81,12 @@ function LocatePageStep1() {
             setDisabled(true);
             setError(true);
         };
-
     };
 
-    const checkPallet = async () => {
+    const checkPallet = async (url) => {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${url}`, {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json",
@@ -91,7 +95,7 @@ function LocatePageStep1() {
             });
             const data = await res.json();
             data.error && handleOpenAlert("Este pallet no existe");
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(value, {state: value}) : 
+            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(url, {state: url}) :
             data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado");
             console.log(data);
             }

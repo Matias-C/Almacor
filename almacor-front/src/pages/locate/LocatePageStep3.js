@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -106,15 +108,12 @@ function LocatePageStep3() {
         generateLocation();
     }, [Connected.userInfo]);
 
-    const checkLocation = async (e) => {
-        e.preventDefault();
-
-        const url = value.substr(2,10);
+    const checkLocation = async (location) => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ubic_pallet/?ubic=UB${url}`, {
+            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ubic_pallet/?ubic=${location}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -129,7 +128,7 @@ function LocatePageStep3() {
                 setLocationChecked(false);
                 handleOpenAlert("Ubicación mo disponible", "error");
             }
-            console.log(data, locationChecked);
+            console.log(data); 
         }
     };
 
@@ -218,18 +217,19 @@ function LocatePageStep3() {
         
         if (e.target.value.substr(0,2) === "UB") {
             setValidPallet(true);
-            
             if (parseInt(e.target.value.substr(2,2)) === deposit) {
                 setValidDeposit(true);
-
                 if (parseInt(e.target.value.substr(4,2)) === zone) {
                     setValidZone(true);
-
                     if (e.target.value.length > 11) {
                         setValidLength(true);
                         setDisabled(false);
-                        setError(false)
-                        
+                        setError(false);
+                        if (e.target.value.length === 12) {
+                            checkLocation(e.target.value);
+                        } else {
+                            return null;
+                        }
                     } else {
                         setValidLength(false);
                         setDisabled(true);
@@ -240,13 +240,11 @@ function LocatePageStep3() {
                     setDisabled(true);
                     setError(true);
                 }
-                
             } else {
                 setValidDeposit(false);
                 setDisabled(true);
                 setError(true);
             };
-
         } else {
             setValidPallet(false);
             setDisabled(true);
@@ -278,8 +276,8 @@ function LocatePageStep3() {
                             id="id-hall"
                             variant="standard"
                             value={hall}
-                            onChange={(event) => {
-                                setHall(event.target.value);
+                            onChange={(e) => {
+                                setHall(e.target.value);
                             }}
                             InputProps={{
                                 readOnly: true,
@@ -288,53 +286,78 @@ function LocatePageStep3() {
                             >
                         </TextField>
 
-                        <Typography variant='h5' className='add-page-label'>Columna</Typography>
-                        <TextField
-                            id="id-col"
-                            variant="standard"
-                            value={col}
-                            onChange={(event) => {
-                                setCol(event.target.value);
-                            }}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                            >
-                        </TextField>
+                        <Grid container spacing={2}>
+                            <Grid xs={6} sm={6} md={6}>
 
-                        <Typography variant='h5' className='add-page-label'>Nivel</Typography>
-                        <TextField
-                            id="id-row"
-                            variant="standard"
-                            value={row}
-                            onChange={(event) => {
-                                setRow(event.target.value);
-                            }}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                            >
-                        </TextField>
+                                <Typography variant='h5' className='add-page-label'>Columna</Typography>
+                                <TextField
+                                    id="id-col"
+                                    variant="standard"
+                                    value={col}
+                                    onChange={(e) => {
+                                        setCol(e.target.value);
+                                    }}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    className='add-page-input'
+                                    >
+                                </TextField>
+
+                            </Grid>
+
+                            <Grid xs={6} sm={6} md={6}>
+
+                                <Typography variant='h5' className='add-page-label'>Nivel</Typography>
+                                <TextField
+                                    id="id-row"
+                                    variant="standard"
+                                    value={row}
+                                    onChange={(e) => {
+                                        setRow(e.target.value);
+                                    }}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    className='add-page-input'
+                                    >
+                                </TextField>
+
+                            </Grid>
+                        </Grid>
+
+                        <FormControl variant="standard" fullWidth margin='dense'>
+                            <InputLabel htmlFor="pallet-code">Ubicación</InputLabel>
+                            <Input
+                                id="pallet-code"
+                                value={value}
+                                error={error}
+                                autoFocus
+                                onChange={(e) => {
+                                    handleChange(e);
+                                }}
+                                inputComponent={PalletMask}
+                            />
+                            <FormHelperText>
+                                {
+                                    error ? 
+                                        !validPallet ? 
+                                            "Código no válido" 
+                                        : !validDeposit ? 
+                                            "El depósito no coincide con tu depósito actual"
+                                        : !validZone ?
+                                            "La zona no coincide con tu zona actual"
+                                        : !validPalletLength ? 
+                                            "El código es demasiado corto"
+                                        :""
+                                    : ""
+                                }
+                            </FormHelperText>
+                        </FormControl>
 
                     </div>
                 </CardContent>
-                <CardActions>
 
-                    <Button
-                        variant="contained" 
-                        size="medium"
-                        className='add-page-button' 
-                        disableElevation
-                        onClick={(e) => {
-                            locatePallet(e)
-                        }}
-                    >
-                        Ubicar
-                    </Button>
-                    
-                </CardActions>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
 
                     <DialogTitle>Cambiar Ubicación</DialogTitle>
