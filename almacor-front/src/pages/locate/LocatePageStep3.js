@@ -69,8 +69,6 @@ function LocatePageStep3() {
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
 
-    const [locationChecked, setLocationChecked] = useState(false);
-
     useEffect(() => {
         const generateLocation = async () => {
 
@@ -122,13 +120,12 @@ function LocatePageStep3() {
             })
             const data = await res.json();
             if (data.status === "Esta posicion se encuentra vacia") {
-                setLocationChecked(true);
                 handleOpenAlert("Ubicación disponible", "success");
+                handleOpenDialog();
             } else {
-                setLocationChecked(false);
                 handleOpenAlert("Ubicación mo disponible", "error");
             }
-            console.log(data); 
+            console.log(data);
         }
     };
 
@@ -173,6 +170,12 @@ function LocatePageStep3() {
     const [openAlert, setOpenAlert] = useState(false);
     const [alertType, setAlertType] = useState("")
     const [alert, setAlert] = useState("");
+    const [state, setState] = useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'center',
+    });
+    const { vertical, horizontal, open } = state;
 
     const handleOpenDialog = () => {
         setValue("");
@@ -430,8 +433,17 @@ function LocatePageStep3() {
                 
             </Card>
 
-            <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                <Alert onClose={handleCloseAlert} severity={alertType} sx={{ width: '100%' }}>
+            <Snackbar 
+                open={openAlert}
+                autoHideDuration={6000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical, horizontal }}
+            >
+                <Alert 
+                    onClose={handleCloseAlert} 
+                    severity={alertType} 
+                    sx={{ width: '100%' }}
+                >
                     {alert}
                 </Alert>
             </Snackbar>
