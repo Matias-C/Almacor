@@ -23,16 +23,16 @@
 .main-page-buttons-cont {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 
     border-radius: 12px;
 
-    margin-top: 15px;
+    margin-top: 12px;
     max-height: 100%;
     
     overflow: auto;
 }
 
 .main-page-deposit-button {
-    padding: 12px !important;
+    padding: 10px !important;
 }

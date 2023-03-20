@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
@@ -14,8 +14,16 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
+import ContextConnected from '../../context/ContextConnected';
 
 import "./RemovePage.css"
 
@@ -29,9 +37,9 @@ const PalletMask = React.forwardRef(function PalletMask(props, ref) {
     return (
         <IMaskInput
             {...other}
-            mask="##00000000"
+            mask="##0000000000"
             definitions={{
-                '#': /[a-z A-Z]/,
+                '#': /[A-Z]/,
             }}
             inputRef={ref}
             onAccept={(value) => onChange({ target: { value } })}
@@ -46,13 +54,15 @@ PalletMask.propTypes = {
 
 function RemovePage() {
 
+    const Connected = useContext(ContextConnected);
+
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [type, setType] = useState("");
-    const [validPallet, setValidPallet] = useState(false);
-    const [validPalletLength, setValidLength] = useState(false);
+    const [message, setMessage] = useState("")
 
     const [value, setValue] = useState("");
+    const [numero, setNumero] = useState("");
     
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -60,21 +70,41 @@ function RemovePage() {
         if (e.target.value.substr(0,2) === "PL" || e.target.value.substr(0,2) === "UB") {
             if (e.target.value.substr(0,2) === "PL") {
                 setType("PL");
+                
+                if (e.target.value.length > 9) {
+                    setError(false);
+                    setDisabled(false);
+
+                    if (e.target.value.length > 10) {
+                        setMessage("El código es demasiado largo")
+                        setError(true);
+                        setDisabled(true);
+                    } else {
+                        setError(false);
+                        setDisabled(false);
+                    }
+                    
+                } else {
+                    setMessage("El código es demasiado corto")
+                    setDisabled(true);
+                    setError(true);
+                }
+
             } else if (e.target.value.substr(0,2) === "UB") {
                 setType("UB");
+                
+                if (e.target.value.length > 11) {
+                    setError(false);
+                    setDisabled(false);
+                } else {
+                    setMessage("El código es demasiado corto")
+                    setDisabled(true);
+                    setError(true);
+                }
             }
-            setValidPallet(true);
-            if (e.target.value.length > 9) {
-                setValidLength(true);
-                setError(false);
-                setDisabled(false);
-            } else {
-                setValidLength(false);
-                setDisabled(true);
-                setError(true);
-            }
+
         } else {
-            setValidPallet(false)
+            setMessage("El código no es válido")
             setDisabled(true);
             setError(true);
         };
@@ -83,9 +113,23 @@ function RemovePage() {
 
     };
 
+    const [openDialog, setOpenDialog] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertType, setAlertType] = useState("")
     const [alert, setAlert] = useState("");
+    const state = {
+        vertical: 'top',
+        horizontal: 'center',
+    };
+    const { vertical, horizontal } = state;
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
 
     const handleOpenAlert = (alert, type) => {
         setAlertType(type);
@@ -102,12 +146,13 @@ function RemovePage() {
 
     const removePallet = async (e) => {
         e.preventDefault();
+
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
             var formdata = new FormData();
 
-            const response = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -120,10 +165,31 @@ function RemovePage() {
         }
     };
 
+    const removeLocation = async (e) => {
+        e.preventDefault();
+
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+
+            var formdata = new FormData();
+
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${numero}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+                body: formdata
+            })
+            const data = await response.json();
+            data.succes && handleOpenAlert("Ubicación desocupada correctamente", "success");
+            console.log(data);
+        }
+    };
+
     const getPallet = async (e) => {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-          const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${value}`, {
+          const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -132,8 +198,31 @@ function RemovePage() {
             });
             const data = await res.json();
             data.error && handleOpenAlert("Este pallet no existe", "error");
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no fue ubicado", "error");
-            data.status === "El Pallet ingresado se encuentra en una ubicacion" && removePallet(e);
+            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no se encuentra ubicado", "error");
+            data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenDialog();
+            console.log(data);
+        }
+    };
+
+    const locationData = (data) => {
+        setNumero(data);
+        handleOpenDialog();
+    }
+
+    const getLocation = async (e) => {
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+          const res = await fetch(`${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${value}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token.access_token}`
+            },
+            });
+            const data = await res.json();
+            data.error && handleOpenAlert("Esta ubicación no existe", "error");
+            data.status === "Esta posicion se encuentra vacia" && handleOpenAlert("Esta ubicación se encuentra vacía", "error");
+            data[0].numero !== null && locationData(data[0].numero);
             console.log(data);
         }
     };
@@ -164,11 +253,7 @@ function RemovePage() {
                         />
                         <FormHelperText>
                             {
-                                error ? 
-                                    !validPallet ? "El código no es valido" : 
-                                        !validPalletLength ? "El código es demasiado corto" 
-                                    : "" 
-                                : ""
+                                error ? message: ""
                             }
                         </FormHelperText>
                     </FormControl>
@@ -183,8 +268,8 @@ function RemovePage() {
                         disableElevation
                         className='add-page-button'
                         onClick={(e) => {
-                                getPallet(e);
-                            }}
+                            type === "PL" ? getPallet(e) : type === "UB" && getLocation(e);
+                        }}
                     >
                         Remover
                     </Button>
@@ -192,8 +277,51 @@ function RemovePage() {
                 </CardActions>
             </Card>
 
-            <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert}>
-                <Alert onClose={handleCloseAlert} severity={alertType} sx={{ width: '100%' }}>
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+
+                <DialogTitle>Remover</DialogTitle>
+                <DialogContent>
+
+                    <DialogContentText>
+                        Estás por {type === "PL" ? "remover un pallet" : type === "UB" && "desocupar una ubicación"}, estás seguro?
+                    </DialogContentText>
+
+                </DialogContent>
+
+                <DialogActions>
+                    <Button
+                        disabled={disabled}
+                        className='add-page-button' 
+                        onClick={(e) => {
+                            type === "PL" ? removePallet(e) : type === "UB" && removeLocation(e);
+                            handleCloseDialog();
+                        }}
+                    >
+                        Aceptar
+                    </Button>
+                    <Button 
+                        variant="outlined" 
+                        className='add-page-button' 
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        Cancelar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Snackbar 
+                open={openAlert} 
+                autoHideDuration={4000} 
+                onClose={handleCloseAlert} 
+                anchorOrigin={{ vertical, horizontal }}
+            >
+                <Alert 
+                    onClose={handleCloseAlert} 
+                    severity={alertType} 
+                    sx={{ width: '100%' }}
+                >
                     {alert}
                 </Alert>
             </Snackbar>

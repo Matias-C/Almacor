@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Grid from '@mui/material/Grid';
 import { Typography } from '@mui/material';
 
 import OrderButton from "../../components/orders/OrderButton";
 
+import ContextConnected from '../../context/ContextConnected';
+
 import "./OrdersDisplay.css"
 
 function OrdersDisplay() {
+
+    const Connected = useContext(ContextConnected);
 
     const [orders, setOrders] = useState([]);
 
@@ -15,7 +19,7 @@ function OrdersDisplay() {
         const getOrders = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
-            const res = await fetch("https://apicd.almacorweb.com/api/v1/deposito/ordenpartidascb/", {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/ordenpartidascb/`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",

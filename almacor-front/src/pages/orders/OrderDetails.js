@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom'; 
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -6,10 +6,13 @@ import { Typography } from '@mui/material';
 
 import OrderCard from '../../components/orders/OrderCard';
 
+import ContextConnected from '../../context/ContextConnected';
+
 import "./OrderDetails.css"
 
 function OrderDetails() {
 
+    const Connected = useContext(ContextConnected)
     const location = useLocation();
 
     const [details, setDetails] = useState([]);
@@ -18,7 +21,7 @@ function OrderDetails() {
         const getDetails = async () => {
             const token = await JSON.parse(localStorage.getItem("token"));
             if (token) {
-                const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ordenpartidasdt/?id_orden_carga=${location.state.n_id_orden_de_carga}`, {
+                const res = await fetch(`${Connected.currentURL}api/v1/deposito/ordenpartidasdt/?id_orden_carga=${location.state.n_id_orden_de_carga}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,7 +70,6 @@ function OrderDetails() {
                                     orderCol={filteredDetail.ubicacion.columna}
                                     orderRow={filteredDetail.ubicacion.fila}
                                     orderDespacho={filteredDetail.b_quitado}
-                                    setDetails={setDetails}
                                 />
 
                             );

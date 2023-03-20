@@ -47,7 +47,7 @@ const theme = createTheme({
   typography: {
     h1: {
       fontWeight: 700,
-      fontSize: 36,
+      fontSize: 32,
       lineHeight: 1.2,
     },
     h2: {
@@ -81,6 +81,11 @@ const theme = createTheme({
 });
 
 function App() {
+
+  const testingURL = "https://apicdtesting.almacorweb.com/";
+  const productionURL = "https://apicd.almacorweb.com/";
+
+  const currentURL = productionURL;
   
   const [userInfo, setUserInfo] = useState(null);
 
@@ -127,7 +132,7 @@ function App() {
       const token = await JSON.parse(localStorage.getItem("token"));
       if (token) {
         const res = await fetch(
-          "https://apicd.almacorweb.com/api/v1/auth/user/",
+          `${currentURL}api/v1/auth/user/`,
           {
             method: "GET",
             headers: {
@@ -197,6 +202,9 @@ function App() {
     <>
       <ContextConnected.Provider
         value={{
+          currentURL,
+          productionURL,
+
           userInfo,
           setUserInfo,
 
