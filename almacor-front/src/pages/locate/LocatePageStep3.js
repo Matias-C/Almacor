@@ -111,7 +111,7 @@ function LocatePageStep3() {
         handleOpenAlert("Pallet ubicado correctamente", "success");
         setTimeout(() => {
             navigate(-2);
-        }, 2500)
+        }, 1000)
     }
     const locatePallet = async () => {
 

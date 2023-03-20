@@ -152,6 +152,7 @@ function LocatePageStep1() {
                             value={value}
                             error={error}
                             onChange={handleChange}
+                            autoFocus
                             onKeyDown={(e) => {
                                 handleKeyDown(e)
                             }}

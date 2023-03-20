@@ -249,6 +249,7 @@ function RemovePage() {
                             value={value}
                             error={error}
                             onChange={handleChange}
+                            autoFocus
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
