@@ -59,7 +59,7 @@ function OrderCard(props) {
                 body: formdata
             })
 
-            await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -67,7 +67,9 @@ function OrderCard(props) {
             })
 
             const newDetail = await result.json();
-            console.log(newDetail);
+            const data = await response.json();
+            data && refreshPage();
+            console.log(data);
         }
     };
 
@@ -164,7 +166,6 @@ function OrderCard(props) {
                         onClick={(e) => {
                             sendRemoved(e);
                             handleClose();
-                            refreshPage();
                         }}
                     >
                         Aceptar
