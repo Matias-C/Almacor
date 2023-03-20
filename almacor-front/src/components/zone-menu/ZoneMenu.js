@@ -24,11 +24,9 @@ function ZoneMenu() {
     const [page, setPage] = useState("orders")
     
     return (
-
         <>
-
           <PageContainer>
-
+          
             <div className='zone-menu-cont'>
 
               <div className={Connected.openSideBar ? 'zone-menu-side-bar open' : "zone-menu-side-bar"}>
@@ -109,11 +107,8 @@ function ZoneMenu() {
 
             </div>
 
-
           </PageContainer>
-
         </>
-
     );
 }
 

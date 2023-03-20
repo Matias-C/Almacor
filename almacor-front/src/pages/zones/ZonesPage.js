@@ -23,7 +23,7 @@ function ZonesPage() {
         const getZones = async () => {
             const token = await JSON.parse(localStorage.getItem("token"));
             if (token) {
-                const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/zonas/?id_numero_deposito=${location.state.n_id_deposito}&id_numero_empresa=${Connected.userInfo.n_id_empresa}`, {
+                const res = await fetch(`${Connected.currentURL}api/v1/deposito/zonas/?id_numero_deposito=${location.state.n_id_deposito}&id_numero_empresa=${Connected.userInfo.n_id_empresa}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -51,7 +51,7 @@ function ZonesPage() {
 
                     <Paper variant='outlined' className="zones-page-card">
 
-                        <Typography variant="h2">Zonas disponibles</Typography>
+                        <Typography variant="h3">Zonas disponibles</Typography>
                         <hr className="bold-separator"></hr>
                         <div className='zones-page-buttons-cont'>
                             {

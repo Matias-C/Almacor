@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
@@ -18,9 +18,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Divider from '@mui/material/Divider';
 
+import ContextConnected from '../../context/ContextConnected';
+
 import "./OrderCard.css"
 
 function OrderCard(props) {
+
+    const Connected = useContext(ContextConnected);
 
     const [open, setOpen] = useState(false);
 
@@ -47,7 +51,7 @@ function OrderCard(props) {
             var formdata = new FormData();
             formdata.append("b_quitado", b_quitado);
 
-            const result = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`, {
+            const result = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -55,7 +59,7 @@ function OrderCard(props) {
                 body: formdata
             })
 
-            const response = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -63,9 +67,9 @@ function OrderCard(props) {
             })
 
             const newDetail = await result.json();
-            props.setDetails(oldDetail => [...oldDetail, newDetail])
-
-            console.log(newDetail);
+            const data = await response.json();
+            data && refreshPage();
+            console.log(data);
         }
     };
 
@@ -161,7 +165,7 @@ function OrderCard(props) {
                         className='order-card-button'
                         onClick={(e) => {
                             sendRemoved(e);
-                            handleClose()
+                            handleClose();
                         }}
                     >
                         Aceptar

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
@@ -11,8 +11,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import ContextConnected from '../../context/ContextConnected';
+
+import "./LocatePage.css";
+
 function LocatePageStep2() {
 
+    const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -38,7 +43,7 @@ function LocatePageStep2() {
         const getPallet = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${location.state}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${location.state}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -71,7 +76,7 @@ function LocatePageStep2() {
             formdata.append("n_tipoaltura", n_tipoaltura);
             formdata.append("n_nivelrotacion", n_nivelrotacion);
 
-            await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/${pallet.n_id_partida}`, {
+            await fetch(`${Connected.currentURL}api/v1/deposito/partidas/${pallet.n_id_partida}`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -84,8 +89,6 @@ function LocatePageStep2() {
 
     useEffect(() => {
         const keyDownHandler = (e) => {
-            console.log('User pressed: ', e.key);
-    
             if (e.key === 'Enter') {
                 e.preventDefault();
 

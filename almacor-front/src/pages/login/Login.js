@@ -58,7 +58,7 @@ function Login() {
 
         if(password !== "" && username !== "") {
 
-            const response = await fetch("https://apicd.almacorweb.com/api/v1/auth/login/", {
+            const response = await fetch(`${Connected.currentURL}api/v1/auth/login/`, {
                 method: "POST",
                 body: JSON.stringify({ username: username, password: password}),
                 headers: {

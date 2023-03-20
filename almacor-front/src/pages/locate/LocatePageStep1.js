@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -17,6 +17,8 @@ import InputLabel from '@mui/material/InputLabel';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
+import ContextConnected from '../../context/ContextConnected';
 
 import "./LocatePage.css"
 
@@ -47,6 +49,7 @@ PalletMask.propTypes = {
 
 function LocatePageStep1() {
 
+    const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
     const [error, setError] = useState(false);
@@ -67,6 +70,7 @@ function LocatePageStep1() {
                 setDisabled(false);
                 setError(false);
                 if (e.target.value.length === 10) {
+                    setValue(e.target.value);
                     checkPallet(e.target.value);
                 } else {
                     return null;
@@ -86,7 +90,7 @@ function LocatePageStep1() {
     const checkPallet = async (url) => {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/partidas/?numero=${url}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${url}`, {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json",
@@ -97,11 +101,16 @@ function LocatePageStep1() {
             data.error && handleOpenAlert("Este pallet no existe");
             data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(url, {state: url}) :
             data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado");
-            console.log(data);
+            console.log(data, url);
             }
     };
 
     const [openAlert, setOpenAlert] = useState(false);
+    const state = {
+        vertical: 'top',
+        horizontal: 'center',
+    };
+    const { vertical, horizontal } = state;
 
     const handleOpenAlert = (error) => {
         setErrorAlert(error)
@@ -117,8 +126,7 @@ function LocatePageStep1() {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-        checkPallet();
-          console.log('do validate');
+            checkPallet(value);
         }
     }
 
@@ -144,6 +152,7 @@ function LocatePageStep1() {
                             value={value}
                             error={error}
                             onChange={handleChange}
+                            autoFocus
                             onKeyDown={(e) => {
                                 handleKeyDown(e)
                             }}
@@ -170,7 +179,7 @@ function LocatePageStep1() {
                         disableElevation
                         className='add-page-button' 
                         onClick={() => {
-                            checkPallet()
+                            checkPallet(value);
                         }}
                     >
                         Siguiente
@@ -179,8 +188,17 @@ function LocatePageStep1() {
                 </CardActions>
             </Card>
 
-            <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert}>
-                <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+            <Snackbar 
+                open={openAlert} 
+                autoHideDuration={4000} 
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical, horizontal }}
+            >
+                <Alert 
+                    onClose={handleCloseAlert} 
+                    severity="error" 
+                    sx={{ width: '100%' }}
+                >
                     {errorAlert}
                 </Alert>
             </Snackbar>

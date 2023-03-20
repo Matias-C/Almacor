@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
@@ -8,7 +8,6 @@ import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -62,9 +61,12 @@ function LocatePageStep3() {
 
     const Connected = useContext(ContextConnected);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const deposit = parseInt(Connected.currentDepositId);
     const zone = parseInt(Connected.currentZoneId);
+    const weight = location.state.n_tipopeso;
+    const height = location.state.n_tipoaltura;
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
@@ -78,8 +80,8 @@ function LocatePageStep3() {
                 const id_empresa = Connected.userInfo.n_id_empresa;
                 const id_deposito = deposit;
                 const id_zona = zone;
-                const tipo_peso = location.state.n_tipopeso;
-                const tipo_altura = location.state.n_tipoaltura;
+                const tipo_peso = weight;
+                const tipo_altura = height;
 
                 var formdata = new FormData();
                 formdata.append("id_empresa", id_empresa);
@@ -88,7 +90,7 @@ function LocatePageStep3() {
                 formdata.append("tipo_peso", tipo_peso);
                 formdata.append("tipo_altura", tipo_altura);
 
-                const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/generar_ubic_pallet/", {
+                const response = await fetch(`${Connected.currentURL}api/v1/deposito/generar_ubic_pallet/`, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${token.access_token}`
@@ -100,37 +102,18 @@ function LocatePageStep3() {
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
                 console.log(data);
-
             }
         };
         generateLocation();
     }, [Connected.userInfo]);
 
-    const checkLocation = async (location) => {
-
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-            
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/ubic_pallet/?ubic=${location}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token.access_token}`
-                },
-            })
-            const data = await res.json();
-            if (data.status === "Esta posicion se encuentra vacia") {
-                handleOpenAlert("Ubicación disponible", "success");
-                handleOpenDialog();
-            } else {
-                handleOpenAlert("Ubicación mo disponible", "error");
-            }
-            console.log(data);
-        }
-    };
-
-    const locatePallet = async (e) => {
-        e.preventDefault();
+    const locate = () => {
+        handleOpenAlert("Pallet ubicado correctamente", "success");
+        setTimeout(() => {
+            navigate(-2);
+        }, 1000)
+    }
+    const locatePallet = async () => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
@@ -152,7 +135,7 @@ function LocatePageStep3() {
             formdata.append("id_fila", id_fila);
             formdata.append("id_partida", id_partida);
 
-            const response = await fetch("https://apicd.almacorweb.com/api/v1/deposito/ubicar_pallet_en_posicion/", {
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/ubicar_pallet_en_posicion/`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
@@ -160,9 +143,42 @@ function LocatePageStep3() {
                 body: formdata
             })
             const data = await response.json();
-            data.success && handleOpenAlert("Pallet ubicado correctamente", "success");
+            data.success && locate();
             console.log(data);
 
+        }
+    };
+
+    const checkLocation = async (location) => {
+
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+            
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${location}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+            })
+            const data = await res.json();
+            if (data.status === "Esta posicion se encuentra vacia") {
+
+                const newHall = parseInt(location.substr(6,2));
+                const newCol = parseInt(location.substr(8,2));
+                const newRow = parseInt(location.substr(10,2));
+
+                if (newHall === hall && newCol === col && newRow === row) {
+                    locatePallet();
+                } else {
+                    handleOpenAlert("La ubicación no coincide", "warning")
+                    handleOpenDialog();
+                }
+
+            } else {
+                handleOpenAlert("Ubicación no disponible", "error");
+            }
+            console.log(data);
         }
     };
 
@@ -170,16 +186,13 @@ function LocatePageStep3() {
     const [openAlert, setOpenAlert] = useState(false);
     const [alertType, setAlertType] = useState("")
     const [alert, setAlert] = useState("");
-    const [state, setState] = useState({
-        open: false,
+    const state = {
         vertical: 'top',
         horizontal: 'center',
-    });
-    const { vertical, horizontal, open } = state;
+    };
+    const { vertical, horizontal } = state;
 
     const handleOpenDialog = () => {
-        setValue("");
-        setError(false);
         setOpenDialog(true);
     };
 
@@ -253,7 +266,6 @@ function LocatePageStep3() {
             setDisabled(true);
             setError(true);
         };
-
     };
 
     return(
@@ -360,82 +372,55 @@ function LocatePageStep3() {
 
                     </div>
                 </CardContent>
-
-                <Dialog open={openDialog} onClose={handleCloseDialog}>
-
-                    <DialogTitle>Cambiar Ubicación</DialogTitle>
-                    <DialogContent>
-
-                        <DialogContentText>
-                            Para cambiar la ubicación podés ingresar un código, o cambiar los valores a mano.
-                        </DialogContentText>
-
-                        <FormControl variant="standard" fullWidth margin='dense'>
-                            <InputLabel htmlFor="pallet-code">Código</InputLabel>
-                            <Input
-                                id="pallet-code"
-                                value={value}
-                                error={error}
-                                autoFocus
-                                onChange={handleChange}
-                                inputComponent={PalletMask}
-                            />
-                            <FormHelperText>
-                                {
-                                    error ? 
-                                        !validPallet ? 
-                                            "Código no válido" 
-                                        : !validDeposit ? 
-                                            "El depósito no coincide con tu depósito actual"
-                                        : !validZone ?
-                                            "La zona no coincide con tu zona actual"
-                                        : !validPalletLength ? 
-                                            "El código es demasiado corto"
-                                        :""
-                                    : ""
-                                }
-                            </FormHelperText>
-                        </FormControl>
-                    </DialogContent>
-
-                    <DialogActions>
-                        <Button
-                            disabled={disabled}
-                            className='add-page-button' 
-                            onClick={(e) => {
-
-                                const newHall = parseInt(value.substr(6,2));
-                                const newCol = parseInt(value.substr(8,2));
-                                const newRow = parseInt(value.substr(10,2));
-
-                                setHall(newHall);
-                                setCol(newCol);
-                                setRow(newRow);
-
-                                checkLocation(e)
-
-                                handleCloseDialog();
-                            }}
-                        >
-                            Aceptar
-                        </Button>
-                        <Button 
-                            variant="outlined" 
-                            className='add-page-button' 
-                            onClick={(e) => {
-                                handleCloseDialog();
-                            }}
-                        >
-                            Cancelar
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                
             </Card>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+
+                <DialogTitle>La ubicación no coincide</DialogTitle>
+                <DialogContent>
+
+                    <DialogContentText>
+                        Estás ubicando el pallet en una ubicación distinta a la recomendada, estás seguro?
+                    </DialogContentText>
+
+                </DialogContent>
+
+                <DialogActions>
+                    <Button
+                        disabled={disabled}
+                        className='add-page-button' 
+                        onClick={() => {
+
+                            const newHall = parseInt(value.substr(6,2));
+                            const newCol = parseInt(value.substr(8,2));
+                            const newRow = parseInt(value.substr(10,2));
+
+                            setHall(newHall);
+                            setCol(newCol);
+                            setRow(newRow);
+
+                            locatePallet();
+
+                            handleCloseDialog();
+                        }}
+                    >
+                        Aceptar
+                    </Button>
+                    <Button 
+                        variant="outlined" 
+                        className='add-page-button' 
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        Cancelar
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             <Snackbar 
                 open={openAlert}
-                autoHideDuration={6000}
+                autoHideDuration={4000}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >

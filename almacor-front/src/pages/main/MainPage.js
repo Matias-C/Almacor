@@ -15,13 +15,13 @@ function ZonesPage(props) {
     const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
-    const [deposits, setDeposits] = useState([]);
+    const [deposits, setDeposits] = useState(null);
 
     useEffect(() => {
         const getDeposits = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
-            const res = await fetch(`https://apicd.almacorweb.com/api/v1/deposito/depositos/?id_empresa=${Connected.userInfo.n_id_empresa}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/depositos/?id_empresa=${Connected.userInfo.n_id_empresa}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function ZonesPage(props) {
         getDeposits();
     }, [Connected.userInfo]);
 
-    if (Connected.userInfo === null) {
+    if (deposits === null) {
         return null;
     } else {
 
@@ -50,7 +50,7 @@ function ZonesPage(props) {
 
                     <Paper variant='outlined' className="main-page-card">
                     
-                        <Typography variant="h2">Tus depósitos</Typography>
+                        <Typography variant="h3">Tus depósitos</Typography>
                         <hr className="bold-separator"></hr>
 
                         <div className="main-page-buttons-cont">
