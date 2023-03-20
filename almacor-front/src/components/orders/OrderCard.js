@@ -59,7 +59,7 @@ function OrderCard(props) {
                 body: formdata
             })
 
-            const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
+            await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token.access_token}`
