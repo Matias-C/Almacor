@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -26,6 +24,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
+import PalletDetails from '../../components/pallet-details/PalletDetails';
 
 import ContextConnected from '../../context/ContextConnected';
 
@@ -284,93 +284,43 @@ function LocatePageStep3() {
                     <Typography variant='h4'>Ubicación</Typography>
                     <hr className='separator' />
 
-                    <div className='add-page-inputs-cont'>
+                    <PalletDetails 
+                        hall={hall}
+                        col={col}
+                        row={row}
+                    />
 
-                        <Typography variant='h5' className='add-page-label'>Pasillo</Typography>
+                    <Typography variant='h5' className='step-three add-page-label'>Ingrese una ubicación para confirmar</Typography>
+
+                    <FormControl variant="outlined" fullWidth margin='dense'>
                         <TextField
-                            id="id-hall"
-                            variant="standard"
-                            value={hall}
+                            id="pallet-code"
+                            size="small"
+                            label="Ubicación"
+                            value={value}
+                            error={error}
+                            autoFocus
                             onChange={(e) => {
-                                setHall(e.target.value);
+                                handleChange(e);
                             }}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                            >
-                        </TextField>
-
-                        <Grid container spacing={2}>
-                            <Grid xs={6} sm={6} md={6}>
-
-                                <Typography variant='h5' className='add-page-label'>Columna</Typography>
-                                <TextField
-                                    id="id-col"
-                                    variant="standard"
-                                    value={col}
-                                    onChange={(e) => {
-                                        setCol(e.target.value);
-                                    }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    className='add-page-input'
-                                    >
-                                </TextField>
-
-                            </Grid>
-
-                            <Grid xs={6} sm={6} md={6}>
-
-                                <Typography variant='h5' className='add-page-label'>Nivel</Typography>
-                                <TextField
-                                    id="id-row"
-                                    variant="standard"
-                                    value={row}
-                                    onChange={(e) => {
-                                        setRow(e.target.value);
-                                    }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    className='add-page-input'
-                                    >
-                                </TextField>
-
-                            </Grid>
-                        </Grid>
-
-                        <FormControl variant="standard" fullWidth margin='dense'>
-                            <InputLabel htmlFor="pallet-code">Ubicación</InputLabel>
-                            <Input
-                                id="pallet-code"
-                                value={value}
-                                error={error}
-                                autoFocus
-                                onChange={(e) => {
-                                    handleChange(e);
-                                }}
-                                inputComponent={PalletMask}
-                            />
-                            <FormHelperText>
-                                {
-                                    error ? 
-                                        !validPallet ? 
-                                            "Código no válido" 
-                                        : !validDeposit ? 
-                                            "El depósito no coincide con tu depósito actual"
-                                        : !validZone ?
-                                            "La zona no coincide con tu zona actual"
-                                        : !validPalletLength ? 
-                                            "El código es demasiado corto"
-                                        :""
-                                    : ""
-                                }
-                            </FormHelperText>
-                        </FormControl>
-
-                    </div>
+                            inputComponent={PalletMask}
+                        />
+                        <FormHelperText>
+                            {
+                                error ? 
+                                    !validPallet ? 
+                                        "Código no válido" 
+                                    : !validDeposit ? 
+                                        "El depósito no coincide con tu depósito actual"
+                                    : !validZone ?
+                                        "La zona no coincide con tu zona actual"
+                                    : !validPalletLength ? 
+                                        "El código es demasiado corto"
+                                    :""
+                                : ""
+                            }
+                        </FormHelperText>
+                    </FormControl>
                 </CardContent>
             </Card>
 

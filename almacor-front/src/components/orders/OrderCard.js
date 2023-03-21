@@ -16,7 +16,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import Divider from '@mui/material/Divider';
+import PalletDetails from '../pallet-details/PalletDetails';
 
 import ContextConnected from '../../context/ContextConnected';
 
@@ -75,13 +75,13 @@ function OrderCard(props) {
 
     return(
 
-        <Grid xs={12} sm={6} md={3}>
+        <Grid xs={12} sm={6} md={4} lg={3}>
 
             <Card variant='outlined' className={props.orderDespacho ? "despachado" : "no-despachado"}>
 
                 <CardContent>
 
-                    <Typography variant='h4' className='order-card-header'>Contenedor: <span className='number'>{props.orderConteiner}</span></Typography>
+                    <Typography variant='h4' className='order-card-header'>PL{props.orderConteiner}</Typography>
                     <hr className='separator' />
 
                     <div className='order-card-table-cont'>
@@ -91,29 +91,14 @@ function OrderCard(props) {
                             <Typography variant='body' className='number'>{props.orderRemito}</Typography>
 
                         </div>
-                        <Divider />
-                        <div className='order-card-table-item'>
-
-                            <Typography variant='body' className='order-card-item'>Pasillo</Typography>
-                            <Typography variant='body' className='number'>{props.orderHall}</Typography>
-
-                        </div>
-                        <Divider />
-                        <div className='order-card-table-item'>
-
-                            <Typography variant='body' className='order-card-item'>Columna</Typography>
-                            <Typography variant='body' className='number'>{props.orderCol}</Typography>
-
-                        </div>
-                        <Divider />
-                        <div className='order-card-table-item'>
-
-                            <Typography variant='body'>Nivel</Typography>
-                            <Typography variant='body' className='number'>{props.orderRow}</Typography>
-
-                        </div>
 
                     </div>
+
+                    <PalletDetails 
+                        hall={props.orderHall}
+                        col={props.orderCol}
+                        row={props.orderRow}
+                    />
 
                 </CardContent>
 

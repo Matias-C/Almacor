@@ -89,9 +89,9 @@ function OrderDetails() {
                                     orderRemito={filteredDetail.c_remito}
                                     orderDeposit={filteredDetail.ubicacion.deposito}
                                     orderZone={filteredDetail.ubicacion.zona}
-                                    orderHall={filteredDetail.ubicacion.c_pasillo}
-                                    orderCol={filteredDetail.ubicacion.columna}
-                                    orderRow={filteredDetail.ubicacion.fila}
+                                    orderHall="-"
+                                    orderCol="-"
+                                    orderRow="-"
                                     orderDespacho={filteredDetail.b_quitado}
                                 />
 

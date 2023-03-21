@@ -15,6 +15,10 @@
     margin-top: 5px !important;
 }
 
+.step-three.add-page-label {
+    margin: 15px 0 5px 0 !important;
+}
+
 .add-page-inputs-cont{
     display: flex;
     flex-direction: column;
@@ -22,7 +26,12 @@
 }
 
 .add-page-input {
+    border-radius: 8px !important;
     width: 100%;
+}
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    border-radius: 8px !important;
 }
 
 .add-page-button {
