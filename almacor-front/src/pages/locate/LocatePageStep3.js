@@ -66,6 +66,8 @@ function LocatePageStep3() {
     const zone = parseInt(Connected.currentZoneId);
     const weight = location.state.n_tipopeso;
     const height = location.state.n_tipoaltura;
+    const [ub, setUb] = useState("")
+    const [idHall, setIdHall] = useState("")
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
@@ -97,6 +99,8 @@ function LocatePageStep3() {
                     body: formdata
                 })
                 const data = await response.json();
+                setUb(data.UB)
+                setIdHall(data.n_id_pasillo)
                 setHall(data.c_pasillo);
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
@@ -120,7 +124,7 @@ function LocatePageStep3() {
             const id_empresa = Connected.userInfo.n_id_empresa;
             const id_deposito = deposit;
             const id_zona = zone;
-            const id_pasillo = hall;
+            const id_pasillo = idHall;
             const id_columna = col;
             const id_fila = row;
             const id_partida = location.state.n_id_partida;
@@ -163,11 +167,7 @@ function LocatePageStep3() {
             const data = await res.json();
             if (data.status === "Esta posicion se encuentra vacia") {
 
-                const newHall = parseInt(location.substr(6,2));
-                const newCol = parseInt(location.substr(8,2));
-                const newRow = parseInt(location.substr(10,2));
-
-                if (newHall === hall && newCol === col && newRow === row) {
+                if (location === ub) {
                     locatePallet();
                 } else {
                     handleOpenAlert("La ubicación no coincide", "warning")
