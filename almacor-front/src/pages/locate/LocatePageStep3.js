@@ -9,11 +9,10 @@ import CardContent from '@mui/material/CardContent';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
 import Dialog from '@mui/material/Dialog';
@@ -98,7 +97,7 @@ function LocatePageStep3() {
                     body: formdata
                 })
                 const data = await response.json();
-                setHall(data.n_id_pasillo);
+                setHall(data.c_pasillo);
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
                 console.log(data);
@@ -281,7 +280,7 @@ function LocatePageStep3() {
             <Card variant="outlined" className='add-page-card'>
                 <CardContent>
 
-                    <Typography variant='h4'>Ubicación</Typography>
+                    <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Ubicación</span></Typography>
                     <hr className='separator' />
 
                     <PalletDetails 
@@ -292,10 +291,10 @@ function LocatePageStep3() {
 
                     <Typography variant='h5' className='step-three add-page-label'>Ingrese una ubicación para confirmar</Typography>
 
-                    <FormControl variant="outlined" fullWidth margin='dense'>
-                        <TextField
+                    <FormControl variant="outlined" size='small' fullWidth margin='dense'>
+                        <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
+                        <OutlinedInput
                             id="pallet-code"
-                            size="small"
                             label="Ubicación"
                             value={value}
                             error={error}
@@ -307,10 +306,12 @@ function LocatePageStep3() {
                         />
                         <FormHelperText>
                             {
-                                error ? 
-                                    !validPallet ? 
+                                value === "" ?
+                                     "" 
+                                : error ?
+                                    !validPallet ?
                                         "Código no válido" 
-                                    : !validDeposit ? 
+                                    : !validDeposit ?
                                         "El depósito no coincide con tu depósito actual"
                                     : !validZone ?
                                         "La zona no coincide con tu zona actual"

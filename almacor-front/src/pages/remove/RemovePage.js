@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
 import Dialog from '@mui/material/Dialog';
@@ -242,19 +243,23 @@ function RemovePage() {
                 <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                    <FormControl variant="standard" className="remove-page-input">
+                    <FormControl size="small" error={value === "" ? false : error} className="remove-page-input" margin='dense'>
                         <InputLabel htmlFor="pallet-code">Código</InputLabel>
-                        <Input
+                        <OutlinedInput
                             id="pallet-code"
+                            label="Código"
                             value={value}
-                            error={error}
                             onChange={handleChange}
                             autoFocus
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
                             {
-                                error ? message: ""
+                                value === "" ? 
+                                    ""
+                                : error ? 
+                                    message 
+                                : ""
                             }
                         </FormHelperText>
                     </FormControl>

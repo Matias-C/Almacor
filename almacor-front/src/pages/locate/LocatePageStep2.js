@@ -115,17 +115,18 @@ function LocatePageStep2() {
 
             <Card variant="outlined" className='add-page-card'>
                 <CardContent>
-
-                    <div className='add-page-card-header'>
                     
-                        <Typography variant='h4'>Detalles</Typography>
-
-                    </div>
+                    <Typography variant='h4' className='add-page-card-header'>{pallet.c_tipo_contenido}{pallet.c_numero} <span>/ Detalles</span></Typography>
                     <hr className='separator' />
 
                     <div className='add-page-inputs-cont'>
 
-                        <Typography variant='h5' className='add-page-label'>Peso (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
+
+                            <Typography variant='h5' className='label'>Peso</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
                     
                         <FormControl variant="outlined">
                             <Select
@@ -141,7 +142,12 @@ function LocatePageStep2() {
                             </Select>
                         </FormControl>
 
-                        <Typography variant='h5' className='add-page-label'>Altura (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
+
+                            <Typography variant='h5' className='label'>Altura</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
 
                         <FormControl variant="outlined">
                             <Select
@@ -157,7 +163,12 @@ function LocatePageStep2() {
                             </Select>
                         </FormControl>
 
-                        <Typography variant='h5' className='add-page-label'>Nivel de Rotación (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
+
+                            <Typography variant='h5' className='label'>Nivel de rotación</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
 
                         <FormControl variant="outlined">
                             <Select
