@@ -136,9 +136,9 @@ function LocatePageStep2() {
                                 onChange={handleWeight}
                                 className='add-page-input'
                             >
-                                <MenuItem value={1}>1 - Liviano</MenuItem>
+                                <MenuItem value={1}>1 - Pesado</MenuItem>
                                 <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                <MenuItem value={3}>3 - Pesado</MenuItem>
+                                <MenuItem value={3}>3 - Liviano</MenuItem>
                             </Select>
                         </FormControl>
 
@@ -158,8 +158,7 @@ function LocatePageStep2() {
                                 className='add-page-input'
                             >
                                 <MenuItem value={1}>1 - Bajo</MenuItem>
-                                <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                <MenuItem value={3}>3 - Alto</MenuItem>
+                                <MenuItem value={2}>2 - Alto</MenuItem>
                             </Select>
                         </FormControl>
 
