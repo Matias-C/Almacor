@@ -6,13 +6,25 @@
     max-width: 500px;
 }
 
-.add-page-card-header {
-    display: flex;
-    justify-content: space-between;
+.add-page-card-header span {
+    font-weight: 400;
+    opacity: 50%;
 }
 
-.add-page-label {
-    margin-top: 5px !important;
+.add-page-input-label-cont {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 5px;
+}
+
+.add-page-input-label-cont .detail {
+    font-weight: 400;
+    opacity: 50%;
+}
+
+.step-three.add-page-label {
+    margin: 15px 0 5px 0 !important;
 }
 
 .add-page-inputs-cont{
@@ -22,7 +34,12 @@
 }
 
 .add-page-input {
+    border-radius: 8px !important;
     width: 100%;
+}
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    border-radius: 8px !important;
 }
 
 .add-page-button {

@@ -40,26 +40,31 @@ function OrdersDisplay() {
 
             <Typography variant='h3' className='orders-header'>Ordenes de carga activas</Typography>
 
-            <Grid container spacing={2} className="orders-grid">
+            <div className='orders-buttons'>
 
-                {
-                    orders.map((order) => {
+                <Grid container spacing={2}>
 
-                        return (
+                    {
+                        orders.map((order) => {
 
-                            <OrderButton
-                                key={order.n_id_pk}
-                                orderNumber={order.n_id_orden_de_carga}
-                                orderStore={order.c_descripcion}
-                                order={order}
-                            />
+                            return (
 
-                        );
+                                <OrderButton
+                                    key={order.n_id_pk}
+                                    orderNumber={order.n_id_orden_de_carga}
+                                    orderStore={order.c_descripcion}
+                                    order={order}
+                                />
 
-                    })
-                }
-                
-            </Grid>
+                            );
+
+                        })
+                    }
+                    
+                </Grid>
+
+            </div>
+
 
         </div>
 

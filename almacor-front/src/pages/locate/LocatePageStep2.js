@@ -115,51 +115,67 @@ function LocatePageStep2() {
 
             <Card variant="outlined" className='add-page-card'>
                 <CardContent>
-
-                    <div className='add-page-card-header'>
                     
-                        <Typography variant='h4'>{pallet.c_tipo_contenido}{pallet.c_numero}</Typography>
-
-                    </div>
+                    <Typography variant='h4' className='add-page-card-header'>{pallet.c_tipo_contenido}{pallet.c_numero} <span>/ Detalles</span></Typography>
                     <hr className='separator' />
 
                     <div className='add-page-inputs-cont'>
 
-                        <Typography variant='h5' className='add-page-label'>Peso (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
+
+                            <Typography variant='h5' className='label'>Peso</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
                     
-                        <FormControl variant="standard" className='add-page-input'>
+                        <FormControl variant="outlined">
                             <Select
                                 id="pallet-weight"
                                 value={weight}
+                                size="small"
                                 onChange={handleWeight}
+                                className='add-page-input'
                             >
-                                <MenuItem value={1}>1 - Liviano</MenuItem>
+                                <MenuItem value={1}>1 - Pesado</MenuItem>
                                 <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                <MenuItem value={3}>3 - Pesado</MenuItem>
+                                <MenuItem value={3}>3 - Liviano</MenuItem>
                             </Select>
                         </FormControl>
 
-                        <Typography variant='h5' className='add-page-label'>Altura (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
 
-                        <FormControl variant="standard" className='add-page-input'>
+                            <Typography variant='h5' className='label'>Altura</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
+
+                        <FormControl variant="outlined">
                             <Select
                                 id="pallet-height"
                                 value={height}
+                                size="small"
                                 onChange={handleHeight}
+                                className='add-page-input'
                             >
                                 <MenuItem value={1}>1 - Bajo</MenuItem>
-                                <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                <MenuItem value={3}>3 - Intermedio</MenuItem>
+                                <MenuItem value={2}>2 - Alto</MenuItem>
                             </Select>
                         </FormControl>
 
-                        <Typography variant='h5' className='add-page-label'>Nivel de Rotación (Se puede cambiar)</Typography>
+                        <div className='add-page-input-label-cont'>
 
-                        <FormControl variant="standard" className='add-page-input'>
+                            <Typography variant='h5' className='label'>Nivel de rotación</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
+
+                        <FormControl variant="outlined">
                             <Select
                                 id="pallet-rotation"
                                 value={rotation}
+                                size="small"
                                 onChange={handleRotation}
+                                className='add-page-input'
                             >
                                 <MenuItem value={1}>1</MenuItem>
                                 <MenuItem value={2}>2</MenuItem>

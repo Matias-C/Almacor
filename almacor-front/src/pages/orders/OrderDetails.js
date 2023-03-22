@@ -89,9 +89,9 @@ function OrderDetails() {
                                     orderRemito={filteredDetail.c_remito}
                                     orderDeposit={filteredDetail.ubicacion.deposito}
                                     orderZone={filteredDetail.ubicacion.zona}
-                                    orderHall={filteredDetail.ubicacion.c_pasillo}
-                                    orderCol={filteredDetail.ubicacion.columna}
-                                    orderRow={filteredDetail.ubicacion.fila}
+                                    orderHall={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.c_pasillo}
+                                    orderCol={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.columna}
+                                    orderRow={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.fila}
                                     orderDespacho={filteredDetail.b_quitado}
                                 />
 
@@ -100,7 +100,7 @@ function OrderDetails() {
 
                         })
                     }
-
+                    
                 </Grid>
 
             </div>

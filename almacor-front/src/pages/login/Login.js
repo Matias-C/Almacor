@@ -9,7 +9,8 @@ import Typography from '@mui/material/Typography';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -56,7 +57,7 @@ function Login() {
 
     const login = async (username, password) => {
 
-        if(password !== "" && username !== "") {
+        if (password !== "" && username !== "") {
 
             const response = await fetch(`${Connected.currentURL}api/v1/auth/login/`, {
                 method: "POST",
@@ -92,8 +93,8 @@ function Login() {
                     <hr className='separator'/>
 
                     <Typography variant="h5" className='login-label'>Nombre de Usuario</Typography>
-                    <FormControl variant="standard" fullWidth>
-                        <Input
+                    <FormControl variant="outlined" size="small" fullWidth>
+                        <OutlinedInput
                             id="name"
                             autoFocus
                             value={userName}
@@ -104,8 +105,8 @@ function Login() {
                     </FormControl>
 
                     <Typography variant="h5" className='login-label password'>Contraseña</Typography>
-                    <FormControl variant="standard" fullWidth>
-                        <Input
+                    <FormControl variant="outlined" size="small" fullWidth>
+                        <OutlinedInput
                             id="password"
                             type='password'
                             value={userPassword}
@@ -118,7 +119,8 @@ function Login() {
 
                 <CardActions>
                     <Button 
-                        variant="contained" 
+                        variant="contained"
+                        disableElevation
                         className='login-button'
                         onClick={() => {
                                 const username = userName;

@@ -6,13 +6,11 @@ import { IMaskInput } from 'react-imask';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
 import Snackbar from '@mui/material/Snackbar';
@@ -145,12 +143,12 @@ function LocatePageStep1() {
                     <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                    <FormControl variant="standard" className="add-page-input">
-                        <InputLabel htmlFor="pallet-code">Código</InputLabel>
-                        <Input
+                    <FormControl error={value === "" ? false : error} size="small" className="add-page-input" margin='dense'>
+                        <InputLabel htmlFor="component-outlined">Código</InputLabel>
+                        <OutlinedInput
                             id="pallet-code"
+                            label="Código"
                             value={value}
-                            error={error}
                             onChange={handleChange}
                             autoFocus
                             onKeyDown={(e) => {
@@ -160,9 +158,13 @@ function LocatePageStep1() {
                         />
                         <FormHelperText>
                             {
-                                error ? 
-                                    !validPallet ? "El código no es valido" : 
-                                        !validPalletLength ? "El código es demasiado corto" 
+                                value === "" ?
+                                    "" 
+                                : error ? 
+                                    !validPallet ? 
+                                        "El código no es valido" 
+                                    : !validPalletLength ? 
+                                        "El código es demasiado corto" 
                                     : "" 
                                 : ""
                             }
@@ -170,22 +172,6 @@ function LocatePageStep1() {
                     </FormControl>
 
                 </CardContent>
-                <CardActions>
-
-                    <Button
-                        disabled={disabled}
-                        variant="contained" 
-                        size="medium"
-                        disableElevation
-                        className='add-page-button' 
-                        onClick={() => {
-                            checkPallet(value);
-                        }}
-                    >
-                        Siguiente
-                    </Button>
-                    
-                </CardActions>
             </Card>
 
             <Snackbar 

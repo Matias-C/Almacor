@@ -4,18 +4,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
 import Dialog from '@mui/material/Dialog';
@@ -26,6 +23,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
+import PalletDetails from '../../components/pallet-details/PalletDetails';
 
 import ContextConnected from '../../context/ContextConnected';
 
@@ -67,6 +66,8 @@ function LocatePageStep3() {
     const zone = parseInt(Connected.currentZoneId);
     const weight = location.state.n_tipopeso;
     const height = location.state.n_tipoaltura;
+    const [ub, setUb] = useState("")
+    const [idHall, setIdHall] = useState("")
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
@@ -98,7 +99,9 @@ function LocatePageStep3() {
                     body: formdata
                 })
                 const data = await response.json();
-                setHall(data.n_id_pasillo);
+                setUb(data.UB)
+                setIdHall(data.n_id_pasillo)
+                setHall(data.c_pasillo);
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
                 console.log(data);
@@ -121,7 +124,7 @@ function LocatePageStep3() {
             const id_empresa = Connected.userInfo.n_id_empresa;
             const id_deposito = deposit;
             const id_zona = zone;
-            const id_pasillo = hall;
+            const id_pasillo = idHall;
             const id_columna = col;
             const id_fila = row;
             const id_partida = location.state.n_id_partida;
@@ -164,11 +167,7 @@ function LocatePageStep3() {
             const data = await res.json();
             if (data.status === "Esta posicion se encuentra vacia") {
 
-                const newHall = parseInt(location.substr(6,2));
-                const newCol = parseInt(location.substr(8,2));
-                const newRow = parseInt(location.substr(10,2));
-
-                if (newHall === hall && newCol === col && newRow === row) {
+                if (location === ub) {
                     locatePallet();
                 } else {
                     handleOpenAlert("La ubicación no coincide", "warning")
@@ -281,96 +280,48 @@ function LocatePageStep3() {
             <Card variant="outlined" className='add-page-card'>
                 <CardContent>
 
-                    <Typography variant='h4'>Ubicación</Typography>
+                    <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Ubicación</span></Typography>
                     <hr className='separator' />
 
-                    <div className='add-page-inputs-cont'>
+                    <PalletDetails 
+                        hall={hall}
+                        col={col}
+                        row={row}
+                    />
 
-                        <Typography variant='h5' className='add-page-label'>Pasillo</Typography>
-                        <TextField
-                            id="id-hall"
-                            variant="standard"
-                            value={hall}
+                    <Typography variant='h5' className='step-three add-page-label'>Ingrese una ubicación para confirmar</Typography>
+
+                    <FormControl variant="outlined" size='small' fullWidth margin='dense'>
+                        <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
+                        <OutlinedInput
+                            id="pallet-code"
+                            label="Ubicación"
+                            value={value}
+                            error={error}
+                            autoFocus
                             onChange={(e) => {
-                                setHall(e.target.value);
+                                handleChange(e);
                             }}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            className='add-page-input'
-                            >
-                        </TextField>
-
-                        <Grid container spacing={2}>
-                            <Grid xs={6} sm={6} md={6}>
-
-                                <Typography variant='h5' className='add-page-label'>Columna</Typography>
-                                <TextField
-                                    id="id-col"
-                                    variant="standard"
-                                    value={col}
-                                    onChange={(e) => {
-                                        setCol(e.target.value);
-                                    }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    className='add-page-input'
-                                    >
-                                </TextField>
-
-                            </Grid>
-
-                            <Grid xs={6} sm={6} md={6}>
-
-                                <Typography variant='h5' className='add-page-label'>Nivel</Typography>
-                                <TextField
-                                    id="id-row"
-                                    variant="standard"
-                                    value={row}
-                                    onChange={(e) => {
-                                        setRow(e.target.value);
-                                    }}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    className='add-page-input'
-                                    >
-                                </TextField>
-
-                            </Grid>
-                        </Grid>
-
-                        <FormControl variant="standard" fullWidth margin='dense'>
-                            <InputLabel htmlFor="pallet-code">Ubicación</InputLabel>
-                            <Input
-                                id="pallet-code"
-                                value={value}
-                                error={error}
-                                autoFocus
-                                onChange={(e) => {
-                                    handleChange(e);
-                                }}
-                                inputComponent={PalletMask}
-                            />
-                            <FormHelperText>
-                                {
-                                    error ? 
-                                        !validPallet ? 
-                                            "Código no válido" 
-                                        : !validDeposit ? 
-                                            "El depósito no coincide con tu depósito actual"
-                                        : !validZone ?
-                                            "La zona no coincide con tu zona actual"
-                                        : !validPalletLength ? 
-                                            "El código es demasiado corto"
-                                        :""
-                                    : ""
-                                }
-                            </FormHelperText>
-                        </FormControl>
-
-                    </div>
+                            inputComponent={PalletMask}
+                        />
+                        <FormHelperText>
+                            {
+                                value === "" ?
+                                     "" 
+                                : error ?
+                                    !validPallet ?
+                                        "Código no válido" 
+                                    : !validDeposit ?
+                                        "El depósito no coincide con tu depósito actual"
+                                    : !validZone ?
+                                        "La zona no coincide con tu zona actual"
+                                    : !validPalletLength ? 
+                                        "El código es demasiado corto"
+                                    :""
+                                : ""
+                            }
+                        </FormHelperText>
+                    </FormControl>
                 </CardContent>
             </Card>
 

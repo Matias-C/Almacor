@@ -1,0 +1,23 @@
+.pallet-details-cont {
+    margin-top: 12px;
+}
+
+.pallet-details-grid {
+    padding: 0 !important;
+}
+
+.pallet-details-table {
+    background-color: rgba(0, 0, 0, .1);
+    border-radius: 6px;
+    text-align: center;
+
+    width: 100%;
+}
+
+.pallet-details-table.header {
+    padding: 5px 0;
+}
+
+.pallet-details-table.item {
+    padding: 10px 0;
+}
