@@ -23,6 +23,7 @@ import "./LocatePage.css"
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
 const PalletMask = React.forwardRef(function PalletMask(props, ref) {
 
     const { onChange, ...other } = props;
@@ -52,7 +53,6 @@ function LocatePageStep1() {
 
     const [error, setError] = useState(false);
     const [errorAlert, setErrorAlert] = useState("");
-    const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
@@ -65,7 +65,6 @@ function LocatePageStep1() {
             setValidPallet(true);
             if (e.target.value.length > 9) {
                 setValidLength(true);
-                setDisabled(false);
                 setError(false);
                 if (e.target.value.length === 10) {
                     setValue(e.target.value);
@@ -75,12 +74,10 @@ function LocatePageStep1() {
                 }
             } else {
                 setValidLength(false);
-                setDisabled(true);
                 setError(true);
             }
         } else {
-            setValidPallet(false)
-            setDisabled(true);
+            setValidPallet(false);
             setError(true);
         };
     };
@@ -143,7 +140,7 @@ function LocatePageStep1() {
                     <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                    <FormControl error={value === "" ? false : error} size="small" className="add-page-input" margin='dense'>
+                    <FormControl error={value === "" ? false : error} size="small" className="add-page-input">
                         <InputLabel htmlFor="component-outlined">Código</InputLabel>
                         <OutlinedInput
                             id="pallet-code"

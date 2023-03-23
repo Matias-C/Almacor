@@ -212,12 +212,6 @@ function LocatePageStep3() {
         setOpenAlert(false);
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-          console.log('do validate');
-        }
-    }
-
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);
@@ -291,7 +285,7 @@ function LocatePageStep3() {
 
                     <Typography variant='h5' className='step-three add-page-label'>Ingrese una ubicación para confirmar</Typography>
 
-                    <FormControl variant="outlined" size='small' fullWidth margin='dense'>
+                    <FormControl variant="outlined" size='small' fullWidth>
                         <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
                         <OutlinedInput
                             id="pallet-code"

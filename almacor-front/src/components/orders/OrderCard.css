@@ -34,3 +34,7 @@
     border-color: var(--main-color) !important;
     color: var(--main-color) !important;
 }
+
+.order-card-input {
+    margin-top: 15px !important;
+}

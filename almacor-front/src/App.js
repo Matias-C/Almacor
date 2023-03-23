@@ -11,8 +11,6 @@ import {
 
 import { createTheme, ThemeProvider } from "@mui/material";
 
-import ProtectedRoute from "./components/protected-route/ProtectedRoute.js";
-
 import Login from "./pages/login/Login.js";
 
 import MainPage from "./pages/main/MainPage.js";
@@ -187,21 +185,19 @@ function App() {
 
               <Route exact path="/" element=<Navigate to={userInfo === null ? "/login" : "/depositos"} />/>
               <Route exact path="/login" element=<Login /> />
-              <Route element=<ProtectedRoute user={userInfo} /> >
-                <Route exact path="/depositos" element=<MainPage /> />
-                <Route exact path="/depositos/:deposit" element=<ZonesPage /> />
-                <Route exact path="/depositos/:deposit/:zone" element=<ZoneMenu /> >
+              <Route exact path="/depositos" element=<MainPage /> />
+              <Route exact path="/depositos/:deposit" element=<ZonesPage /> />
+              <Route exact path="/depositos/:deposit/:zone" element=<ZoneMenu /> >
 
-                  <Route exact path="ordenes" element=<OrdersDisplay /> />
-                  <Route exact path="ordenes/:order" element=<OrderDetails /> />
+                <Route exact path="ordenes" element=<OrdersDisplay /> />
+                <Route exact path="ordenes/:order" element=<OrderDetails /> />
 
-                  <Route exact path="ubicar" element=<LocatePageStep1 /> />
-                  <Route exact path="ubicar/:pallet" element=<LocatePageStep2 /> />
-                  <Route exact path="ubicar/:pallet/ubicacion" element=<LocatePageStep3 /> />
+                <Route exact path="ubicar" element=<LocatePageStep1 /> />
+                <Route exact path="ubicar/:pallet" element=<LocatePageStep2 /> />
+                <Route exact path="ubicar/:pallet/ubicacion" element=<LocatePageStep3 /> />
 
-                  <Route exact path="remover" element=<RemovePage /> />
+                <Route exact path="remover" element=<RemovePage /> />
 
-                </Route>
               </Route>
 
             </Routes>
