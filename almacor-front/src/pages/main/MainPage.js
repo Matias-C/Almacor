@@ -66,7 +66,7 @@ function ZonesPage(props) {
                                             disableElevation
                                             className="main-page-deposit-button"
                                             onClick={() => { 
-                                                navigate(`deposito=${deposit.c_descripcion}`, {state: deposit});
+                                                navigate(`deposito=${deposit.c_descripcion.toLowerCase().replace(/\s+/g, '-')}`, {state: deposit});
                                                 Connected.setLocalDeposit("id-deposit", deposit.n_id_deposito, "deposit", deposit.c_descripcion)
                                             }}
                                         >{deposit.c_descripcion}</Button>

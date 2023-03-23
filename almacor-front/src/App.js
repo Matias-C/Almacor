@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 
 import {
+  BrowserRouter,
+  Routes,
+  Route,
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
 
 import { createTheme, ThemeProvider } from "@mui/material";
+
+import ProtectedRoute from "./components/protected-route/ProtectedRoute.js";
 
 import Login from "./pages/login/Login.js";
 
@@ -85,7 +90,7 @@ function App() {
   const testingURL = "https://apicdtesting.almacorweb.com/";
   const productionURL = "https://apicd.almacorweb.com/";
 
-  const currentURL = productionURL;
+  const currentURL = testingURL;
   
   const [userInfo, setUserInfo] = useState(null);
 
@@ -149,55 +154,6 @@ function App() {
     loadUserFromLocalStorage();
   }, []);
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Navigate to={userInfo === null ? "/login" : "/depositos"} />,
-    },
-    {
-      path: "login",
-      element: <Login />,
-    },
-    {
-      path: "depositos",
-      element: <MainPage />,
-    },
-    {
-      path: "depositos/:deposit",
-      element: <ZonesPage />,
-    },
-    {
-      path: "depositos/:deposit/:zone",
-      element: <ZoneMenu />,
-      children: [
-        {
-          path: "ordenes",
-          element: <OrdersDisplay />,
-        },
-        {
-          path: "ordenes/:order",
-          element: <OrderDetails />,
-        },
-        {
-          path: "ubicar",
-          element: <LocatePageStep1 />,
-        },
-        {
-          path: "ubicar/:pallet",
-          element: <LocatePageStep2 />,
-        },
-        {
-          path: "ubicar/:pallet/ubicacion",
-          element: <LocatePageStep3 />,
-        },
-        {
-          path: "remover",
-          element: <RemovePage />,
-        },
-      ],
-    },
-  ]);
-
   return (
     <>
       <ContextConnected.Provider
@@ -226,7 +182,30 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
+          <BrowserRouter>
+            <Routes>
+
+              <Route exact path="/" element=<Navigate to={userInfo === null ? "/login" : "/depositos"} />/>
+              <Route exact path="/login" element=<Login /> />
+              <Route element=<ProtectedRoute user={userInfo} /> >
+                <Route exact path="/depositos" element=<MainPage /> />
+                <Route exact path="/depositos/:deposit" element=<ZonesPage /> />
+                <Route exact path="/depositos/:deposit/:zone" element=<ZoneMenu /> >
+
+                  <Route exact path="ordenes" element=<OrdersDisplay /> />
+                  <Route exact path="ordenes/:order" element=<OrderDetails /> />
+
+                  <Route exact path="ubicar" element=<LocatePageStep1 /> />
+                  <Route exact path="ubicar/:pallet" element=<LocatePageStep2 /> />
+                  <Route exact path="ubicar/:pallet/ubicacion" element=<LocatePageStep3 /> />
+
+                  <Route exact path="remover" element=<RemovePage /> />
+
+                </Route>
+              </Route>
+
+            </Routes>
+          </BrowserRouter>
         </ThemeProvider>
       </ContextConnected.Provider>
     </>

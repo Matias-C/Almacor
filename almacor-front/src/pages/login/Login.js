@@ -75,7 +75,7 @@ function Login() {
                 Connected.setUserInfo(res.user);
                 const newToken = { access_token: res.access_token, refresh_token: res.refresh_token }
                 localStorage.setItem("token", JSON.stringify(newToken));
-                navigate("/depositos");
+                navigate("/depositos", { replace: true });
                 refreshPage();
 
             } else {

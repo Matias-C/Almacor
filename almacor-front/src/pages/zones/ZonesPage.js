@@ -66,7 +66,7 @@ function ZonesPage() {
                                             className="zones-page-zone-button"
                                             disableElevation
                                             onClick={() => { 
-                                                navigate(`${zone.c_descripcion}/ordenes`, {state: zone});
+                                                navigate(`zona=${zone.c_descripcion.toLowerCase().replace(/\s+/g, '-')}/ordenes`, {state: zone});
                                                 Connected.setLocalZone("id-zone", zone.n_id_zona, "zone", zone.c_descripcion)
                                             }}
                                         >{zone.c_descripcion}</Button>
