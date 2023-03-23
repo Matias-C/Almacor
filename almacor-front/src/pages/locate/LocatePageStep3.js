@@ -283,7 +283,7 @@ function LocatePageStep3() {
                         row={row}
                     />
 
-                    <Typography variant='h5' className='step-three add-page-label'>Ingrese una ubicación para confirmar</Typography>
+                    <Typography variant='h5' className='step-three add-page-label'>Ingrese la ubicación para confirmar</Typography>
 
                     <FormControl variant="outlined" size='small' fullWidth>
                         <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
