@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
@@ -85,6 +85,11 @@ function ZoneMenu() {
                   disableElevation
                   fullWidth
                   className='zone-menu-side-bar-button'
+                  onClick={() => {
+                    Connected.setOpenSideBar(false);
+                    navigate("inventario");
+                    setPage("inventory");
+                  }}
                 >
                   <ViewQuiltRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
                   {Connected.openSideBar ? 'Inventario' : ""}
@@ -97,7 +102,7 @@ function ZoneMenu() {
                     <div className='page-header'>
 
                       <BackButton />
-                      <Typography variant="h1" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
+                      <Typography variant="h3" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
 
                     </div>
 

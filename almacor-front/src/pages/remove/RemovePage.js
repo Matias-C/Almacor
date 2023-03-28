@@ -233,7 +233,7 @@ function RemovePage() {
         <>
             <div className='remove-page-header'>
 
-                <Typography variant='h3'>Remover Pallet</Typography>
+                <Typography variant='h1'>Remover Pallet</Typography>
 
             </div>
 

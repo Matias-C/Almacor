@@ -109,7 +109,7 @@ function LocatePageStep2() {
         <>
             <div className='add-page-header'>
 
-                <Typography variant='h3' className='orders-header'>Ubicar Pallet</Typography>
+                <Typography variant='h1' className='orders-header'>Ubicar Pallet</Typography>
 
             </div>
 

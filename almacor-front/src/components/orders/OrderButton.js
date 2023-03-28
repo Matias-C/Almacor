@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Button } from '@mui/material';
 
 import "./OrderButton.css"
@@ -11,7 +11,7 @@ function OrderButton(props) {
 
     return(
 
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Grid xs={12} sm={6} md={4} lg={3}>
 
             <Button variant='outlined' className="order-button-cont" onClick={() => { navigate(`orden=${props.orderNumber}`, {state: props.order}); }}>
 

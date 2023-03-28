@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 
-import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
-import OrderButton from "../../components/orders/OrderButton";
+import DisplayPage from '../../components/display/DisplayPage';
+import DisplayButton from '../../components/display/DisplayButton';
 
 import ContextConnected from '../../context/ContextConnected';
 
@@ -36,11 +36,10 @@ function OrdersDisplay() {
 
     return(
 
-        <div className="orders">
-
-            <Typography variant='h3' className='orders-header'>Ordenes de carga activas</Typography>
-
-            <div className='orders-buttons'>
+        <>
+            <DisplayPage
+                displayPageHeader="Órdenes de carga activas"
+            >
 
                 <Grid container spacing={2}>
 
@@ -49,24 +48,24 @@ function OrdersDisplay() {
 
                             return (
 
-                                <OrderButton
+                                <DisplayButton
                                     key={order.n_id_pk}
-                                    orderNumber={order.n_id_orden_de_carga}
-                                    orderStore={order.c_descripcion}
-                                    order={order}
+                                    displayButtonType="Orden"
+                                    displayButtonTypeDetail={order.n_id_orden_de_carga}
+                                    displayButtonHeader={order.c_descripcion}
+                                    displayButtonURL={`orden=${order.n_id_orden_de_carga}`}
+                                    object={order}
                                 />
 
                             );
 
                         })
                     }
-                    
+
                 </Grid>
 
-            </div>
-
-
-        </div>
+            </DisplayPage>
+        </>
 
     );
 }
