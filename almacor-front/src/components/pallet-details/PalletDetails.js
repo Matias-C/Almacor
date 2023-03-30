@@ -10,6 +10,16 @@ function PalletDetails(props) {
 
                 <Grid container spacing={1} className="pallet-details-grid">
 
+                    {props.pallet &&
+
+                        <Grid xs={12} sm={12} md={12}>
+                            <div className='pallet-details-table header'>
+                                <Typography variant="h3">PL{props.pallet}</Typography>
+                            </div>
+                        </Grid>
+                    
+                    }
+
                     <Grid xs={4} sm={4} md={4}>
                         <div className='pallet-details-table header'>
                             <Typography variant='h5'>Pasillo</Typography>

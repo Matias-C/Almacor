@@ -1,21 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import PropTypes from 'prop-types';
-import { IMaskInput } from 'react-imask';
-
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
 
 import DisplayPage from '../../components/display/DisplayPage';
 import DisplayButton from '../../components/display/DisplayButton';

@@ -1,0 +1,8 @@
+.inv-card-pallet-cont {
+    background-color: rgba(0, 0, 0, .1);
+    border-radius: 6px;
+    text-align: center;
+
+    padding: 6px 0;
+    width: 100%;
+}
