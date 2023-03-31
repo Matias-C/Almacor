@@ -46,11 +46,18 @@
 /* Details */
 
 
+.display-details-cont {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
 .display-details-header {
     display: flex;
     align-items: center;
 
-    margin-bottom: 15px;
 }
 
 .display-details-header .detail {

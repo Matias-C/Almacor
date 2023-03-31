@@ -35,7 +35,7 @@ function OrderDetails() {
             }
         };
         getDetails();
-    }, []);
+    }, [Connected, location.state.n_id_orden_de_carga]);
 
     return(
 

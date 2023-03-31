@@ -102,7 +102,7 @@ function ZoneMenu() {
                     <div className='page-header'>
 
                       <BackButton />
-                      <Typography variant="h3" className='zone-menu-header'>{Connected.currentDeposit} / {Connected.currentZone}</Typography>
+                      <Typography variant="h4" className='zone-menu-header'>{Connected.currentDeposit.toUpperCase()} / {Connected.currentZone.toUpperCase()}</Typography>
 
                     </div>
 

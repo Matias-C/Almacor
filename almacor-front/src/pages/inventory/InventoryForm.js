@@ -1,29 +1,21 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Unstable_Grid2';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-
 import { PalletMask } from '../../components/masked-inputs/PalletMask';
+import { LocationMask } from '../../components/masked-inputs/LocationMask';
 
 import ContextConnected from '../../context/ContextConnected';
 
-import "./LocatePage.css"
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-function LocatePageStep1() {
+function InventoryForm() {
 
     const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
@@ -103,69 +95,50 @@ function LocatePageStep1() {
     }
 
     return(
-
         <>
-            <div className='add-page-header'>
+            <Card variant="outlined" className='inv-form-card-cont'>
+                <CardContent className='inv-form-card-content'>
+                    <Grid container spacing={2}>
+                        <Grid>
 
-                <Typography variant='h1'>Ubicar Pallet</Typography>
+                            <FormControl error={value === "" ? false : error} size="small">
+                                <InputLabel htmlFor="component-outlined">Código</InputLabel>
+                                <OutlinedInput
+                                    id="pallet-code"
+                                    label="Código"
+                                    value={value}
+                                    onChange={handleChange}
+                                    autoFocus
+                                    onKeyDown={(e) => {
+                                        handleKeyDown(e)
+                                    }}
+                                    inputComponent={PalletMask}
+                                />
+                                <FormHelperText>
+                                    {
+                                        value === "" ?
+                                            "" 
+                                        : error ? 
+                                            !validPallet ? 
+                                                "El código no es valido" 
+                                            : !validPalletLength ? 
+                                                "El código es demasiado corto" 
+                                            : "" 
+                                        : ""
+                                    }
+                                </FormHelperText>
+                            </FormControl>
 
-            </div>
+                        </Grid>
 
-            <Card variant="outlined" className='add-page-card'>
-                <CardContent>
-
-                    <Typography variant='h4'>Ingrese el código del pallet</Typography>
-                    <hr className='separator' />
-
-                    <FormControl error={value === "" ? false : error} size="small" className="add-page-input">
-                        <InputLabel htmlFor="component-outlined">Código</InputLabel>
-                        <OutlinedInput
-                            id="pallet-code"
-                            label="Código"
-                            value={value}
-                            onChange={handleChange}
-                            autoFocus
-                            onKeyDown={(e) => {
-                                handleKeyDown(e)
-                            }}
-                            inputComponent={PalletMask}
-                        />
-                        <FormHelperText>
-                            {
-                                value === "" ?
-                                    "" 
-                                : error ? 
-                                    !validPallet ? 
-                                        "El código no es valido" 
-                                    : !validPalletLength ? 
-                                        "El código es demasiado corto" 
-                                    : "" 
-                                : ""
-                            }
-                        </FormHelperText>
-                    </FormControl>
-
+                        <Grid>
+                            
+                        </Grid>
+                    </Grid>
                 </CardContent>
             </Card>
-
-            <Snackbar 
-                open={openAlert} 
-                autoHideDuration={4000} 
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert 
-                    onClose={handleCloseAlert} 
-                    severity="error" 
-                    sx={{ width: '100%' }}
-                >
-                    {errorAlert}
-                </Alert>
-            </Snackbar>
-            
         </>
-        
     );
 }
 
-export default LocatePageStep1;
+export default InventoryForm;

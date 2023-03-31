@@ -2,26 +2,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from "react-router-dom";
 
 import Grid from '@mui/material/Unstable_Grid2';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
 
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Typography } from '@mui/material';
 
 import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import DisplayDetailsPage from "../../components/display/DisplayDetailsPage";
 import InventoryCard from './InventoryCard';
+import InventoryForm from './InventoryForm';
 
 import ContextConnected from '../../context/ContextConnected';
 
@@ -32,10 +25,22 @@ function InventoryDetails() {
     const Connected = useContext(ContextConnected);
     const location = useLocation();
 
+    const [empty, setEmpty] = useState(null);
     const [inventoryDetails, setInventoryDetails] = useState([]);
 
+    const [openDialog, setOpenDialog] = useState(false);
+    
+    const setInventory = (data) => {
+        setEmpty(false);
+        setInventoryDetails(data)
+    }
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
     useEffect(() => {
-        const getOrders = async () => {
+        const getInventoryDetails = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
             const res = await fetch(`${Connected.currentURL}api/v1/deposito/inventarios_reales/?n_id_inventario=${location.state.n_id_inventario}&n_id_empresa=${location.state.n_id_empresa}`, {
@@ -46,41 +51,75 @@ function InventoryDetails() {
               },
             })
             const data = await res.json();
-            setInventoryDetails(data);
-            console.log(data);
+            data.error ? setEmpty(true) : setInventory(data);
+            console.log(data, location.state.n_id_empresa, location.state.n_id_inventario);
           }
         };
-        getOrders();
-    }, [Connected.userInfo]);
+        getInventoryDetails();
+    }, [Connected, location.state.n_id_empresa, location.state.n_id_inventario]);
 
     return (
-        <DisplayDetailsPage
-            detailsHeaderDetail={location.state.c_tipo_inventario === "T" ? "TOTAL" : "PARCIAL"}
-            detailsHeader={`Inventario ${location.state.n_id_inventario}`}
-        >
-            <Grid container spacing={2}>
 
+        <>
+            <DisplayDetailsPage
+                detailsHeaderDetail={location.state.c_tipo_inventario === "T" ? "TOTAL" : "PARCIAL"}
+                detailsHeader={`Inventario ${location.state.n_id_inventario}`}
+                addButton
+                setOpenDialog={setOpenDialog}
+            >
                 {
-                    inventoryDetails.map(item => {
+                    !empty ? 
+                        <Grid container spacing={2}>
+                            {
+                                inventoryDetails.map((item) => {
 
-                        return (
+                                    return (
 
-                            <InventoryCard
-                                key={item.n_id_pk}
-                                itemPL={item.c_numero}
-                                itemHall={item.c_pasillo}
-                                itemCol={item.n_id_columna}
-                                itemRow={item.n_id_fila}
-                            />
+                                        <InventoryCard
+                                            key={item.n_id_pk}
+                                            itemPL={item.c_numero}
+                                            itemHall={item.c_pasillo}
+                                            itemCol={item.n_id_columna}
+                                            itemRow={item.n_id_fila}
+                                        />
 
-                        );
+                                    );
 
-
-                    })
+                                })
+                            }
+                        </Grid> 
+                    
+                    :
+                        <Typography variant="h3" className='inv-details-empty-alert'>Inventario vacío</Typography>
                 }
 
-            </Grid> 
-        </DisplayDetailsPage>
+            </DisplayDetailsPage>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+
+                <DialogTitle>Añadir</DialogTitle>
+                <DialogContent>
+
+                    <DialogContentText>
+                        Diálogo
+                    </DialogContentText>
+
+                </DialogContent>
+
+                <DialogActions>
+                    <Button 
+                        variant="outlined" 
+                        className='add-page-button' 
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        Cancelar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+        
     );
 }
 

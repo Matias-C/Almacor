@@ -32,7 +32,7 @@ function InventoryPage () {
           }
         };
         getOrders();
-    }, [Connected.userInfo]);
+    }, [Connected]);
 
     return (
         <>

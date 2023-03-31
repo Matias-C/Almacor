@@ -25,32 +25,11 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 import PalletDetails from '../../components/pallet-details/PalletDetails';
+import { LocationMask } from '../../components/masked-inputs/LocationMask';
 
 import ContextConnected from '../../context/ContextConnected';
 
 import "./LocatePage.css"
-
-const PalletMask = React.forwardRef(function PalletMask(props, ref) {
-
-    const { onChange, ...other } = props;
-
-    return (
-        <IMaskInput
-            {...other}
-            mask="##0000000000"
-            definitions={{
-                '#': /[A-Z]/,
-            }}
-            inputRef={ref}
-            onAccept={(value) => onChange({ target: { value } })}
-            overwrite
-        />
-    );
-  });
-  
-PalletMask.propTypes = {
-    onChange: PropTypes.func.isRequired,
-};
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -296,7 +275,7 @@ function LocatePageStep3() {
                             onChange={(e) => {
                                 handleChange(e);
                             }}
-                            inputComponent={PalletMask}
+                            inputComponent={LocationMask}
                         />
                         <FormHelperText>
                             {
