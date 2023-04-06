@@ -7,10 +7,6 @@
     width: 100%;
 }
 
-.inv-form-card-cont {
-    margin-bottom: 15px;
-}
-
-.inv-form-card-content {
-    padding: 16px !important;
+.inventory-form-input {
+    width: 100%;
 }

@@ -97,11 +97,13 @@ function InventoryDetails() {
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
 
-                <DialogTitle>Añadir</DialogTitle>
+                <DialogTitle>Añadir Incidencia</DialogTitle>
                 <DialogContent>
 
                     <DialogContentText>
-                        Diálogo
+                        <InventoryForm 
+                            inventoryId={location.state.n_id_inventario}
+                        />
                     </DialogContentText>
 
                 </DialogContent>

@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-import { IMaskInput } from 'react-imask';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -95,6 +92,7 @@ function LocatePageStep3() {
             navigate(-2);
         }, 1000)
     }
+    
     const locatePallet = async () => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
