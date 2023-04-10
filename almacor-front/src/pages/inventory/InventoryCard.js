@@ -68,41 +68,27 @@ function InventoryCard(props) {
         window.location.reload(false);
     }
 
-    const sendRemoved = async (pallet) => {
+    const removeIncidence = async (e) => {
+        e.preventDefault();
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
-            if (pallet.substr(2,8) === props.orderConteiner) {
+            var formdata = new FormData();
 
-                const b_quitado = "true";
-
-                var formdata = new FormData();
-                formdata.append("b_quitado", b_quitado);
-
-                const result = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token.access_token}`
-                    },
-                    body: formdata
-                })
-
-                const response = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Authorization": `Bearer ${token.access_token}`
-                    },
-                })
-
-                const data = await response.json();
-                data && refreshPage();
-                console.log(data);
-
-            } else {
-                handleOpenAlert("El código no coindice", "error")
+            const response = await fetch(`${Connected.currentURL}api/v1/deposito/inventarios_reales/?id=${props.itemId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+                body: formdata
+            })
+            const data = await response.json();
+            if (data.succes) {
+                handleOpenAlert("Quitado correctamente", "success");
+                refreshPage();
             }
-
+            console.log(data);
         }
     };
     
@@ -124,30 +110,15 @@ function InventoryCard(props) {
                     </CardContent>
 
                     <CardActions>
-                        {
-                            !props.orderDespacho ? 
-
-                                <Button 
-                                    variant='contained' 
-                                    size='medium' 
-                                    className='order-card-button' 
-                                    disableElevation
-                                    onClick={handleOpen}
-                                >
-                                    Quitar
-                                </Button>
-                            :
-                                <Button 
-                                    variant='outlined' 
-                                    size='medium' 
-                                    className='order-card-button despachado' 
-                                    disableElevation
-                                    disabled
-                                    startIcon={<CheckCircleIcon />}
-                                >
-                                    Quitado
-                                </Button>
-                        }
+                        <Button 
+                            variant='contained' 
+                            size='medium' 
+                            className='order-card-button' 
+                            disableElevation
+                            onClick={handleOpen}
+                        >
+                            Quitar
+                        </Button>
                     </CardActions>
 
                 </Card>
@@ -156,17 +127,15 @@ function InventoryCard(props) {
             <Dialog
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
             >
                 <DialogTitle>
-                    {"Se necesita confirmación"}
+                    {"Quitar"}
                 </DialogTitle>
 
                 <DialogContent>
 
                     <DialogContentText>
-                        Ingrese el código del pallet a quitar para confirmar.
+                        Estás por quitar una incidencia, ¿Estás seguro?
                     </DialogContentText>
 
                 </DialogContent>
@@ -174,10 +143,13 @@ function InventoryCard(props) {
                 <DialogActions>
 
                     <Button 
-                        variant='text' 
+                        variant='outlined' 
                         disableElevation 
                         className='order-card-button' 
-                        onClick={handleClose}
+                        onClick={(e) => {
+                            removeIncidence(e);
+                            handleClose();
+                        }}
                     >
                         Aceptar
                     </Button>
@@ -197,7 +169,7 @@ function InventoryCard(props) {
 
             <Snackbar 
                 open={openAlert}
-                autoHideDuration={4000}
+                autoHideDuration={2000}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >

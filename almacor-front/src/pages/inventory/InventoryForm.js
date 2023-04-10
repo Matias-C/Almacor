@@ -49,7 +49,8 @@ function InventoryForm(props) {
                 setValidPalletLength(true);
                 setError(false);
                 if (e.target.value.length === 10) {
-                    checkPallet(e.target.value);
+                    setPallet(e.target.value);
+                    setInputFocus();
                 } else {
                     return null;
                 }
@@ -77,7 +78,7 @@ function InventoryForm(props) {
                 setValidLocationLength(true);
                 setError(false);
                 if (e.target.value.length === 12) {
-                    checkLocation(e.target.value);
+                    addIncidence(e.target.value)
                 } else {
                     return null;
                 }
@@ -91,60 +92,14 @@ function InventoryForm(props) {
         };
     };
 
-    const checkPallet = async (pallet) => {
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${pallet}`, {
-                method: "GET",
-                headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token.access_token}`
-                },
-            });
-            const data = await res.json();
-            data.error && handleOpenAlert("Este pallet no existe", "error");
-            if (data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion") {
-                handleOpenAlert("Pallet disponible", "success");
-                setInputFocus();
-            }
-            data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado", "error");
-            console.log(data);
-            }
-    };
-
-    const checkLocation = async (location) => {
-
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-            
-            const res = await fetch(`${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${location}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token.access_token}`
-                },
-            })
-            const data = await res.json();
-            if (data.status === "Esta posicion se encuentra vacia") {
-
-                handleOpenAlert("Ubicación disponible", "success");
-                addIncidence(location);
-
-            } else {
-                handleOpenAlert("Ubicación no disponible", "error");
-            }
-            console.log(data, location);
-        }
-    };
-
-    const addIncidence = async (location) => {
+    const addIncidence = async (loc) => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
 
             const n_id_empresa = Connected.userInfo.n_id_empresa;
             const n_id_inventario = props.inventoryId;
-            const ubicacion = location;
+            const ubicacion = loc;
             const numero = pallet;
 
             var formdata = new FormData();
@@ -161,7 +116,18 @@ function InventoryForm(props) {
                 body: formdata
             })
             const data = await response.json();
-            console.log(data, ubicacion, numero);
+            if (data.error) {
+
+                if (data.error[0] === "Esta ubicacion ya se encuentra registrada en este inventario") {
+                    handleOpenAlert("Esta ubicación ya está en uso", "error")
+                } else if (data.error[0] === "Esta partida ya se encuentra registrada en este inventario") {
+                    handleOpenAlert("Este pallet ya está almacenado", "error")
+                }
+
+            } else if (data.status) {
+                handleOpenAlert("Almacenado correctamente")
+            }
+            console.log(data);
 
         }
     };
@@ -188,12 +154,6 @@ function InventoryForm(props) {
         setOpenAlert(false);
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            checkPallet(pallet);
-        }
-    }
-
     return(
         <>
             <Grid container spacing={2}>
@@ -207,9 +167,6 @@ function InventoryForm(props) {
                             value={pallet}
                             onChange={handleChangePallet}
                             autoFocus
-                            onKeyDown={(e) => {
-                                handleKeyDown(e)
-                            }}
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
@@ -237,9 +194,6 @@ function InventoryForm(props) {
                             label="Ubicación"
                             value={location}
                             onChange={handleChangeLocation}
-                            onKeyDown={(e) => {
-                                handleKeyDown(e)
-                            }}
                             inputComponent={LocationMask}
                             inputRef={inputFocus}
                         />
@@ -262,7 +216,7 @@ function InventoryForm(props) {
 
             <Snackbar 
                 open={openAlert}
-                autoHideDuration={1500}
+                autoHideDuration={2200}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >

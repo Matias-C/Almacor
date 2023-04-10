@@ -9,7 +9,6 @@ import { Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import DisplayDetailsPage from "../../components/display/DisplayDetailsPage";
@@ -52,7 +51,7 @@ function InventoryDetails() {
             })
             const data = await res.json();
             data.error ? setEmpty(true) : setInventory(data);
-            console.log(data, location.state.n_id_empresa, location.state.n_id_inventario);
+            console.log(data);
           }
         };
         getInventoryDetails();
@@ -77,6 +76,7 @@ function InventoryDetails() {
 
                                         <InventoryCard
                                             key={item.n_id_pk}
+                                            itemId={item.n_id_pk}
                                             itemPL={item.c_numero}
                                             itemHall={item.c_pasillo}
                                             itemCol={item.n_id_columna}
@@ -93,33 +93,32 @@ function InventoryDetails() {
                         <Typography variant="h3" className='inv-details-empty-alert'>Inventario vacío</Typography>
                 }
 
-            </DisplayDetailsPage>
+                <Dialog open={openDialog} onClose={handleCloseDialog}>
 
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>Añadir Incidencia</DialogTitle>
+                    <DialogContent>
 
-                <DialogTitle>Añadir Incidencia</DialogTitle>
-                <DialogContent>
-
-                    <DialogContentText>
                         <InventoryForm 
                             inventoryId={location.state.n_id_inventario}
                         />
-                    </DialogContentText>
 
-                </DialogContent>
+                    </DialogContent>
 
-                <DialogActions>
-                    <Button 
-                        variant="outlined" 
-                        className='add-page-button' 
-                        onClick={() => {
-                            handleCloseDialog();
-                        }}
-                    >
-                        Cancelar
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    <DialogActions>
+                        <Button 
+                            variant="outlined" 
+                            className='add-page-button' 
+                            onClick={() => {
+                                handleCloseDialog();
+                            }}
+                        >
+                            Cancelar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+            </DisplayDetailsPage>
+
         </>
         
     );
