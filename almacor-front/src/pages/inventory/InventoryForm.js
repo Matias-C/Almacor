@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
@@ -32,7 +32,12 @@ function InventoryForm(props) {
 
     const Connected = useContext(ContextConnected);
 
-    const [inputFocus, setInputFocus] = UseFocus();
+    const [inputPalletFocus, setInputPalletFocus] = UseFocus();
+    const [inputLocationFocus, setinputLocationFocus] = UseFocus();
+
+    useEffect(() => {
+        setInputPalletFocus();
+    },[])
 
     const [errorPallet, setErrorPallet] = useState(false);
     const [validPallet, setValidPallet] = useState(false);
@@ -50,7 +55,7 @@ function InventoryForm(props) {
                 setErrorPallet(false);
                 if (e.target.value.length === 10) {
                     setPallet(e.target.value);
-                    setInputFocus();
+                    setinputLocationFocus();
                 } else {
                     return null;
                 }
@@ -133,7 +138,9 @@ function InventoryForm(props) {
                     handleOpenAlert("Esta ubicación no existe", "error")
                 }
                 else {
-                    props.setInventoryDetails([...props.inventoryDetails, data.status.info])
+                    setPallet("");
+                    setLocation("");
+                    setInputPalletFocus();
                     handleOpenAlert("Almacenado correctamente");
                 }
                 
@@ -177,8 +184,8 @@ function InventoryForm(props) {
                             label="Pallet"
                             value={pallet}
                             onChange={handleChangePallet}
-                            autoFocus
                             inputComponent={PalletMask}
+                            inputRef={inputPalletFocus}
                         />
                         <FormHelperText>
                             {
@@ -206,7 +213,7 @@ function InventoryForm(props) {
                             value={location}
                             onChange={handleChangeLocation}
                             inputComponent={LocationMask}
-                            inputRef={inputFocus}
+                            inputRef={inputLocationFocus}
                         />
                         <FormHelperText>
                             {
