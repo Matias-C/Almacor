@@ -151,14 +151,13 @@ function App() {
       }
     };
     loadUserFromLocalStorage();
-  }, []);
+  }, [currentURL]);
 
   return (
     <>
       <ContextConnected.Provider
         value={{
           currentURL,
-          productionURL,
 
           userInfo,
           setUserInfo,

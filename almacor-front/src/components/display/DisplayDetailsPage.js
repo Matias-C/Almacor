@@ -25,7 +25,7 @@ function DisplayDetailsPage(props) {
 
                 {
                     props.addButton &&
-                        <Fab color="primary" size="medium" aria-label="add" onClick={handleOpenDialog}>
+                        <Fab color="primary" size="medium" onClick={handleOpenDialog}>
                             <AddIcon />
                         </Fab>
                 }

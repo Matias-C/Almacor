@@ -2,6 +2,9 @@
 
 
 .display-page-header {
+    display: flex;
+    justify-content: space-between;
+
     color: var(--main-font);
     margin-bottom: 15px !important;
 }

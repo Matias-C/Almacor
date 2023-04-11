@@ -55,7 +55,7 @@ function InventoryDetails() {
           }
         };
         getInventoryDetails();
-    }, [Connected, location.state.n_id_empresa, location.state.n_id_inventario]);
+    }, [Connected, location]);
 
     return (
 
@@ -96,10 +96,13 @@ function InventoryDetails() {
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
 
                     <DialogTitle>Añadir Incidencia</DialogTitle>
-                    <DialogContent>
+                    
+                    <DialogContent className='inventory-dialog'>
 
-                        <InventoryForm 
+                        <InventoryForm
                             inventoryId={location.state.n_id_inventario}
+                            inventoryDetails={inventoryDetails}
+                            setInventoryDetails={setInventoryDetails}
                         />
 
                     </DialogContent>

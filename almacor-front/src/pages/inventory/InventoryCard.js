@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react';
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
 import Grid from '@mui/material/Unstable_Grid2';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -17,16 +15,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import PalletDetails from '../../components/pallet-details/PalletDetails';
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-
 import ContextConnected from '../../context/ContextConnected';
 
 import "./Inventory.css"
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function InventoryCard(props) {
 
@@ -40,28 +31,6 @@ function InventoryCard(props) {
 
     const handleClose = () => {
         setOpen(false);
-    };
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("")
-    const [alert, setAlert] = useState("");
-    const state = {
-        vertical: 'top',
-        horizontal: 'center',
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenAlert = (alert, type) => {
-        setAlertType(type);
-        setAlert(alert);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenAlert(false);
     };
 
     const refreshPage = () => {
@@ -85,7 +54,6 @@ function InventoryCard(props) {
             })
             const data = await response.json();
             if (data.succes) {
-                handleOpenAlert("Quitado correctamente", "success");
                 refreshPage();
             }
             console.log(data);
@@ -167,20 +135,6 @@ function InventoryCard(props) {
 
             </Dialog>
 
-            <Snackbar 
-                open={openAlert}
-                autoHideDuration={2000}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert 
-                    onClose={handleCloseAlert} 
-                    severity={alertType} 
-                    sx={{ width: '100%' }}
-                >
-                    {alert}
-                </Alert>
-            </Snackbar>
         </>
 
     );

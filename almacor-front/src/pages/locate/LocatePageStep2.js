@@ -59,7 +59,7 @@ function LocatePageStep2() {
           }
         };
         getPallet();
-    }, []);
+    }, [Connected, location]);
 
     const changePallet = async (e) => {
         e.preventDefault();

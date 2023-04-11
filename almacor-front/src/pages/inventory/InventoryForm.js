@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -34,7 +34,7 @@ function InventoryForm(props) {
 
     const [inputFocus, setInputFocus] = UseFocus();
 
-    const [error, setError] = useState(false);
+    const [errorPallet, setErrorPallet] = useState(false);
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidPalletLength] = useState(false);
 
@@ -47,7 +47,7 @@ function InventoryForm(props) {
             setValidPallet(true);
             if (e.target.value.length > 9) {
                 setValidPalletLength(true);
-                setError(false);
+                setErrorPallet(false);
                 if (e.target.value.length === 10) {
                     setPallet(e.target.value);
                     setInputFocus();
@@ -56,14 +56,15 @@ function InventoryForm(props) {
                 }
             } else {
                 setValidPalletLength(false);
-                setError(true);
+                setErrorPallet(true);
             }
         } else {
             setValidPallet(false);
-            setError(true);
+            setErrorPallet(true);
         };
     };
 
+    const [errorLocation, setErrorLocation] = useState(false);
     const [validLocation, setValidLocation] = useState(false);
     const [validLocationLength, setValidLocationLength] = useState(false);
 
@@ -76,7 +77,7 @@ function InventoryForm(props) {
             setValidLocation(true);
             if (e.target.value.length > 11) {
                 setValidLocationLength(true);
-                setError(false);
+                setErrorLocation(false);
                 if (e.target.value.length === 12) {
                     addIncidence(e.target.value)
                 } else {
@@ -84,11 +85,11 @@ function InventoryForm(props) {
                 }
             } else {
                 setValidLocationLength(false);
-                setError(true);
+                setErrorLocation(true);
             };
         } else {
             setValidLocation(false);
-            setError(true);
+            setErrorLocation(true);
         };
     };
 
@@ -122,10 +123,20 @@ function InventoryForm(props) {
                     handleOpenAlert("Esta ubicación ya está en uso", "error")
                 } else if (data.error[0] === "Esta partida ya se encuentra registrada en este inventario") {
                     handleOpenAlert("Este pallet ya está almacenado", "error")
+                } else if (data.error[0] === "El Pallet ingresado no existe") {
+                    handleOpenAlert("Este pallet no existe", "error")
                 }
 
             } else if (data.status) {
-                handleOpenAlert("Almacenado correctamente")
+
+                if (data.status[0] === "Esta posicion no existe") {
+                    handleOpenAlert("Esta ubicación no existe", "error")
+                }
+                else {
+                    props.setInventoryDetails([...props.inventoryDetails, data.status.info])
+                    handleOpenAlert("Almacenado correctamente");
+                }
+                
             }
             console.log(data);
 
@@ -159,8 +170,8 @@ function InventoryForm(props) {
             <Grid container spacing={2}>
                 <Grid xs={12} sm={12} md={12} lg={12}>
 
-                    <FormControl error={pallet === "" ? false : error} size="small" margin="dense" className="inventory-form-input">
-                        <InputLabel htmlFor="component-outlined">Pallet</InputLabel>
+                    <FormControl error={pallet === "" ? false : errorPallet} size="small" margin="dense" className="inventory-form-input">
+                        <InputLabel>Pallet</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
                             label="Pallet"
@@ -173,7 +184,7 @@ function InventoryForm(props) {
                             {
                                 pallet === "" ?
                                     "" 
-                                : error ? 
+                                : errorPallet ? 
                                     !validPallet ? 
                                         "El código no es valido" 
                                     : !validPalletLength ? 
@@ -187,8 +198,8 @@ function InventoryForm(props) {
                 </Grid>
 
                 <Grid xs={12} sm={12} md={12} lg={12}>
-                    <FormControl error={location === "" ? false : error} size="small" className="inventory-form-input">
-                        <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
+                    <FormControl error={location === "" ? false : errorLocation} size="small" className="inventory-form-input">
+                        <InputLabel>Ubicación</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
                             label="Ubicación"
@@ -201,7 +212,7 @@ function InventoryForm(props) {
                             {
                                 location === "" ?
                                     "" 
-                                : error ? 
+                                : errorLocation ? 
                                     !validLocation ? 
                                         "El código no es valido" 
                                     : !validLocationLength ? 

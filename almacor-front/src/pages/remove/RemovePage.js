@@ -296,6 +296,7 @@ function RemovePage() {
 
                 <DialogActions>
                     <Button
+                        variant='outlined'
                         disabled={disabled}
                         className='add-page-button' 
                         onClick={(e) => {
@@ -306,7 +307,9 @@ function RemovePage() {
                         Aceptar
                     </Button>
                     <Button 
-                        variant="outlined" 
+                        variant="contained" 
+                        autofocus
+                        disableElevation
                         className='add-page-button' 
                         onClick={() => {
                             handleCloseDialog();

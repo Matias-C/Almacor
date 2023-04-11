@@ -32,7 +32,7 @@ function OrdersDisplay() {
           }
         };
         getOrders();
-    }, []);
+    }, [Connected]);
 
     return(
 

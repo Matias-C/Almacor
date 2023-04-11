@@ -84,7 +84,7 @@ function LocatePageStep3() {
             }
         };
         generateLocation();
-    }, [Connected.userInfo]);
+    }, [Connected, deposit, zone, weight, height]);
 
     const locate = () => {
         handleOpenAlert("Pallet ubicado correctamente", "success");
