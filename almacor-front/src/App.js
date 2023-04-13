@@ -183,7 +183,7 @@ function App() {
           <BrowserRouter>
             <Routes>
 
-              <Route exact path="/" element=<Navigate to={userInfo === null ? "/login" : "/depositos"} />/>
+              <Route exact path="/" element=<Navigate to={userInfo === null ? "/login" : "/depositos"} replace={true}/>/>
               <Route exact path="/login" element=<Login /> />
               <Route exact path="/depositos" element=<MainPage /> />
               <Route exact path="/depositos/:deposit" element=<ZonesPage /> />
