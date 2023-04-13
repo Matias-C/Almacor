@@ -54,7 +54,7 @@ function InventoryCard(props) {
             })
             const data = await response.json();
             if (data.succes) {
-                refreshPage();
+                props.setRefresh(true);
             }
             console.log(data);
         }

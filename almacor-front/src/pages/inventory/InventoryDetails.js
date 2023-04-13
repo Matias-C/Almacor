@@ -26,7 +26,7 @@ function InventoryDetails() {
 
     const [empty, setEmpty] = useState(null);
     const [inventoryDetails, setInventoryDetails] = useState([]);
-    const [listener, setListener] = useState("");
+    const [refresh, setRefresh] = useState(false);
 
     const [openDialog, setOpenDialog] = useState(false);
     
@@ -52,11 +52,12 @@ function InventoryDetails() {
             })
             const data = await res.json();
             data.error ? setEmpty(true) : setInventory(data);
+            setRefresh(false);
             console.log(data);
           }
         };
         getInventoryDetails();
-    }, [Connected, location, listener]);
+    }, [Connected, location, refresh]);
 
     return (
 
@@ -82,6 +83,7 @@ function InventoryDetails() {
                                             itemHall={item.c_pasillo}
                                             itemCol={item.n_id_columna}
                                             itemRow={item.n_id_fila}
+                                            setRefresh={setRefresh}
                                         />
 
                                     );
@@ -104,7 +106,7 @@ function InventoryDetails() {
                             inventoryId={location.state.n_id_inventario}
                             inventoryDetails={inventoryDetails}
                             setInventoryDetails={setInventoryDetails}
-                            setListener={setListener}
+                            setRefresh={setRefresh}
                         />
 
                     </DialogContent>

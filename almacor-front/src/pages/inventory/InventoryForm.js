@@ -138,9 +138,7 @@ function InventoryForm(props) {
                     handleOpenAlert("Esta ubicación no existe", "error")
                 }
                 else if (data.info) {
-                    const newData = data.info
-                    props.setInventoryDetails([...props.inventoryDetails, newData]);
-                    props.setListener("1");
+                    props.setRefresh(true);
                     setPallet("");
                     setLocation("");
                     setInputPalletFocus();

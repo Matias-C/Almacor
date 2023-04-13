@@ -243,7 +243,7 @@ function RemovePage() {
                 <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                    <FormControl size="small" error={value === "" ? false : error} className="remove-page-input" margin='dense'>
+                    <FormControl size="small" error={value === "" ? false : error} fullWidth className="remove-page-input">
                         <InputLabel htmlFor="pallet-code">Código</InputLabel>
                         <OutlinedInput
                             id="pallet-code"

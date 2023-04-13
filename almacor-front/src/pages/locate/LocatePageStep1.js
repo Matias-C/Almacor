@@ -117,8 +117,8 @@ function LocatePageStep1() {
                     <Typography variant='h4'>Ingrese el código del pallet</Typography>
                     <hr className='separator' />
 
-                    <FormControl error={value === "" ? false : error} size="small" className="add-page-input">
-                        <InputLabel htmlFor="component-outlined">Código</InputLabel>
+                    <FormControl error={value === "" ? false : error} size="small" fullWidth className="add-page-input">
+                        <InputLabel>Código</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
                             label="Código"

@@ -178,15 +178,12 @@ function OrderCard(props) {
                     <Typography variant='h4' className='order-card-header'>PL{props.orderConteiner}</Typography>
                     <hr className='separator' />
 
-                    <div className='order-card-table-cont'>
                         <div className='order-card-table-item'>
 
                             <Typography variant='body' className='order-card-item'>Remito</Typography>
                             <Typography variant='body' className='number'>{props.orderRemito}</Typography>
 
                         </div>
-
-                    </div>
 
                     <PalletDetails 
                         hall={props.orderHall}
