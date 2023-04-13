@@ -26,6 +26,7 @@ function InventoryDetails() {
 
     const [empty, setEmpty] = useState(null);
     const [inventoryDetails, setInventoryDetails] = useState([]);
+    const [listener, setListener] = useState("");
 
     const [openDialog, setOpenDialog] = useState(false);
     
@@ -55,7 +56,7 @@ function InventoryDetails() {
           }
         };
         getInventoryDetails();
-    }, [Connected, location]);
+    }, [Connected, location, listener]);
 
     return (
 
@@ -103,6 +104,7 @@ function InventoryDetails() {
                             inventoryId={location.state.n_id_inventario}
                             inventoryDetails={inventoryDetails}
                             setInventoryDetails={setInventoryDetails}
+                            setListener={setListener}
                         />
 
                     </DialogContent>

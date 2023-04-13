@@ -33,7 +33,7 @@ function InventoryForm(props) {
     const Connected = useContext(ContextConnected);
 
     const [inputPalletFocus, setInputPalletFocus] = UseFocus();
-    const [inputLocationFocus, setinputLocationFocus] = UseFocus();
+    const [inputLocationFocus, setInputLocationFocus] = UseFocus();
 
     useEffect(() => {
         setInputPalletFocus();
@@ -55,7 +55,7 @@ function InventoryForm(props) {
                 setErrorPallet(false);
                 if (e.target.value.length === 10) {
                     setPallet(e.target.value);
-                    setinputLocationFocus();
+                    setInputLocationFocus();
                 } else {
                     return null;
                 }
@@ -137,7 +137,10 @@ function InventoryForm(props) {
                 if (data.status[0] === "Esta posicion no existe") {
                     handleOpenAlert("Esta ubicación no existe", "error")
                 }
-                else {
+                else if (data.info) {
+                    const newData = data.info
+                    props.setInventoryDetails([...props.inventoryDetails, newData]);
+                    props.setListener("1");
                     setPallet("");
                     setLocation("");
                     setInputPalletFocus();
