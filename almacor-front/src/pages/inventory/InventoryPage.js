@@ -46,7 +46,7 @@ function InventoryPage () {
     };
 
     useEffect(() => {
-        const getOrders = async () => {
+        const getInventories = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
             const res = await fetch(`${Connected.currentURL}api/v1/deposito/inventarios/?empresa=${Connected.userInfo.n_id_empresa}`, {
@@ -57,12 +57,17 @@ function InventoryPage () {
               },
             })
             const data = await res.json();
-            data.error ? setEmpty(true) : setInventory(data);
+            if (data.error) {
+                setEmpty(true);
+            } else {
+                setInventory(data);
+                setEmpty(false);
+            }
             setCurrentCompany(Connected.userInfo.n_id_empresa);
             setLoading(false);
           }
         };
-        getOrders();
+        getInventories();
     }, [Connected]);
 
     const addInventory = async () => {
