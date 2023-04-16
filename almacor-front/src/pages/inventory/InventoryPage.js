@@ -26,6 +26,7 @@ function InventoryPage () {
 
     const [loading, setLoading] = useState(true);
 
+    const [empty, setEmpty] = useState(null);
     const [inventory, setInventory] = useState([]);
     const [currentCompany, setCurrentCompany] = useState("");
     const [inventoryType, setInventoryType] = useState("T");
@@ -56,7 +57,7 @@ function InventoryPage () {
               },
             })
             const data = await res.json();
-            setInventory(data);
+            data.error ? setEmpty(true) : setInventory(data);
             setCurrentCompany(Connected.userInfo.n_id_empresa);
             setLoading(false);
           }
@@ -95,37 +96,43 @@ function InventoryPage () {
                 addButton
                 setOpenDialog={setOpenDialog}
             >
+                {
+                    !empty ?
 
-                <Grid container spacing={2}>
+                        <Grid container spacing={2}>
 
-                    {
-                        loading ? (
-                            <>
-                                <DisplaySkeleton />
-                                <DisplaySkeleton />
-                                <DisplaySkeleton />
-                                <DisplaySkeleton />
-                            </>
-                        ) : (
+                            {
+                                loading ? (
+                                    <>
+                                        <DisplaySkeleton />
+                                        <DisplaySkeleton />
+                                        <DisplaySkeleton />
+                                        <DisplaySkeleton />
+                                    </>
+                                ) : (
 
-                            inventory.map((item) => {
-                                return (
+                                    inventory.map((item) => {
+                                        return (
 
-                                    <DisplayButton
-                                        key={item.n_id_pk}
-                                        displayButtonTypeDetail={item.c_tipo_inventario === "T" ? "Total" : "Parcial"}
-                                        displayButtonHeader={`Inventario ${item.n_id_inventario}`}
-                                        displayButtonURL={`inventario=${item.n_id_inventario}`}
-                                        object={item}
-                                    />
+                                            <DisplayButton
+                                                key={item.n_id_pk}
+                                                displayButtonTypeDetail={item.c_tipo_inventario === "T" ? "Total" : "Parcial"}
+                                                displayButtonHeader={`Inventario ${item.n_id_inventario}`}
+                                                displayButtonURL={`inventario=${item.n_id_inventario}`}
+                                                object={item}
+                                            />
 
-                                );
-                            })
+                                        );
+                                    })
 
-                        )
-                    }
+                                )
+                            }
 
-                </Grid>
+                        </Grid>
+                    :
+                        <Typography variant="h3" className='inv-details-empty-alert'>No se encontraron Inventarios</Typography>
+                }
+
 
             </DisplayPage>
 

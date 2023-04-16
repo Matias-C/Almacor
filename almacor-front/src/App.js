@@ -89,7 +89,7 @@ function App() {
   const testingURL = "https://apicdtesting.almacorweb.com/";
   const productionURL = "https://apicd.almacorweb.com/";
 
-  const currentURL = productionURL;
+  const currentURL = testingURL;
   
   const [userInfo, setUserInfo] = useState(null);
 
