@@ -34,7 +34,6 @@ function ZonesPage() {
                 })
                 const data = await res.json();
                 setZones(data);
-                console.log(data);
             }
         };
         getZones();

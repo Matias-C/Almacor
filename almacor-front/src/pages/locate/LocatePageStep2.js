@@ -62,7 +62,6 @@ function LocatePageStep2() {
             setHeight(data.data[0].n_tipoaltura);
             setRotation(data.data[0].n_nivelrotacion);
             setLoading(false);
-            console.log(data);
           }
         };
         getPallet();

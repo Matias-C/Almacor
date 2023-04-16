@@ -30,7 +30,6 @@ function OrdersDisplay() {
             const data = await res.json();
             setOrders(data);
             setLoading(false);
-            console.log(data);
           }
         };
         getOrders();

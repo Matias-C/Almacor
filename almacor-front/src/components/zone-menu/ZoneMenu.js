@@ -61,7 +61,6 @@ function ZoneMenu() {
         } else if (currentUrl.includes("inventario")) {
           setPage("inventory")
         }
-        console.log(currentUrl);
       }
       getUrl();
     },[])

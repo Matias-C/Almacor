@@ -83,7 +83,6 @@ function OrderDetails() {
                 const data = await res.json();
                 setDetails(data);
                 setLoading(false);
-                console.log(data);
             }
         };
         getDetails();

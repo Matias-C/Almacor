@@ -32,7 +32,6 @@ function ZonesPage(props) {
             })
             const data = await res.json();
             setDeposits(data);
-            console.log(data);
           }
         };
         getDeposits();

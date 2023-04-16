@@ -110,9 +110,6 @@ function RemovePage() {
             setDisabled(true);
             setError(true);
         };
-
-        console.log(type);
-
     };
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -163,7 +160,6 @@ function RemovePage() {
             })
             const data = await response.json();
             data.succes && handleOpenAlert("Pallet removido correctamente", "success");
-            console.log(data);
         }
     };
 
@@ -184,7 +180,6 @@ function RemovePage() {
             })
             const data = await response.json();
             data.succes && handleOpenAlert("Ubicación desocupada correctamente", "success");
-            console.log(data);
         }
     };
 
@@ -202,7 +197,6 @@ function RemovePage() {
             data.error && handleOpenAlert("Este pallet no existe", "error");
             data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no se encuentra ubicado", "error");
             data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenDialog();
-            console.log(data);
         }
     };
 
@@ -225,7 +219,6 @@ function RemovePage() {
             data.error && handleOpenAlert("Esta ubicación no existe", "error");
             data.status === "Esta posicion se encuentra vacia" && handleOpenAlert("Esta ubicación se encuentra vacía", "error");
             data[0].numero !== null && locationData(data[0].numero);
-            console.log(data);
         }
     };
 

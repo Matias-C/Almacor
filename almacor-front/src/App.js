@@ -89,7 +89,7 @@ function App() {
   const testingURL = "https://apicdtesting.almacorweb.com/";
   const productionURL = "https://apicd.almacorweb.com/";
 
-  const currentURL = testingURL;
+  const currentURL = productionURL;
   
   const [userInfo, setUserInfo] = useState(null);
 
@@ -147,7 +147,6 @@ function App() {
         );
         const data = await res.json();
         setUserInfo(data);
-        console.log(data)
       }
     };
     loadUserFromLocalStorage();

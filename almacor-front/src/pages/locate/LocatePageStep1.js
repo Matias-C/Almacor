@@ -76,7 +76,6 @@ function LocatePageStep1() {
             data.error && handleOpenAlert("Este pallet no existe");
             data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(url, {state: url}) :
             data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado");
-            console.log(data, url);
             }
     };
 

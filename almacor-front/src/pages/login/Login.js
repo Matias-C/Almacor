@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -76,7 +74,6 @@ function Login() {
             })
     
             const res = await response.json();
-            console.log(res.user)
         
             if (response.status === 200) {
 

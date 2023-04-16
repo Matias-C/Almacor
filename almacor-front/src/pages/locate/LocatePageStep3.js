@@ -88,7 +88,6 @@ function LocatePageStep3() {
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
                 setLoading(false);
-                console.log(data);
             }
         };
         generateLocation();
@@ -142,7 +141,6 @@ function LocatePageStep3() {
             })
             const data = await response.json();
             data.success && locate();
-            console.log(data);
 
         }
     };
@@ -172,7 +170,6 @@ function LocatePageStep3() {
             } else {
                 handleOpenAlert("Ubicación no disponible", "error");
             }
-            console.log(data);
         }
     };
 

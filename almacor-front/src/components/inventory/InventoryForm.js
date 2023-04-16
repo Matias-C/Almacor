@@ -144,7 +144,6 @@ function InventoryForm(props) {
                 }
                 
             }
-            console.log(data);
 
         }
     };

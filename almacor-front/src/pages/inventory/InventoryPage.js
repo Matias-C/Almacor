@@ -59,7 +59,6 @@ function InventoryPage () {
             setInventory(data);
             setCurrentCompany(Connected.userInfo.n_id_empresa);
             setLoading(false);
-            console.log(data);
           }
         };
         getOrders();
@@ -86,8 +85,6 @@ function InventoryPage () {
             })
             const newData = await response.json();
             setInventory([...inventory, newData]);
-            console.log(newData);
-
         }
     };
 

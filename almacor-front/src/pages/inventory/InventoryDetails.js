@@ -55,7 +55,6 @@ function InventoryDetails() {
             data.error ? setEmpty(true) : setInventory(data);
             setRefresh(false);
             setLoading(false);
-            console.log(data);
           }
         };
         getInventoryDetails();

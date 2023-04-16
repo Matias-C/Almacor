@@ -158,7 +158,6 @@ function OrderCard(props) {
 
                 const data = await response.json();
                 data && refreshPage();
-                console.log(data);
 
             } else {
                 handleOpenAlert("El código no coindice", "error")

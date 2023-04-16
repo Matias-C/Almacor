@@ -50,7 +50,6 @@ function InventoryCard(props) {
             if (data.succes) {
                 props.setRefresh(true);
             }
-            console.log(data);
         }
     };
     
