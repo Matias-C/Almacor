@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -21,7 +23,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
+import Skeleton from '@mui/material/Skeleton';
+
 import PalletDetails from '../../components/pallet-details/PalletDetails';
+import PalletDetailsSkeleton from '../../components/pallet-details/PalletDetailsSkeleton';
 import { LocationMask } from '../../components/masked-inputs/LocationMask';
 
 import ContextConnected from '../../context/ContextConnected';
@@ -37,6 +42,8 @@ function LocatePageStep3() {
     const Connected = useContext(ContextConnected);
     const location = useLocation();
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
 
     const deposit = parseInt(Connected.currentDepositId);
     const zone = parseInt(Connected.currentZoneId);
@@ -80,11 +87,22 @@ function LocatePageStep3() {
                 setHall(data.c_pasillo);
                 setCol(data.n_id_columna);
                 setRow(data.n_id_fila);
+                setLoading(false);
                 console.log(data);
             }
         };
         generateLocation();
     }, [Connected, deposit, zone, weight, height]);
+
+    const newLocation = (e) => {
+        e.preventDefault();
+
+        const newHall = parseInt(value.substr(6,2));
+        const newCol = parseInt(value.substr(8,2));
+        const newRow = parseInt(value.substr(10,2));
+
+        locatePallet(newHall, newCol, newRow);
+    }
 
     const locate = () => {
         handleOpenAlert("Pallet ubicado correctamente", "success");
@@ -93,7 +111,7 @@ function LocatePageStep3() {
         }, 1000)
     }
     
-    const locatePallet = async () => {
+    const locatePallet = async (hall, col, row) => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
@@ -101,7 +119,7 @@ function LocatePageStep3() {
             const id_empresa = Connected.userInfo.n_id_empresa;
             const id_deposito = deposit;
             const id_zona = zone;
-            const id_pasillo = idHall;
+            const id_pasillo = hall;
             const id_columna = col;
             const id_fila = row;
             const id_partida = location.state.n_id_partida;
@@ -145,7 +163,7 @@ function LocatePageStep3() {
             if (data.status === "Esta posicion se encuentra vacia") {
 
                 if (location === ub) {
-                    locatePallet();
+                    locatePallet(idHall, col, row);
                 } else {
                     handleOpenAlert("La ubicación no coincide", "warning")
                     handleOpenDialog();
@@ -160,7 +178,7 @@ function LocatePageStep3() {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("")
+    const [alertType, setAlertType] = useState("");
     const [alert, setAlert] = useState("");
     const state = {
         vertical: 'top',
@@ -211,11 +229,6 @@ function LocatePageStep3() {
                         setValidLength(true);
                         setDisabled(false);
                         setError(false);
-                        if (e.target.value.length === 12) {
-                            checkLocation(e.target.value);
-                        } else {
-                            return null;
-                        }
                     } else {
                         setValidLength(false);
                         setDisabled(true);
@@ -238,6 +251,12 @@ function LocatePageStep3() {
         };
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            checkLocation(e.target.value);
+        }
+    }
+
     return(
 
         <>
@@ -248,53 +267,80 @@ function LocatePageStep3() {
 
             </div>
 
-            <Card variant="outlined" className='add-page-card'>
-                <CardContent>
+            <Grid container>
+                <Grid xs={12} sm={6} md={5} lg={4}>
 
-                    <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Ubicación</span></Typography>
-                    <hr className='separator' />
+                    <Card variant="outlined" className='add-page-card'>
+                        <CardContent>
 
-                    <PalletDetails 
-                        hall={hall}
-                        col={col}
-                        row={row}
-                    />
-
-                    <Typography variant='h5' className='step-three add-page-label'>Ingrese la ubicación para confirmar</Typography>
-
-                    <FormControl variant="outlined" size='small' fullWidth>
-                        <InputLabel htmlFor="component-outlined">Ubicación</InputLabel>
-                        <OutlinedInput
-                            id="pallet-code"
-                            label="Ubicación"
-                            value={value}
-                            error={error}
-                            autoFocus
-                            onChange={(e) => {
-                                handleChange(e);
-                            }}
-                            inputComponent={LocationMask}
-                        />
-                        <FormHelperText>
                             {
-                                value === "" ?
-                                     "" 
-                                : error ?
-                                    !validPallet ?
-                                        "Código no válido" 
-                                    : !validDeposit ?
-                                        "El depósito no coincide con tu depósito actual"
-                                    : !validZone ?
-                                        "La zona no coincide con tu zona actual"
-                                    : !validPalletLength ? 
-                                        "El código es demasiado corto"
-                                    :""
-                                : ""
+                                loading ? (
+                                    <>
+                                        <Skeleton variant="text" width="50%" sx={{ fontSize: '20px' }} animation="wave" />
+                                        <Skeleton>
+                                            <hr className='separator' />
+                                        </Skeleton>
+
+                                        <PalletDetailsSkeleton />
+
+                                        <Skeleton variant="text" width="70%" sx={{ fontSize: '20px' }} animation="wave" style={{ margin: "16px 0 12px" }} />
+                                        <Skeleton variant="rounded" height={40} animation="wave" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Detalles</span></Typography>
+                                        <hr className='separator' />
+
+                                        <PalletDetails 
+                                            hall={hall}
+                                            col={col}
+                                            row={row}
+                                        />
+
+                                        <Typography variant='h5' className='step-three add-page-label'>Ingrese la ubicación para confirmar</Typography>
+
+                                        <FormControl variant="outlined" size='small' fullWidth error={value === "" ? false : error}>
+                                            <InputLabel>Ubicación</InputLabel>
+                                            <OutlinedInput
+                                                id="pallet-code"
+                                                label="Ubicación"
+                                                value={value}
+                                                autoFocus
+                                                onChange={handleChange}
+                                                onKeyDown={(e) => {
+                                                    handleKeyDown(e)
+                                                }}
+                                                inputComponent={LocationMask}
+                                            />
+                                            <FormHelperText>
+                                                {
+                                                    value === "" ?
+                                                        "" 
+                                                    : error ?
+                                                        !validPallet ?
+                                                            "Código no válido" 
+                                                        : !validDeposit ?
+                                                            "El depósito no coincide con tu depósito actual"
+                                                        : !validZone ?
+                                                            "La zona no coincide con tu zona actual"
+                                                        : !validPalletLength ? 
+                                                            "El código es demasiado corto"
+                                                        :""
+                                                    : ""
+                                                }
+                                            </FormHelperText>
+                                        </FormControl>
+                                    </>
+                                )
                             }
-                        </FormHelperText>
-                    </FormControl>
-                </CardContent>
-            </Card>
+
+                        </CardContent>
+                    </Card>
+
+                </Grid>
+            </Grid>
+
+            
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
 
@@ -309,27 +355,19 @@ function LocatePageStep3() {
 
                 <DialogActions>
                     <Button
+                        variant='outlined'
                         disabled={disabled}
                         className='add-page-button' 
-                        onClick={() => {
-
-                            const newHall = parseInt(value.substr(6,2));
-                            const newCol = parseInt(value.substr(8,2));
-                            const newRow = parseInt(value.substr(10,2));
-
-                            setHall(newHall);
-                            setCol(newCol);
-                            setRow(newRow);
-
-                            locatePallet();
-
+                        onClick={(e) => {
+                            newLocation(e);
                             handleCloseDialog();
                         }}
                     >
                         Aceptar
                     </Button>
                     <Button 
-                        variant="outlined" 
+                        variant="contained"
+                        disableElevation
                         className='add-page-button' 
                         onClick={() => {
                             handleCloseDialog();

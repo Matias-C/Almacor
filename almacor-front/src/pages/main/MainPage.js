@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
+
 import Paper from '@mui/material/Paper';
 import { Typography, Button } from "@mui/material";
 
@@ -34,7 +36,7 @@ function ZonesPage(props) {
           }
         };
         getDeposits();
-    }, [Connected.userInfo]);
+    }, [Connected]);
 
     if (deposits === null) {
         return null;
@@ -48,36 +50,44 @@ function ZonesPage(props) {
 
                     <Typography variant="h1" className="main-page-header">Bienvenido {Connected.userInfo.username}</Typography>
 
-                    <Paper variant='outlined' className="main-page-card">
+                    <Grid container>
+                        <Grid xs={12} sm={6} md={5} lg={4}>
+
+                            <Paper variant='outlined' className="main-page-card">
                     
-                        <Typography variant="h3">Tus depósitos</Typography>
-                        <hr className="bold-separator"></hr>
+                                <Typography variant="h3">Tus depósitos</Typography>
+                                <hr className="bold-separator"></hr>
 
-                        <div className="main-page-buttons-cont">
-                            {
-                                deposits.map((deposit) => {
+                                <div className="main-page-buttons-cont">
+                                    {
+                                        deposits.map((deposit) => {
 
-                                    return (
+                                            return (
 
-                                        <Button
-                                            key={deposit.n_id_deposito}
-                                            variant="contained"
-                                            size="large"
-                                            disableElevation
-                                            className="main-page-deposit-button"
-                                            onClick={() => { 
-                                                navigate(`deposito=${deposit.c_descripcion.toLowerCase().replace(/\s+/g, '-')}`, {state: deposit});
-                                                Connected.setLocalDeposit("id-deposit", deposit.n_id_deposito, "deposit", deposit.c_descripcion)
-                                            }}
-                                        >{deposit.c_descripcion}</Button>
+                                                <Button
+                                                    key={deposit.n_id_deposito}
+                                                    variant="contained"
+                                                    size="large"
+                                                    disableElevation
+                                                    className="main-page-deposit-button"
+                                                    onClick={() => { 
+                                                        navigate(`deposito=${deposit.c_descripcion.toLowerCase().replace(/\s+/g, '-')}`, {state: deposit});
+                                                        Connected.setLocalDeposit("id-deposit", deposit.n_id_deposito, "deposit", deposit.c_descripcion)
+                                                    }}
+                                                >{deposit.c_descripcion}</Button>
 
-                                    );
+                                            );
 
 
-                                })
-                            }
-                        </div>
-                    </Paper>
+                                        })
+                                    }
+                                </div>
+                            </Paper>
+
+                        </Grid>
+                    </Grid>
+
+                    
 
                 </div>
             </PageContainer>

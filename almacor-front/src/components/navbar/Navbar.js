@@ -20,11 +20,7 @@ function Navbar() {
     const logout = async () => {
         Connected.setUserInfo(null);
         localStorage.removeItem('token');
-        navigate("/")
-    };
-    
-    const refreshPage = () => {
-        window.location.reload(false);
+        navigate("/", {replace: true})
     };
 
     return (
@@ -51,7 +47,6 @@ function Navbar() {
                     color="inherit"
                     onClick={() => {
                         logout();
-                        refreshPage();
                     }}
                 >
                     <LogoutIcon className='nav-icon' />

@@ -4,17 +4,68 @@ import { useLocation } from 'react-router-dom';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import DisplayDetailsPage from '../../components/display/DisplayDetailsPage';
+import OrderCardSkeleton from '../../components/orders/OrderCardSkeleton';
 import OrderCard from '../../components/orders/OrderCard';
 
 import ContextConnected from '../../context/ContextConnected';
 
-import "./OrderDetails.css"
+function Details({ details }) {
+    return (
+        <>
+            {
+                details.filter(detail => detail.b_quitado.toString().includes("f")).map(filteredDetail => {
 
+                    return (
+
+                        <OrderCard
+                            key={filteredDetail.n_id_pk}
+                            idPartida={filteredDetail.n_id_partida}
+                            orderConteiner={filteredDetail.c_numero}
+                            orderRemito={filteredDetail.c_remito}
+                            orderDeposit={filteredDetail.ubicacion.deposito}
+                            orderZone={filteredDetail.ubicacion.zona}
+                            orderHall={filteredDetail.ubicacion.c_pasillo}
+                            orderCol={filteredDetail.ubicacion.columna}
+                            orderRow={filteredDetail.ubicacion.fila}
+                            orderDespacho={filteredDetail.b_quitado}
+                        />
+
+                    );
+
+                })
+            }
+            {
+                details.filter(detail => detail.b_quitado.toString().includes("t")).map(filteredDetail => {
+
+                    return (
+
+                        <OrderCard
+                            key={filteredDetail.n_id_pk}
+                            idPartida={filteredDetail.n_id_partida}
+                            orderConteiner={filteredDetail.c_numero}
+                            orderRemito={filteredDetail.c_remito}
+                            orderDeposit={filteredDetail.ubicacion.deposito}
+                            orderZone={filteredDetail.ubicacion.zona}
+                            orderHall={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.c_pasillo}
+                            orderCol={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.columna}
+                            orderRow={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.fila}
+                            orderDespacho={filteredDetail.b_quitado}
+                        />
+
+                    );
+
+                })
+            }
+        </>
+    )
+}
 
 function OrderDetails() {
 
     const Connected = useContext(ContextConnected)
     const location = useLocation();
+
+    const [loading, setLoading] = useState(true);
 
     const [details, setDetails] = useState([]);
 
@@ -31,6 +82,7 @@ function OrderDetails() {
                 })
                 const data = await res.json();
                 setDetails(data);
+                setLoading(false);
                 console.log(data);
             }
         };
@@ -40,63 +92,26 @@ function OrderDetails() {
     return(
 
         <DisplayDetailsPage
-            detailsHeaderDetail={`Orden ${location.state.n_id_orden_de_carga}`}
+            detailsHeaderDetail={location.state.n_id_orden_de_carga}
             detailsHeader={location.state.c_descripcion}
         >
 
             <Grid container spacing={2}>
-
                 {
-                    details.filter(detail => detail.b_quitado.toString().includes("f")).map(filteredDetail => {
-
-                        return (
-
-                            <OrderCard
-                                key={filteredDetail.n_id_pk}
-                                idPartida={filteredDetail.n_id_partida}
-                                orderConteiner={filteredDetail.c_numero}
-                                orderRemito={filteredDetail.c_remito}
-                                orderDeposit={filteredDetail.ubicacion.deposito}
-                                orderZone={filteredDetail.ubicacion.zona}
-                                orderHall={filteredDetail.ubicacion.c_pasillo}
-                                orderCol={filteredDetail.ubicacion.columna}
-                                orderRow={filteredDetail.ubicacion.fila}
-                                orderDespacho={filteredDetail.b_quitado}
-                            />
-
-                        );
-
-
-                    })
+                    loading ? (
+                        <>
+                            <OrderCardSkeleton />
+                            <OrderCardSkeleton />
+                        </>
+                    ) : (
+                        <Details 
+                            details={details}
+                        />
+                    )
                 }
-                {
-                    details.filter(detail => detail.b_quitado.toString().includes("t")).map(filteredDetail => {
-
-                        return (
-
-                            <OrderCard
-                                key={filteredDetail.n_id_pk}
-                                idPartida={filteredDetail.n_id_partida}
-                                orderConteiner={filteredDetail.c_numero}
-                                orderRemito={filteredDetail.c_remito}
-                                orderDeposit={filteredDetail.ubicacion.deposito}
-                                orderZone={filteredDetail.ubicacion.zona}
-                                orderHall={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.c_pasillo}
-                                orderCol={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.columna}
-                                orderRow={filteredDetail.ubicacion.info ? "-" : filteredDetail.ubicacion.fila}
-                                orderDespacho={filteredDetail.b_quitado}
-                            />
-
-                        );
-
-
-                    })
-                }
-                
-            </Grid> 
+            </Grid>
 
         </DisplayDetailsPage>
-
     );
 }
 

@@ -15,15 +15,16 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import DisplayPage from '../../components/display/DisplayPage';
+import DisplaySkeleton from '../../components/display/DisplaySkeleton';
 import DisplayButton from '../../components/display/DisplayButton';
 
 import ContextConnected from '../../context/ContextConnected';
 
-import "./Inventory.css"
-
 function InventoryPage () {
 
     const Connected = useContext(ContextConnected);
+
+    const [loading, setLoading] = useState(true);
 
     const [inventory, setInventory] = useState([]);
     const [currentCompany, setCurrentCompany] = useState("");
@@ -57,6 +58,7 @@ function InventoryPage () {
             const data = await res.json();
             setInventory(data);
             setCurrentCompany(Connected.userInfo.n_id_empresa);
+            setLoading(false);
             console.log(data);
           }
         };
@@ -100,98 +102,109 @@ function InventoryPage () {
                 <Grid container spacing={2}>
 
                     {
-                        inventory.map((item) => {
+                        loading ? (
+                            <>
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                            </>
+                        ) : (
 
-                            return (
+                            inventory.map((item) => {
+                                return (
 
-                                <DisplayButton
-                                    key={item.n_id_pk}
-                                    displayButtonTypeDetail={item.c_tipo_inventario === "T" ? "Total" : "Parcial"}
-                                    displayButtonHeader={`Inventario ${item.n_id_inventario}`}
-                                    displayButtonURL={`inventario=${item.n_id_inventario}`}
-                                    object={item}
-                                />
+                                    <DisplayButton
+                                        key={item.n_id_pk}
+                                        displayButtonTypeDetail={item.c_tipo_inventario === "T" ? "Total" : "Parcial"}
+                                        displayButtonHeader={`Inventario ${item.n_id_inventario}`}
+                                        displayButtonURL={`inventario=${item.n_id_inventario}`}
+                                        object={item}
+                                    />
 
-                            );
+                                );
+                            })
 
-                        })
+                        )
                     }
 
                 </Grid>
 
             </DisplayPage>
 
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="xs">
 
-                    <DialogTitle>Añadir Inventario</DialogTitle>
+                <DialogTitle>Añadir Inventario</DialogTitle>
 
-                    <DialogContent>
+                <DialogContent>
+                    <div className='add-page-inputs-cont'>
 
-                        <div className='add-page-inputs-cont'>
+                        <div className='add-page-input-label-cont'>
 
-                            <div className='add-page-input-label-cont'>
+                            <Typography variant='h5' className='label'>Empresa</Typography>
 
-                                <Typography variant='h5' className='label'>Empresa</Typography>
-
-                            </div>
-
-                                <FormControl variant="outlined" fullWidth>
-                                    <Select
-                                        id="pallet-weight"
-                                        value={currentCompany}
-                                        size="small"
-                                        disabled
-                                        onChange={handleCurrentCompany}
-                                        className='inventory-form-input'
-                                    >
-                                        <MenuItem value={currentCompany}>{currentCompany}</MenuItem>
-                                    </Select>
-                                </FormControl>
-
-                            <div className='add-page-input-label-cont'>
-
-                                <Typography variant='h5' className='label'>Tipo</Typography>
-                                <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
-
-                            </div>
-                        
-                            <FormControl variant="outlined" fullWidth>
-                                <Select
-                                    id="pallet-weight"
-                                    value={inventoryType}
-                                    size="small"
-                                    onChange={handleInventoryType}
-                                    className='inventory-form-input'
-                                >
-                                    <MenuItem value={"T"}>Total</MenuItem>
-                                    <MenuItem value={"P"}>Parcial</MenuItem>
-                                </Select>
-                            </FormControl>
                         </div>
 
-                    </DialogContent>
+                        <FormControl variant="outlined" fullWidth>
+                            <Select
+                                id="pallet-weight"
+                                value={currentCompany}
+                                size="small"
+                                disabled
+                                onChange={handleCurrentCompany}
+                                className='inventory-form-input'
+                            >
+                                <MenuItem value={currentCompany}>{currentCompany}</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                    <DialogActions>
-                        <Button 
-                            variant="outlined" 
-                            className='add-page-button' 
-                            onClick={() => {
-                                addInventory();
-                                handleCloseDialog();
-                            }}
-                        >
-                            Aceptar
-                        </Button>
-                        <Button 
-                            variant="contained" 
-                            disableElevation
-                            className='add-page-button' 
-                            onClick={handleCloseDialog}
-                        >
-                            Cancelar
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                        <div className='add-page-input-label-cont'>
+
+                            <Typography variant='h5' className='label'>Tipo</Typography>
+                            <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+
+                        </div>
+                    
+                        <FormControl variant="outlined" fullWidth>
+                            <Select
+                                id="pallet-weight"
+                                value={inventoryType}
+                                size="small"
+                                onChange={handleInventoryType}
+                                className='inventory-form-input'
+                            >
+                                <MenuItem value={"T"}>Total</MenuItem>
+                                <MenuItem value={"P"}>Parcial</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                    </div>
+                </DialogContent>
+
+                <DialogActions>
+
+                    <Button 
+                        variant="outlined" 
+                        className='add-page-button' 
+                        onClick={() => {
+                            addInventory();
+                            handleCloseDialog();
+                        }}
+                    >
+                        Aceptar
+                    </Button>
+
+                    <Button 
+                        variant="contained" 
+                        disableElevation
+                        className='add-page-button' 
+                        onClick={handleCloseDialog}
+                    >
+                        Cancelar
+                    </Button>
+                    
+                </DialogActions>
+            </Dialog>
         </>
     )
 }

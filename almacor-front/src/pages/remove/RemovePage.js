@@ -3,6 +3,8 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { IMaskInput } from 'react-imask';
 
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -11,7 +13,6 @@ import Typography from '@mui/material/Typography';
 
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
@@ -31,7 +32,7 @@ import "./RemovePage.css"
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-const PalletMask = React.forwardRef(function PalletMask(props, ref) {
+const InputMask = React.forwardRef(function InputMask(props, ref) {
 
     const { onChange, ...other } = props;
 
@@ -49,7 +50,7 @@ const PalletMask = React.forwardRef(function PalletMask(props, ref) {
     );
 });
   
-PalletMask.propTypes = {
+InputMask.propTypes = {
     onChange: PropTypes.func.isRequired,
 };
 
@@ -237,51 +238,58 @@ function RemovePage() {
 
             </div>
 
-            <Card variant="outlined" className='remove-page-card'>
-                <CardContent>
+            <Grid container>
+                <Grid xs={12} sm={6} md={5} lg={4}>
 
-                <Typography variant='h4'>Ingrese el código del pallet</Typography>
-                    <hr className='separator' />
+                <Card variant="outlined" className='remove-page-card'>
+                    <CardContent>
 
-                    <FormControl size="small" error={value === "" ? false : error} fullWidth className="remove-page-input">
-                        <InputLabel htmlFor="pallet-code">Código</InputLabel>
-                        <OutlinedInput
-                            id="pallet-code"
-                            label="Código"
-                            value={value}
-                            onChange={handleChange}
-                            autoFocus
-                            inputComponent={PalletMask}
-                        />
-                        <FormHelperText>
-                            {
-                                value === "" ? 
-                                    ""
-                                : error ? 
-                                    message 
-                                : ""
-                            }
-                        </FormHelperText>
-                    </FormControl>
+                    <Typography variant='h4'>Ingrese el código del pallet</Typography>
+                        <hr className='separator' />
 
-                </CardContent>
-                <CardActions>
+                        <FormControl size="small" error={value === "" ? false : error} fullWidth className="remove-page-input">
+                            <InputLabel htmlFor="pallet-code">Código</InputLabel>
+                            <OutlinedInput
+                                id="pallet-code"
+                                label="Código"
+                                value={value}
+                                onChange={handleChange}
+                                autoFocus
+                                inputComponent={InputMask}
+                            />
+                            <FormHelperText>
+                                {
+                                    value === "" ? 
+                                        ""
+                                    : error ? 
+                                        message 
+                                    : ""
+                                }
+                            </FormHelperText>
+                        </FormControl>
 
-                    <Button 
-                        disabled={disabled}
-                        variant="contained"
-                        size="medium"
-                        disableElevation
-                        className='add-page-button'
-                        onClick={(e) => {
-                            type === "PL" ? getPallet(e) : type === "UB" && getLocation(e);
-                        }}
-                    >
-                        Remover
-                    </Button>
+                    </CardContent>
                     
-                </CardActions>
-            </Card>
+                    <CardActions>
+
+                        <Button 
+                            disabled={disabled}
+                            variant="contained"
+                            size="medium"
+                            disableElevation
+                            className='add-page-button'
+                            onClick={(e) => {
+                                type === "PL" ? getPallet(e) : type === "UB" && getLocation(e);
+                            }}
+                        >
+                            Remover
+                        </Button>
+                        
+                    </CardActions>
+                </Card>
+
+                </Grid>
+            </Grid>
 
             <Dialog open={openDialog} onClose={handleCloseDialog}>
 
@@ -308,7 +316,7 @@ function RemovePage() {
                     </Button>
                     <Button 
                         variant="contained" 
-                        autofocus
+                        autoFocus
                         disableElevation
                         className='add-page-button' 
                         onClick={() => {

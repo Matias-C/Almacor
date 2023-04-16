@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
@@ -21,15 +21,75 @@ function ZoneMenu() {
     const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
-    const [page, setPage] = useState("orders")
-    
-    return (
-        <>
-          <PageContainer>
-          
-            <div className='zone-menu-cont'>
+    const [handleOpenSideBar, setHandleOpenSideBar] = useState(true);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
+    useEffect(() => {
+      const handleWindowResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+      window.addEventListener('resize', handleWindowResize);
+      return () => {
+        window.removeEventListener('resize', handleWindowResize);
+      };
+    }, []);
 
-              <div className={Connected.openSideBar ? 'zone-menu-side-bar open' : "zone-menu-side-bar"}>
+    useEffect(() => {
+      const handleSideBar = () => {
+        if (handleOpenSideBar && windowWidth > 768) {
+          Connected.setOpenSideBar(true);
+          setHandleOpenSideBar(false);
+        } else if (!handleOpenSideBar && windowWidth < 768) {
+          Connected.setOpenSideBar(false);
+          setHandleOpenSideBar(true);
+        }
+      }
+      handleSideBar();
+    },[Connected, handleOpenSideBar, windowWidth])
+
+    const [page, setPage] = useState("")
+
+    useEffect(() => {
+      const getUrl = () => {
+        const currentUrl = window.location.href.toString();
+        if (currentUrl.includes("ordenes")) {
+          setPage("orders")
+        } else if (currentUrl.includes("ubicar")) {
+          setPage("locate")
+        } else if (currentUrl.includes("remover")) {
+          setPage("remove")
+        } else if (currentUrl.includes("inventario")) {
+          setPage("inventory")
+        }
+        console.log(currentUrl);
+      }
+      getUrl();
+    },[])
+
+    const handleOpen = (e) => {
+      e.stopPropagation();
+      Connected.setOpenSideBar(false);
+    }
+
+    const handleClose = () => {
+      if (windowWidth < 768) {
+        Connected.setOpenSideBar(false);
+      } else {
+        return null;
+      }
+    }
+
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    }
+
+    return (
+      <>
+        <PageContainer>
+          <div className='zone-menu-cont'>
+            <div className={Connected.openSideBar ? 'zone-menu-side-bar-bg open' : "zone-menu-side-bar-bg"} onClick={(e) => {handleOpen(e)}}>
+
+              <div className={Connected.openSideBar ? 'zone-menu-side-bar open' : "zone-menu-side-bar"} onClick={(e) => {stopPropagation(e)}}>
 
                 <Button 
                   variant={page === "orders" ? "contained" : "text"}
@@ -38,8 +98,8 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    Connected.setOpenSideBar(false);
-                    navigate("ordenes");
+                    handleClose();
+                    navigate("ordenes", {replace: true});
                     setPage("orders");
                   }}
                 >
@@ -54,8 +114,8 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    Connected.setOpenSideBar(false);
-                    navigate("ubicar");
+                    handleClose();
+                    navigate("ubicar", {replace: true});
                     setPage("locate");
                   }}
                 >
@@ -70,8 +130,8 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    Connected.setOpenSideBar(false);
-                    navigate("remover");
+                    handleClose();
+                    navigate("remover" ,{replace: true});
                     setPage("remove");
                   }}
                 >
@@ -86,8 +146,8 @@ function ZoneMenu() {
                   fullWidth
                   className='zone-menu-side-bar-button'
                   onClick={() => {
-                    Connected.setOpenSideBar(false);
-                    navigate("inventario");
+                    handleClose();
+                    navigate("inventario", {replace: true});
                     setPage("inventory");
                   }}
                 >
@@ -96,24 +156,23 @@ function ZoneMenu() {
                 </Button>
 
               </div>
-
-              <div className='zone-menu-content'>
-
-                    <div className='page-header'>
-
-                      <BackButton />
-                      <Typography variant="h4" className='zone-menu-header'>{Connected.currentDeposit.toUpperCase()} / {Connected.currentZone.toUpperCase()}</Typography>
-
-                    </div>
-
-                    <Outlet />
-                    
-                </div>
-
             </div>
 
-          </PageContainer>
-        </>
+            <div className='zone-menu-content'>
+
+                  <div className='page-header'>
+
+                    <BackButton />
+                    <Typography variant="h4" className='zone-menu-header'>{Connected.currentDeposit.toUpperCase()} / {Connected.currentZone.toUpperCase()}</Typography>
+
+                  </div>
+
+                  <Outlet />
+                  
+              </div>
+          </div>
+        </PageContainer>
+      </>
     );
 }
 

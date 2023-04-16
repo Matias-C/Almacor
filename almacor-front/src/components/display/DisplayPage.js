@@ -19,7 +19,7 @@ function DisplayPage(props) {
 
                 {
                     props.addButton &&
-                        <Fab color="primary" size="medium" onClick={handleOpenDialog}>
+                        <Fab color="primary" size="medium" onClick={handleOpenDialog} className='float-button'>
                             <AddIcon />
                         </Fab>
                 }

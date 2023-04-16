@@ -1,5 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import Paper from '@mui/material/Paper';
 import { Typography, Button } from "@mui/material";
@@ -36,7 +38,7 @@ function ZonesPage() {
             }
         };
         getZones();
-    }, [Connected.userInfo]);
+    }, [Connected, location]);
 
     return(
         
@@ -49,35 +51,43 @@ function ZonesPage() {
                         <Typography variant="h1" className='zones-page-header'>{Connected.currentDeposit}</Typography>
                     </div>
 
-                    <Paper variant='outlined' className="zones-page-card">
+                    <Grid container>
+                        <Grid xs={12} sm={6} md={5} lg={4}>
 
-                        <Typography variant="h3">Zonas disponibles</Typography>
-                        <hr className="bold-separator"></hr>
-                        <div className='zones-page-buttons-cont'>
-                            {
-                                zones.map((zone) => {
+                            <Paper variant='outlined' className="zones-page-card">
 
-                                    return (
+                                <Typography variant="h3">Zonas disponibles</Typography>
+                                <hr className="bold-separator"></hr>
+                                <div className='zones-page-buttons-cont'>
+                                    {
+                                        zones.map((zone) => {
 
-                                        <Button
-                                            key={zone.n_id_zona}
-                                            variant="contained"
-                                            size="large"
-                                            className="zones-page-zone-button"
-                                            disableElevation
-                                            onClick={() => { 
-                                                navigate(`zona=${zone.c_descripcion.toLowerCase().replace(/\s+/g, '-')}/ordenes`, {state: zone});
-                                                Connected.setLocalZone("id-zone", zone.n_id_zona, "zone", zone.c_descripcion)
-                                            }}
-                                        >{zone.c_descripcion}</Button>
+                                            return (
 
-                                    );
+                                                <Button
+                                                    key={zone.n_id_zona}
+                                                    variant="contained"
+                                                    size="large"
+                                                    className="zones-page-zone-button"
+                                                    disableElevation
+                                                    onClick={() => { 
+                                                        navigate(`zona=${zone.c_descripcion.toLowerCase().replace(/\s+/g, '-')}/ordenes`, {state: zone});
+                                                        Connected.setLocalZone("id-zone", zone.n_id_zona, "zone", zone.c_descripcion)
+                                                    }}
+                                                >{zone.c_descripcion}</Button>
+
+                                            );
 
 
-                                })
-                            }
-                        </div>
-                    </Paper>
+                                        })
+                                    }
+                                </div>
+                            </Paper>
+                            
+                        </Grid>
+                    </Grid>
+
+                    
 
                 </div>
             </PageContainer>

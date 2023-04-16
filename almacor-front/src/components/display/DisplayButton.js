@@ -11,7 +11,7 @@ function DisplayButton(props) {
 
     return(
 
-        <Grid xs={12} sm={6} md={4} lg={3}>
+        <Grid xs={12} sm={12} md={6} lg={4}>
 
             <Button variant='outlined' className="display-button-cont" onClick={() => { navigate(props.displayButtonURL, {state: props.object}); }}>
 

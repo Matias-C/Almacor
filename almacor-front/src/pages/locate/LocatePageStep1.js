@@ -1,8 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import FormControl from '@mui/material/FormControl';
@@ -29,6 +33,7 @@ function LocatePageStep1() {
     const navigate = useNavigate();
 
     const [error, setError] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [errorAlert, setErrorAlert] = useState("");
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
@@ -43,15 +48,11 @@ function LocatePageStep1() {
             if (e.target.value.length > 9) {
                 setValidLength(true);
                 setError(false);
-                if (e.target.value.length === 10) {
-                    setValue(e.target.value);
-                    checkPallet(e.target.value);
-                } else {
-                    return null;
-                }
+                setDisabled(false);
             } else {
                 setValidLength(false);
                 setError(true);
+                setDisabled(true);
             }
         } else {
             setValidPallet(false);
@@ -59,7 +60,9 @@ function LocatePageStep1() {
         };
     };
 
-    const checkPallet = async (url) => {
+    const checkPallet = async (e, url) => {
+        e.preventDefault();
+
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${url}`, {
@@ -98,7 +101,7 @@ function LocatePageStep1() {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            checkPallet(value);
+            checkPallet(e, value);
         }
     }
 
@@ -111,42 +114,65 @@ function LocatePageStep1() {
 
             </div>
 
-            <Card variant="outlined" className='add-page-card'>
-                <CardContent>
+            <Grid container>
+                <Grid xs={12} sm={6} md={5} lg={4}>
 
-                    <Typography variant='h4'>Ingrese el código del pallet</Typography>
-                    <hr className='separator' />
+                    <Card variant="outlined" className='add-page-card'>
+                        <CardContent>
 
-                    <FormControl error={value === "" ? false : error} size="small" fullWidth className="add-page-input">
-                        <InputLabel>Código</InputLabel>
-                        <OutlinedInput
-                            id="pallet-code"
-                            label="Código"
-                            value={value}
-                            onChange={handleChange}
-                            autoFocus
-                            onKeyDown={(e) => {
-                                handleKeyDown(e)
+                            <Typography variant='h4'>Ingrese el código del pallet</Typography>
+                            <hr className='separator' />
+
+                            <FormControl error={value === "" ? false : error} size="small" fullWidth className="add-page-input">
+                                <InputLabel>Código</InputLabel>
+                                <OutlinedInput
+                                    id="pallet-code"
+                                    label="Código"
+                                    value={value}
+                                    onChange={handleChange}
+                                    autoFocus
+                                    onKeyDown={(e) => {
+                                        handleKeyDown(e)
+                                    }}
+                                    inputComponent={PalletMask}
+                                />
+                                <FormHelperText>
+                                    {
+                                        value === "" ?
+                                            "" 
+                                        : error ? 
+                                            !validPallet ? 
+                                                "El código no es valido" 
+                                            : !validPalletLength ? 
+                                                "El código es demasiado corto" 
+                                            : "" 
+                                        : ""
+                                    }
+                                </FormHelperText>
+                            </FormControl>
+
+                        </CardContent>
+
+                        <CardActions>
+
+                        <Button 
+                            disabled={disabled}
+                            variant="contained"
+                            size="medium"
+                            disableElevation
+                            className='add-page-button'
+                            onClick={(e) => {
+                                checkPallet(e, value)
                             }}
-                            inputComponent={PalletMask}
-                        />
-                        <FormHelperText>
-                            {
-                                value === "" ?
-                                    "" 
-                                : error ? 
-                                    !validPallet ? 
-                                        "El código no es valido" 
-                                    : !validPalletLength ? 
-                                        "El código es demasiado corto" 
-                                    : "" 
-                                : ""
-                            }
-                        </FormHelperText>
-                    </FormControl>
+                        >
+                            Siguiente
+                        </Button>
+                        
+                    </CardActions>
+                    </Card>
 
-                </CardContent>
-            </Card>
+                </Grid>
+            </Grid>
 
             <Snackbar 
                 open={openAlert} 

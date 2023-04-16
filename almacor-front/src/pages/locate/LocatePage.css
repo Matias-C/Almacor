@@ -1,9 +1,5 @@
 .add-page-header {
-    margin-bottom: 15px;
-}
-
-.add-page-card {
-    max-width: 400px;
+    margin-bottom: 16px;
 }
 
 .add-page-card-header span {
@@ -22,13 +18,13 @@
 }
 
 .step-three.add-page-label {
-    margin: 15px 0 !important;
+    margin: 16px 0 12px !important;
 }
 
 .add-page-inputs-cont{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .add-page-input {

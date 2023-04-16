@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -53,6 +55,12 @@ function Login() {
 
     const refreshPage = () => {
         window.location.reload(false);
+    }
+
+    const handleKeyDown = (e, username, password) => {
+        if (e.key === 'Enter') {
+            login(username, password);
+        }
     }
 
     const login = async (username, password) => {
@@ -111,6 +119,12 @@ function Login() {
                             type='password'
                             value={userPassword}
                             onChange={handlePassword}
+                            onKeyDown={(e) => {
+                                const username = userName;
+                                const password = userPassword;
+
+                                handleKeyDown(e, username, password)
+                            }}
                         />
                         <FormHelperText>
                         </FormHelperText>
@@ -123,11 +137,11 @@ function Login() {
                         disableElevation
                         className='login-button'
                         onClick={() => {
-                                const username = userName;
-                                const password = userPassword;
+                            const username = userName;
+                            const password = userPassword;
 
-                                login(username, password);
-                            }}
+                            login(username, password);
+                        }}
                     >
                         Iniciar Sesión
                     </Button>

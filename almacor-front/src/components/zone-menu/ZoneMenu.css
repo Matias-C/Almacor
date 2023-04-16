@@ -5,6 +5,10 @@
     height: calc(100vh - var(--nav-height));
 }
 
+.zone-menu-side-bar-bg {
+    height: calc(100vh - var(--nav-height));
+}
+
 .zone-menu-side-bar {
     z-index: 5;
     display: flex;
@@ -15,10 +19,12 @@
 
     padding: 15px 10px;
     width: fit-content;
+    height: calc(100vh - var(--nav-height) - 30px);
 }
 
 .zone-menu-side-bar.open {
-    width: 250px;
+    width: 200px;
+    height: calc(100vh - var(--nav-height) - 30px);
 }
 
 .zone-menu-side-bar-button {
@@ -49,8 +55,17 @@
     }
 
     .zone-menu-side-bar.open {
-        width: 250px;
+        width: 200px;
         left: 0;
+    }
+
+    .zone-menu-side-bar-bg.open {
+        background-color: rgba(0, 0, 0, .4);
+
+        position: absolute;
+        z-index: 2;
+        
+        width: 100vw;
     }
 }
 

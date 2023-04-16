@@ -10,12 +10,10 @@ import InputLabel from '@mui/material/InputLabel';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-import { PalletMask } from '../../components/masked-inputs/PalletMask';
-import { LocationMask } from '../../components/masked-inputs/LocationMask';
+import { PalletMask } from '../masked-inputs/PalletMask';
+import { LocationMask } from '../masked-inputs/LocationMask';
 
 import ContextConnected from '../../context/ContextConnected';
-
-import "./Inventory.css"
 
 const UseFocus = () => {
 	const htmlElRef = useRef(null)
@@ -178,7 +176,7 @@ function InventoryForm(props) {
             <Grid container spacing={2}>
                 <Grid xs={12} sm={12} md={12} lg={12}>
 
-                    <FormControl error={pallet === "" ? false : errorPallet} size="small" margin="dense" className="inventory-form-input">
+                    <FormControl error={pallet === "" ? false : errorPallet} size="small" margin="dense" fullWidth>
                         <InputLabel>Pallet</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
@@ -206,7 +204,7 @@ function InventoryForm(props) {
                 </Grid>
 
                 <Grid xs={12} sm={12} md={12} lg={12}>
-                    <FormControl error={location === "" ? false : errorLocation} size="small" className="inventory-form-input">
+                    <FormControl error={location === "" ? false : errorLocation} size="small" fullWidth>
                         <InputLabel>Ubicación</InputLabel>
                         <OutlinedInput
                             id="pallet-code"

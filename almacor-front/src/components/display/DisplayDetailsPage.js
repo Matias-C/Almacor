@@ -20,12 +20,12 @@ function DisplayDetailsPage(props) {
 
                     </div>
 
-                    <Typography variant='h1'>{props.detailsHeader}</Typography>
+                    <Typography variant='h3'>{props.detailsHeader}</Typography>
                 </div>
 
                 {
                     props.addButton &&
-                        <Fab color="primary" size="medium" onClick={handleOpenDialog}>
+                        <Fab color="primary" size="medium" onClick={handleOpenDialog} className='float-button'>
                             <AddIcon />
                         </Fab>
                 }

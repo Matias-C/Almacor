@@ -13,11 +13,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import PalletDetails from '../../components/pallet-details/PalletDetails';
+import PalletDetails from '../pallet-details/PalletDetails';
 
 import ContextConnected from '../../context/ContextConnected';
-
-import "./Inventory.css"
 
 function InventoryCard(props) {
 
@@ -32,10 +30,6 @@ function InventoryCard(props) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const refreshPage = () => {
-        window.location.reload(false);
-    }
 
     const removeIncidence = async (e) => {
         e.preventDefault();

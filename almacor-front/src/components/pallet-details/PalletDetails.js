@@ -44,19 +44,19 @@ function PalletDetails(props) {
 
                     <Grid xs={4} sm={4} md={4}>
                         <div className='pallet-details-table item'>
-                        <Typography variant='h1' className='number'>{props.hall}</Typography>
+                        <Typography variant='h1' className='number'>{props.hall ? props.hall : "-"}</Typography>
                         </div>
                     </Grid>
 
                     <Grid xs={4} sm={4} md={4}>
                         <div className='pallet-details-table item'>
-                        <Typography variant='h1' className='number'>{props.col}</Typography>
+                        <Typography variant='h1' className='number'>{props.col ? props.col : "-"}</Typography>
                         </div>
                     </Grid>
 
                     <Grid xs={4} sm={4} md={4}>
                         <div className='pallet-details-table item'>
-                        <Typography variant='h1' className='number'>{props.row}</Typography>
+                        <Typography variant='h1' className='number'>{props.row ? props.row : "-"}</Typography>
                         </div>
                     </Grid>
 

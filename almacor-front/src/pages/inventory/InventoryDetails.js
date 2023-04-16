@@ -12,17 +12,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import DisplayDetailsPage from "../../components/display/DisplayDetailsPage";
-import InventoryCard from './InventoryCard';
-import InventoryForm from './InventoryForm';
+import InventoryCardSkeleton from '../../components/inventory/InventoryCardSkeleton';
+import InventoryCard from '../../components/inventory/InventoryCard';
+import InventoryForm from '../../components/inventory/InventoryForm';
 
 import ContextConnected from '../../context/ContextConnected';
-
-import "./Inventory.css"
 
 function InventoryDetails() {
 
     const Connected = useContext(ContextConnected);
     const location = useLocation();
+
+    const [loading, setLoading] = useState(true);
 
     const [empty, setEmpty] = useState(null);
     const [inventoryDetails, setInventoryDetails] = useState([]);
@@ -53,6 +54,7 @@ function InventoryDetails() {
             const data = await res.json();
             data.error ? setEmpty(true) : setInventory(data);
             setRefresh(false);
+            setLoading(false);
             console.log(data);
           }
         };
@@ -60,7 +62,6 @@ function InventoryDetails() {
     }, [Connected, location, refresh]);
 
     return (
-
         <>
             <DisplayDetailsPage
                 detailsHeaderDetail={location.state.c_tipo_inventario === "T" ? "TOTAL" : "PARCIAL"}
@@ -72,23 +73,30 @@ function InventoryDetails() {
                     !empty ? 
                         <Grid container spacing={2}>
                             {
-                                inventoryDetails.map((item) => {
+                                loading ? (
+                                    <>
+                                        <InventoryCardSkeleton />
+                                        <InventoryCardSkeleton />
+                                    </>
+                                ) : (
+                                    inventoryDetails.map((item) => {
 
-                                    return (
+                                        return (
 
-                                        <InventoryCard
-                                            key={item.n_id_pk}
-                                            itemId={item.n_id_pk}
-                                            itemPL={item.c_numero}
-                                            itemHall={item.c_pasillo}
-                                            itemCol={item.n_id_columna}
-                                            itemRow={item.n_id_fila}
-                                            setRefresh={setRefresh}
-                                        />
+                                            <InventoryCard
+                                                key={item.n_id_pk}
+                                                itemId={item.n_id_pk}
+                                                itemPL={item.c_numero}
+                                                itemHall={item.c_pasillo}
+                                                itemCol={item.n_id_columna}
+                                                itemRow={item.n_id_fila}
+                                                setRefresh={setRefresh}
+                                            />
 
-                                    );
+                                        );
 
-                                })
+                                    })
+                                )
                             }
                         </Grid> 
                     
@@ -96,7 +104,7 @@ function InventoryDetails() {
                         <Typography variant="h3" className='inv-details-empty-alert'>Inventario vacío</Typography>
                 }
 
-                <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="xs">
 
                     <DialogTitle>Añadir Incidencia</DialogTitle>
                     
@@ -112,6 +120,7 @@ function InventoryDetails() {
                     </DialogContent>
 
                     <DialogActions>
+
                         <Button 
                             variant="outlined" 
                             className='add-page-button' 
@@ -121,13 +130,12 @@ function InventoryDetails() {
                         >
                             Cancelar
                         </Button>
+                        
                     </DialogActions>
                 </Dialog>
 
             </DisplayDetailsPage>
-
         </>
-        
     );
 }
 

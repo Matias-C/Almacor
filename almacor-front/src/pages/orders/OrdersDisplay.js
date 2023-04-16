@@ -3,15 +3,16 @@ import { useState, useEffect, useContext } from 'react';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import DisplayPage from '../../components/display/DisplayPage';
+import DisplaySkeleton from '../../components/display/DisplaySkeleton';
 import DisplayButton from '../../components/display/DisplayButton';
 
 import ContextConnected from '../../context/ContextConnected';
 
-import "./OrdersDisplay.css"
-
 function OrdersDisplay() {
 
     const Connected = useContext(ContextConnected);
+
+    const [loading, setLoading] = useState(true);
 
     const [orders, setOrders] = useState([]);
 
@@ -28,6 +29,7 @@ function OrdersDisplay() {
             })
             const data = await res.json();
             setOrders(data);
+            setLoading(false);
             console.log(data);
           }
         };
@@ -44,22 +46,32 @@ function OrdersDisplay() {
                 <Grid container spacing={2}>
 
                     {
-                        orders.map((order) => {
+                        loading ? (
+                            <>
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                                <DisplaySkeleton />
+                            </>
+                        ) : (
 
-                            return (
+                            orders.map((order) => {
 
-                                <DisplayButton
-                                    key={order.n_id_pk}
-                                    displayButtonType="Orden"
-                                    displayButtonTypeDetail={order.n_id_orden_de_carga}
-                                    displayButtonHeader={order.c_descripcion}
-                                    displayButtonURL={`orden=${order.n_id_orden_de_carga}`}
-                                    object={order}
-                                />
+                                return (
 
-                            );
+                                    <DisplayButton
+                                        key={order.n_id_pk}
+                                        displayButtonTypeDetail={order.n_id_orden_de_carga}
+                                        displayButtonHeader={order.c_descripcion}
+                                        displayButtonURL={`orden=${order.n_id_orden_de_carga}`}
+                                        object={order}
+                                    />
 
-                        })
+                                );
+
+                            })
+
+                        )
                     }
 
                 </Grid>

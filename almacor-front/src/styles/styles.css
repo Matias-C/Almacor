@@ -50,6 +50,10 @@ html, body {
     width: 30px;
 }
 
+.MuiSkeleton-rounded {
+    border-radius: 8px !important;
+}
+
 
 /* Scroll */
 
