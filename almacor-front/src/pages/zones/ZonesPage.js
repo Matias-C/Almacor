@@ -47,7 +47,7 @@ function ZonesPage() {
 
                     <div className='page-header'>
                         <BackButton />
-                        <Typography variant="h1" className='zones-page-header'>{Connected.currentDeposit}</Typography>
+                        <Typography variant="h4" className='zones-page-header'>{Connected.currentDeposit}</Typography>
                     </div>
 
                     <Grid container>

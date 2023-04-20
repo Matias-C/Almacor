@@ -93,7 +93,7 @@ function App() {
   
   const [userInfo, setUserInfo] = useState(null);
 
-  const [openSideBar, setOpenSideBar] = useState(true);
+  const [openSideBar, setOpenSideBar] = useState();
 
   const [currentDepositId, setCurrentDepositId] = useState(
     localStorage.getItem("id-deposit")
