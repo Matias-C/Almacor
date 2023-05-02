@@ -7,6 +7,7 @@ import { Typography } from '@mui/material';
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import AddLocationAltRoundedIcon from '@mui/icons-material/AddLocationAltRounded';
 import WrongLocationRoundedIcon from '@mui/icons-material/WrongLocationRounded';
+import SearchIcon from '@mui/icons-material/Search';
 import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 
 import PageContainer from '../page_container/PageContainer';
@@ -53,13 +54,15 @@ function ZoneMenu() {
       const getUrl = () => {
         const currentUrl = window.location.href.toString();
         if (currentUrl.includes("ordenes")) {
-          setPage("orders")
+          setPage("orders");
         } else if (currentUrl.includes("ubicar")) {
-          setPage("locate")
+          setPage("locate");
         } else if (currentUrl.includes("remover")) {
-          setPage("remove")
+          setPage("remove");
+        } else if (currentUrl.includes("localizar")) {
+          setPage("find");
         } else if (currentUrl.includes("inventario")) {
-          setPage("inventory")
+          setPage("inventory");
         }
       }
       getUrl();
@@ -136,6 +139,22 @@ function ZoneMenu() {
                 >
                   <WrongLocationRoundedIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
                   {Connected.openSideBar ? 'Remover' : ""}
+                </Button>
+
+                <Button 
+                  variant={page === "find" ? "contained" : "text"}
+                  size="large"
+                  disableElevation
+                  fullWidth
+                  className='zone-menu-side-bar-button'
+                  onClick={() => {
+                    handleClose();
+                    navigate("localizar" ,{replace: true});
+                    setPage("find");
+                  }}
+                >
+                  <SearchIcon className={Connected.openSideBar ?'zone-menu-side-bar-icon open' : "zone-menu-side-bar-icon"}/>
+                  {Connected.openSideBar ? 'Localizar' : ""}
                 </Button>
 
                 <Button 

@@ -285,7 +285,7 @@ function LocatePageStep3() {
                                     </>
                                 ) : (
                                     <>
-                                        <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Detalles</span></Typography>
+                                        <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Ubicación</span></Typography>
                                         <hr className='separator' />
 
                                         <PalletDetails 
@@ -377,7 +377,7 @@ function LocatePageStep3() {
 
             <Snackbar 
                 open={openAlert}
-                autoHideDuration={4000}
+                autoHideDuration={2000}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >

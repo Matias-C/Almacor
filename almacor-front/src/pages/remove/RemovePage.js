@@ -323,7 +323,7 @@ function RemovePage() {
 
             <Snackbar 
                 open={openAlert} 
-                autoHideDuration={4000} 
+                autoHideDuration={2000} 
                 onClose={handleCloseAlert} 
                 anchorOrigin={{ vertical, horizontal }}
             >

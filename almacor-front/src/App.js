@@ -25,6 +25,8 @@ import LocatePageStep3 from "./pages/locate/LocatePageStep3.js";
 
 import RemovePage from "./pages/remove/RemovePage.js";
 
+import SearchPalletPage from "./pages/search/SearchPalletPage.js";
+
 import InventoryPage from "./pages/inventory/InventoryPage.js";
 import InventoryDetails from "./pages/inventory/InventoryDetails.js";
 
@@ -196,6 +198,8 @@ function App() {
                 <Route exact path="ubicar/:pallet/ubicacion" element=<LocatePageStep3 /> />
 
                 <Route exact path="remover" element=<RemovePage /> />
+
+                <Route exact path="localizar" element=<SearchPalletPage /> />
 
                 <Route exact path="inventario" element=<InventoryPage /> />
                 <Route exact path="inventario/:inventory" element=<InventoryDetails /> />

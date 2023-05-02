@@ -14,27 +14,30 @@ import FormHelperText from '@mui/material/FormHelperText';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
+import PalletDetails from '../../components/pallet-details/PalletDetails';
 import { PalletMask } from '../../components/masked-inputs/PalletMask';
 
 import ContextConnected from '../../context/ContextConnected';
-
-import "./LocatePage.css"
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function LocatePageStep1() {
+function SearchPalletPage() {
 
     const Connected = useContext(ContextConnected);
-    const navigate = useNavigate();
+
+    const [pallet, setPallet] = useState([]);
 
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
-    const [errorAlert, setErrorAlert] = useState("");
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
@@ -74,20 +77,33 @@ function LocatePageStep1() {
             });
             const data = await res.json();
             data.error && handleOpenAlert("Este pallet no existe");
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" ? navigate(url, {state: url}) :
-            data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenAlert("Este pallet ya fue ubicado");
+            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no fue ubicado", "error");
+            if (data.status === "El Pallet ingresado se encuentra en una ubicacion") {
+                handleOpenAlert("Se encontró el pallet", "success");
+                setPallet(data.data[0]);
+                setOpenDialog(true);
             }
+        }
+    };
+
+    const [openDialog, setOpenDialog] = useState(false);
+    
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
     };
 
     const [openAlert, setOpenAlert] = useState(false);
+    const [alertType, setAlertType] = useState("");
+    const [alert, setAlert] = useState("");
     const state = {
         vertical: 'top',
         horizontal: 'center',
     };
     const { vertical, horizontal } = state;
 
-    const handleOpenAlert = (error) => {
-        setErrorAlert(error)
+    const handleOpenAlert = (alert, type) => {
+        setAlertType(type);
+        setAlert(alert);
         setOpenAlert(true);
     };
 
@@ -109,7 +125,7 @@ function LocatePageStep1() {
         <>
             <div className='add-page-header'>
 
-                <Typography variant='h1'>Ubicar Pallet</Typography>
+                <Typography variant='h1'>Localizar Pallet</Typography>
 
             </div>
 
@@ -164,7 +180,7 @@ function LocatePageStep1() {
                                 checkPallet(e, value)
                             }}
                         >
-                            Siguiente
+                            Localizar
                         </Button>
                         
                     </CardActions>
@@ -172,6 +188,32 @@ function LocatePageStep1() {
 
                 </Grid>
             </Grid>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="xs">
+                    
+                    <DialogContent className='inventory-dialog'>
+                        <PalletDetails
+                            pallet={pallet.numero}
+                            hall={pallet.c_pasillo}
+                            col={pallet.n_id_columna}
+                            row={pallet.n_id_fila}
+                        />
+                    </DialogContent>
+
+                    <DialogActions>
+
+                        <Button 
+                            variant="outlined" 
+                            className='add-page-button'
+                            onClick={() => {
+                                handleCloseDialog();
+                            }}
+                        >
+                            Cerrar
+                        </Button>
+                        
+                    </DialogActions>
+                </Dialog>
 
             <Snackbar 
                 open={openAlert} 
@@ -181,10 +223,10 @@ function LocatePageStep1() {
             >
                 <Alert 
                     onClose={handleCloseAlert} 
-                    severity="error" 
+                    severity={alertType} 
                     sx={{ width: '100%' }}
                 >
-                    {errorAlert}
+                    {alert}
                 </Alert>
             </Snackbar>
             
@@ -193,4 +235,4 @@ function LocatePageStep1() {
     );
 }
 
-export default LocatePageStep1;
+export default SearchPalletPage;

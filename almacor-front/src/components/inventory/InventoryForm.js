@@ -232,7 +232,7 @@ function InventoryForm(props) {
 
             <Snackbar 
                 open={openAlert}
-                autoHideDuration={2200}
+                autoHideDuration={2000}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >
