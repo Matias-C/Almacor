@@ -81,7 +81,6 @@ function OrderCard(props) {
                 setError(false);
                 if (e.target.value.length === 10) {
                     setValue(e.target.value);
-                    sendRemoved(e.target.value)
                 } else {
                     return null;
                 }
@@ -125,11 +124,14 @@ function OrderCard(props) {
         setOpenAlert(false);
     };
 
-    const refreshPage = () => {
-        window.location.reload(false);
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendRemoved(e, value);
+        }
     }
 
-    const sendRemoved = async (pallet) => {
+    const sendRemoved = async (e, pallet) => {
+        e.preventDefault();
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
@@ -157,7 +159,7 @@ function OrderCard(props) {
                 })
 
                 const data = await response.json();
-                data && refreshPage();
+                data && props.setRefresh(true);
 
             } else {
                 handleOpenAlert("El código no coindice", "error")
@@ -244,6 +246,9 @@ function OrderCard(props) {
                             label="Código"
                             value={value}
                             onChange={handleChange}
+                            onKeyDown={(e) => {
+                                handleKeyDown(e)
+                            }}
                             autoFocus
                             inputComponent={PalletMask}
                         />

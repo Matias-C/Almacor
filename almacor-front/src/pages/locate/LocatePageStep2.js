@@ -103,7 +103,6 @@ function LocatePageStep2() {
 
             <Grid container>
                 <Grid xs={12} sm={6} md={5} lg={4}>
-                
                     <Card variant="outlined" className='add-page-card'>
                         <CardContent>
                             
@@ -123,114 +122,97 @@ function LocatePageStep2() {
                                 )
                             }
 
-                            <div className='add-page-inputs-cont'>
-
-                                <div className='add-page-input-label-cont'>
+                            <Grid container spacing={2}>
+                                <Grid xs={6} sm={6} md={12} lg={12}>
 
                                     {
                                         loading ? (
-                                            <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                            <>
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
+                                            </>
                                         ) : (
                                             <>
                                                 <Typography variant='h5' className='label'>Peso</Typography>
-                                                <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+                                                <FormControl variant="outlined" fullWidth>
+                                                    <Select
+                                                        id="pallet-weight"
+                                                        value={weight}
+                                                        size="small"
+                                                        onChange={handleWeight}
+                                                        className='add-page-input'
+                                                    >
+                                                        <MenuItem value={1}>1 - Pesado</MenuItem>
+                                                        <MenuItem value={2}>2 - Intermedio</MenuItem>
+                                                        <MenuItem value={3}>3 - Liviano</MenuItem>
+                                                    </Select>
+                                                </FormControl>
                                             </>
                                         )
                                     }
 
-                                </div>
+                                </Grid>
 
-                                {
-                                    loading ? (
-                                        <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
-                                    ) : (
-                                        <FormControl variant="outlined">
-                                            <Select
-                                                id="pallet-weight"
-                                                value={weight}
-                                                size="small"
-                                                onChange={handleWeight}
-                                                className='add-page-input'
-                                            >
-                                                <MenuItem value={1}>1 - Pesado</MenuItem>
-                                                <MenuItem value={2}>2 - Intermedio</MenuItem>
-                                                <MenuItem value={3}>3 - Liviano</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    )
-                                }
-
-                                <div className='add-page-input-label-cont'>
+                                <Grid xs={6} sm={6} md={12} lg={12}>
 
                                     {
                                         loading ? (
-                                            <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                            <>
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
+                                            </>
                                         ) : (
                                             <>
                                                 <Typography variant='h5' className='label'>Altura</Typography>
-                                                <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+                                                <FormControl variant="outlined" fullWidth>
+                                                    <Select
+                                                        id="pallet-height"
+                                                        value={height}
+                                                        size="small"
+                                                        onChange={handleHeight}
+                                                        className='add-page-input'
+                                                    >
+                                                        <MenuItem value={1}>1 - Bajo</MenuItem>
+                                                        <MenuItem value={2}>2 - Alto</MenuItem>
+                                                    </Select>
+                                                </FormControl>
                                             </>
                                         )
                                     }
 
-                                </div>
-                                
-                                {
-                                    loading ? (
-                                        <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
-                                    ) : (
-                                        <FormControl variant="outlined">
-                                            <Select
-                                                id="pallet-height"
-                                                value={height}
-                                                size="small"
-                                                onChange={handleHeight}
-                                                className='add-page-input'
-                                            >
-                                                <MenuItem value={1}>1 - Bajo</MenuItem>
-                                                <MenuItem value={2}>2 - Alto</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    )
-                                }
-                                
+                                </Grid>
 
-                                <div className='add-page-input-label-cont'>
+                                <Grid xs={6} sm={6} md={12} lg={12}>
 
-                                {
+                                    {
                                         loading ? (
-                                            <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                            <>
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
+                                            </>
                                         ) : (
                                             <>
                                                 <Typography variant='h5' className='label'>Nivel de Rotación</Typography>
-                                                <Typography variant='h5' className='detail'>Se puede cambiar</Typography>
+                                                <FormControl variant="outlined" fullWidth>
+                                                    <Select
+                                                        id="pallet-rotation"
+                                                        value={rotation}
+                                                        size="small"
+                                                        onChange={handleRotation}
+                                                        className='add-page-input'
+                                                    >
+                                                        <MenuItem value={1}>1</MenuItem>
+                                                        <MenuItem value={2}>2</MenuItem>
+                                                        <MenuItem value={3}>3</MenuItem>
+                                                    </Select>
+                                                </FormControl>
                                             </>
                                         )
                                     }
 
-                                </div>
+                                </Grid>
+                            </Grid>
 
-                                {
-                                    loading ? (
-                                        <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
-                                    ) : (
-                                        <FormControl variant="outlined">
-                                            <Select
-                                                id="pallet-rotation"
-                                                value={rotation}
-                                                size="small"
-                                                onChange={handleRotation}
-                                                className='add-page-input'
-                                            >
-                                                <MenuItem value={1}>1</MenuItem>
-                                                <MenuItem value={2}>2</MenuItem>
-                                                <MenuItem value={3}>3</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    )
-                                }
-
-                            </div>
                         </CardContent>
                         <CardActions>
 
@@ -252,8 +234,6 @@ function LocatePageStep2() {
                     </Card>
                 </Grid>
             </Grid>
-
-            
         </>
     );
 }

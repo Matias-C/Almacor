@@ -7,24 +7,12 @@
     opacity: 50%;
 }
 
-.add-page-input-label-cont {
-    display: flex;
-    justify-content: space-between;
-}
-
-.add-page-input-label-cont .detail {
-    font-weight: 400;
-    opacity: 50%;
-}
-
 .step-three.add-page-label {
     margin: 16px 0 12px !important;
 }
 
-.add-page-inputs-cont{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.label {
+    margin-bottom: 8px !important;
 }
 
 .add-page-input {

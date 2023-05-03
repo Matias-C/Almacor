@@ -9,7 +9,7 @@ import OrderCard from '../../components/orders/OrderCard';
 
 import ContextConnected from '../../context/ContextConnected';
 
-function Details({ details }) {
+function Details({ details, setRefresh }) {
     return (
         <>
             {
@@ -28,6 +28,7 @@ function Details({ details }) {
                             orderCol={filteredDetail.ubicacion.columna}
                             orderRow={filteredDetail.ubicacion.fila}
                             orderDespacho={filteredDetail.b_quitado}
+                            setRefresh={setRefresh}
                         />
 
                     );
@@ -68,6 +69,7 @@ function OrderDetails() {
     const [loading, setLoading] = useState(true);
 
     const [details, setDetails] = useState([]);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         const getDetails = async () => {
@@ -82,11 +84,12 @@ function OrderDetails() {
                 })
                 const data = await res.json();
                 setDetails(data);
+                setRefresh(false);
                 setLoading(false);
             }
         };
         getDetails();
-    }, [Connected, location.state.n_id_orden_de_carga]);
+    }, [Connected, location, refresh]);
 
     return(
 
@@ -105,6 +108,7 @@ function OrderDetails() {
                     ) : (
                         <Details 
                             details={details}
+                            setRefresh={setRefresh}
                         />
                     )
                 }

@@ -37,10 +37,10 @@ function ZoneMenu() {
 
     useEffect(() => {
       const handleSideBar = () => {
-        if (handleOpenSideBar && windowWidth > 768) {
+        if (handleOpenSideBar && windowWidth > 900) {
           Connected.setOpenSideBar(true);
           setHandleOpenSideBar(false);
-        } else if (!handleOpenSideBar && windowWidth < 768) {
+        } else if (!handleOpenSideBar && windowWidth < 900) {
           Connected.setOpenSideBar(false);
           setHandleOpenSideBar(true);
         }
