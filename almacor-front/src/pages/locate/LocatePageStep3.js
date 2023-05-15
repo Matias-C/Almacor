@@ -100,20 +100,17 @@ function LocatePageStep3() {
         const newCol = parseInt(value.substr(8,2));
         const newRow = parseInt(value.substr(10,2));
 
-        locatePallet(e, newHall, newCol, newRow);
+        locatePallet(newHall, newCol, newRow);
     }
 
     const locate = (e) => {
-        e.preventDefault();
-        
         handleOpenAlert("Pallet ubicado correctamente", "success");
         setTimeout(() => {
             navigate(-2);
         }, 1000);
     }
     
-    const locatePallet = async (e, hall, col, row) => {
-        e.preventDefault();
+    const locatePallet = async (hall, col, row) => {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
@@ -143,7 +140,7 @@ function LocatePageStep3() {
                 body: formdata
             })
             const data = await response.json();
-            data.success && locate(e);
+            data.success && locate();
 
         }
     };
