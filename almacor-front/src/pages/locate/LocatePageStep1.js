@@ -76,11 +76,13 @@ function LocatePageStep1() {
             if (data.error) {
                 handleOpenAlert("Este pallet no existe");
                 setValue("");
-            } else if (data.status === "El Pallet ingresado se encuentra en una ubicacion") {
+            }
+            if (data.status === "El Pallet ingresado se encuentra en una ubicacion") {
                 handleOpenAlert("Este pallet ya fue ubicado");
                 setValue("");
+            } else if (data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion") {
+                navigate(url, {state: url})
             }
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && navigate(url, {state: url});
         }
     };
 

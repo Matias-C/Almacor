@@ -25,7 +25,7 @@ import LocatePageStep3 from "./pages/locate/LocatePageStep3.js";
 
 import RemovePage from "./pages/remove/RemovePage.js";
 
-import SearchPalletPage from "./pages/search/SearchPalletPage.js";
+import SearchPage from "./pages/search/SearchPage.js";
 
 import InventoryPage from "./pages/inventory/InventoryPage.js";
 import InventoryDetails from "./pages/inventory/InventoryDetails.js";
@@ -54,7 +54,6 @@ const theme = createTheme({
     h1: {
       fontWeight: 700,
       fontSize: 32,
-      lineHeight: 1.2,
     },
     h2: {
       fontSize: 28,
@@ -184,25 +183,25 @@ function App() {
           <BrowserRouter>
             <Routes>
 
-              <Route exact path="/" element=<Navigate to={userInfo === null ? "/login" : "/depositos"} replace={true}/>/>
-              <Route exact path="/login" element=<Login /> />
-              <Route exact path="/depositos" element=<MainPage /> />
-              <Route exact path="/depositos/:deposit" element=<ZonesPage /> />
-              <Route exact path="/depositos/:deposit/:zone" element=<ZoneMenu /> >
+              <Route exact path="/" element={<Navigate to={userInfo === null ? "/login" : "/depositos"} replace={true}/>} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/depositos" element={<MainPage />} />
+              <Route exact path="/depositos/:deposit" element={<ZonesPage />} />
+              <Route exact path="/depositos/:deposit/:zone" element={<ZoneMenu />} >
 
-                <Route exact path="ordenes" element=<OrdersDisplay /> />
-                <Route exact path="ordenes/:order" element=<OrderDetails /> />
+                <Route exact path="ordenes" element={<OrdersDisplay />} />
+                <Route exact path="ordenes/:order" element={<OrderDetails />} />
 
-                <Route exact path="ubicar" element=<LocatePageStep1 /> />
-                <Route exact path="ubicar/:pallet" element=<LocatePageStep2 /> />
-                <Route exact path="ubicar/:pallet/ubicacion" element=<LocatePageStep3 /> />
+                <Route exact path="ubicar" element={<LocatePageStep1 />} />
+                <Route exact path="ubicar/:pallet" element={<LocatePageStep2 />} />
+                <Route exact path="ubicar/:pallet/ubicacion" element={<LocatePageStep3 />} />
 
-                <Route exact path="remover" element=<RemovePage /> />
+                <Route exact path="remover" element={<RemovePage />} />
 
-                <Route exact path="localizar" element=<SearchPalletPage /> />
+                <Route exact path="localizar" element={<SearchPage />} />
 
-                <Route exact path="inventario" element=<InventoryPage /> />
-                <Route exact path="inventario/:inventory" element=<InventoryDetails /> />
+                <Route exact path="inventario" element={<InventoryPage />} />
+                <Route exact path="inventario/:inventory" element={<InventoryDetails />} />
 
               </Route>
 

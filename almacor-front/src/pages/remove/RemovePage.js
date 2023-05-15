@@ -32,6 +32,7 @@ import "./RemovePage.css"
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
 const InputMask = React.forwardRef(function InputMask(props, ref) {
 
     const { onChange, ...other } = props;
@@ -159,7 +160,10 @@ function RemovePage() {
                 body: formdata
             })
             const data = await response.json();
-            data.succes && handleOpenAlert("Pallet removido correctamente", "success");
+            if (data.succes) {
+                handleOpenAlert("Pallet removido correctamente", "success");
+                setValue("");
+            }
         }
     };
 
@@ -179,7 +183,10 @@ function RemovePage() {
                 body: formdata
             })
             const data = await response.json();
-            data.succes && handleOpenAlert("Ubicación desocupada correctamente", "success");
+            if (data.succes) {
+                handleOpenAlert("Ubicación desocupada correctamente", "success");
+                setValue("");
+            }
         }
     };
 
@@ -194,9 +201,16 @@ function RemovePage() {
             },
             });
             const data = await res.json();
-            data.error && handleOpenAlert("Este pallet no existe", "error");
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no se encuentra ubicado", "error");
-            data.status === "El Pallet ingresado se encuentra en una ubicacion" && handleOpenDialog();
+            if (data.error) {
+                handleOpenAlert("Este pallet no existe", "error");
+                setValue("");
+            }
+            if (data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion") {
+                handleOpenAlert("Este pallet no se encuentra ubicado", "error");
+                setValue("");
+            } else if (data.status === "El Pallet ingresado se encuentra en una ubicacion") {
+                handleOpenDialog();
+            }
         }
     };
 

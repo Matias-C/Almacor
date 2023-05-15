@@ -1,8 +1,5 @@
 import React, { useState, useContext } from 'react';
 
-import PropTypes from 'prop-types';
-import { IMaskInput } from 'react-imask';
-
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -25,6 +22,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import PalletDetails from '../pallet-details/PalletDetails';
+import { PalletMask } from '../masked-inputs/PalletMask';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -36,28 +34,6 @@ import "./OrderCard.css"
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const PalletMask = React.forwardRef(function PalletMask(props, ref) {
-
-    const { onChange, ...other } = props;
-
-    return (
-        <IMaskInput
-            {...other}
-            mask="##00000000"
-            definitions={{
-                '#': /[A-Z]/,
-            }}
-            inputRef={ref}
-            onAccept={(value) => onChange({ target: { value } })}
-            overwrite
-        />
-    );
-});
-  
-PalletMask.propTypes = {
-    onChange: PropTypes.func.isRequired,
-};
 
 function OrderCard(props) {
 
@@ -226,8 +202,6 @@ function OrderCard(props) {
             <Dialog
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
             >
                 <DialogTitle>
                     {"Se necesita confirmación"}
@@ -249,7 +223,6 @@ function OrderCard(props) {
                             onKeyDown={(e) => {
                                 handleKeyDown(e)
                             }}
-                            autoFocus
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
@@ -269,7 +242,16 @@ function OrderCard(props) {
                 </DialogContent>
 
                 <DialogActions>
-                    <Button variant='contained' autoFocus disableElevation className='order-card-button' onClick={handleClose}>
+                    <Button 
+                        variant='contained'
+                        autoFocus
+                        disableElevation
+                        className='order-card-button'
+                        onClick={() => {
+                            handleClose();
+                            setValue("");
+                        }}
+                    >
                         Cancelar
                     </Button>
                 </DialogActions>

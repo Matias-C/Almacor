@@ -128,7 +128,7 @@ function LocatePageStep2() {
                                     {
                                         loading ? (
                                             <>
-                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} style={{ marginBottom: "10px" }} />
                                                 <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
                                             </>
                                         ) : (
@@ -158,7 +158,7 @@ function LocatePageStep2() {
                                     {
                                         loading ? (
                                             <>
-                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} style={{ marginBottom: "10px" }} />
                                                 <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
                                             </>
                                         ) : (
@@ -182,12 +182,12 @@ function LocatePageStep2() {
 
                                 </Grid>
 
-                                <Grid xs={6} sm={6} md={12} lg={12}>
+                                <Grid xs={12} sm={12} md={12} lg={12}>
 
                                     {
                                         loading ? (
                                             <>
-                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} />
+                                                <Skeleton variant="text" width="30%" animation="wave" sx={{ fontSize: '16px' }} style={{ marginBottom: "10px" }} />
                                                 <Skeleton variant="rounded" width="100%" height={40} animation="wave" />
                                             </>
                                         ) : (

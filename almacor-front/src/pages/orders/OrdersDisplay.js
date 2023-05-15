@@ -39,7 +39,7 @@ function OrdersDisplay() {
 
         <>
             <DisplayPage
-                displayPageHeader="Órdenes de carga activas"
+                displayPageHeader="Órdenes de carga"
             >
 
                 <Grid container spacing={2}>

@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react';
 
+import PropTypes from 'prop-types';
+import { IMaskInput } from 'react-imask';
+
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import Card from '@mui/material/Card';
@@ -21,13 +24,34 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 import PalletDetails from '../../components/pallet-details/PalletDetails';
-import { PalletMask } from '../../components/masked-inputs/PalletMask';
 
 import ContextConnected from '../../context/ContextConnected';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+const InputMask = React.forwardRef(function InputMask(props, ref) {
+
+    const { onChange, ...other } = props;
+
+    return (
+        <IMaskInput
+            {...other}
+            mask="##0000000000"
+            definitions={{
+                '#': /[A-Z]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { value } })}
+            overwrite
+        />
+    );
+});
+  
+InputMask.propTypes = {
+    onChange: PropTypes.func.isRequired,
+};
 
 function SearchPalletPage() {
 
@@ -37,37 +61,63 @@ function SearchPalletPage() {
 
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
-    const [validPallet, setValidPallet] = useState(false);
-    const [validPalletLength, setValidLength] = useState(false);
+    const [type, setType] = useState("");
+    const [message, setMessage] = useState("")
 
     const [value, setValue] = useState("");
     
     const handleChange = (e) => {
         setValue(e.target.value);
         
-        if (e.target.value.substr(0,2) === "PL") {
-            setValidPallet(true);
-            if (e.target.value.length > 9) {
-                setValidLength(true);
-                setError(false);
-                setDisabled(false);
-            } else {
-                setValidLength(false);
-                setError(true);
-                setDisabled(true);
+        if (e.target.value.substr(0,2) === "PL" || e.target.value.substr(0,2) === "UB") {
+            if (e.target.value.substr(0,2) === "PL") {
+                setType("PL");
+                
+                if (e.target.value.length > 9) {
+                    setError(false);
+                    setDisabled(false);
+
+                    if (e.target.value.length > 10) {
+                        setMessage("El código es demasiado largo")
+                        setError(true);
+                        setDisabled(true);
+                    } else {
+                        setError(false);
+                        setDisabled(false);
+                    }
+                    
+                } else {
+                    setMessage("El código es demasiado corto")
+                    setDisabled(true);
+                    setError(true);
+                }
+
+            } else if (e.target.value.substr(0,2) === "UB") {
+                setType("UB");
+                
+                if (e.target.value.length > 11) {
+                    setError(false);
+                    setDisabled(false);
+                } else {
+                    setMessage("El código es demasiado corto")
+                    setDisabled(true);
+                    setError(true);
+                }
             }
+
         } else {
-            setValidPallet(false);
+            setMessage("El código no es válido")
+            setDisabled(true);
             setError(true);
         };
     };
 
-    const checkPallet = async (e, url) => {
+    const searchPallet = async (e) => {
         e.preventDefault();
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${url}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`, {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json",
@@ -75,11 +125,44 @@ function SearchPalletPage() {
                 },
             });
             const data = await res.json();
-            data.error && handleOpenAlert("Este pallet no existe");
-            data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion" && handleOpenAlert("Este pallet no fue ubicado", "error");
+            if (data.error) {
+                handleOpenAlert("Este pallet no existe", "error");
+                setValue("");
+            }
             if (data.status === "El Pallet ingresado se encuentra en una ubicacion") {
                 handleOpenAlert("Se encontró el pallet", "success");
                 setPallet(data.data[0]);
+                setOpenDialog(true);
+            } else if (data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion") {
+                handleOpenAlert("Este pallet no fue ubicado", "error");
+                setValue("");
+            }
+        }
+    };
+
+    const searchLocation = async (e) => {
+        e.preventDefault();
+
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+            
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${value}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token.access_token}`
+                },
+            })
+            const data = await res.json();
+            if (data.error) {
+                handleOpenAlert("Esta ubicación no existe", "error");
+                setValue("");
+            } else if (data.status === "Esta posicion se encuentra vacia") {
+                handleOpenAlert("Esta posición está vacía", "error");
+                setValue("");
+            } else if (data) {
+                handleOpenAlert("Se encontró la ubicación", "success");
+                setPallet(data[0]);
                 setOpenDialog(true);
             }
         }
@@ -89,6 +172,7 @@ function SearchPalletPage() {
     
     const handleCloseDialog = () => {
         setOpenDialog(false);
+        setValue("");
     };
 
     const [openAlert, setOpenAlert] = useState(false);
@@ -112,12 +196,6 @@ function SearchPalletPage() {
         }
         setOpenAlert(false);
     };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            checkPallet(e, value);
-        }
-    }
 
     return(
 
@@ -145,29 +223,22 @@ function SearchPalletPage() {
                                     value={value}
                                     onChange={handleChange}
                                     autoFocus
-                                    onKeyDown={(e) => {
-                                        handleKeyDown(e)
-                                    }}
-                                    inputComponent={PalletMask}
+                                    inputComponent={InputMask}
                                 />
                                 <FormHelperText>
-                                    {
-                                        value === "" ?
-                                            "" 
-                                        : error ? 
-                                            !validPallet ? 
-                                                "El código no es valido" 
-                                            : !validPalletLength ? 
-                                                "El código es demasiado corto" 
-                                            : "" 
-                                        : ""
-                                    }
-                                </FormHelperText>
+                                {
+                                    value === "" ? 
+                                        ""
+                                    : error ? 
+                                        message 
+                                    : ""
+                                }
+                            </FormHelperText>
                             </FormControl>
 
-                        </CardContent>
+                    </CardContent>
 
-                        <CardActions>
+                    <CardActions>
 
                         <Button 
                             disabled={disabled}
@@ -176,7 +247,7 @@ function SearchPalletPage() {
                             disableElevation
                             className='add-page-button'
                             onClick={(e) => {
-                                checkPallet(e, value)
+                                type === "PL" ? searchPallet(e) : type === "UB" && searchLocation(e);
                             }}
                         >
                             Localizar
@@ -190,34 +261,34 @@ function SearchPalletPage() {
 
             <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="xs">
                     
-                    <DialogContent className='inventory-dialog'>
-                        <PalletDetails
-                            pallet={pallet.numero}
-                            hall={pallet.c_pasillo}
-                            col={pallet.n_id_columna}
-                            row={pallet.n_id_fila}
-                        />
-                    </DialogContent>
+                <DialogContent className='inventory-dialog'>
+                    <PalletDetails
+                        pallet={pallet.numero}
+                        hall={pallet.c_pasillo}
+                        col={pallet.n_id_columna}
+                        row={pallet.n_id_fila}
+                    />
+                </DialogContent>
 
-                    <DialogActions>
+                <DialogActions>
 
-                        <Button 
-                            variant="outlined" 
-                            className='add-page-button'
-                            onClick={() => {
-                                handleCloseDialog();
-                            }}
-                        >
-                            Cerrar
-                        </Button>
-                        
-                    </DialogActions>
-                </Dialog>
+                    <Button 
+                        variant="outlined" 
+                        className='add-page-button'
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        Cerrar
+                    </Button>
+                    
+                </DialogActions>
+            </Dialog>
 
             <Snackbar 
                 open={openAlert} 
                 autoHideDuration={2000} 
-                onClose={handleCloseAlert}
+                onClose={handleCloseAlert} 
                 anchorOrigin={{ vertical, horizontal }}
             >
                 <Alert 

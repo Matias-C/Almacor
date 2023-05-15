@@ -16,11 +16,11 @@ function DisplayDetailsPage(props) {
                 <div className='display-details-header'>
                     <div className="detail">
 
-                        <Typography variant='h3'>{props.detailsHeaderDetail}</Typography>
+                        <Typography variant='h4'>{props.detailsHeaderDetail}</Typography>
 
                     </div>
 
-                    <Typography variant='h3'>{props.detailsHeader}</Typography>
+                    <Typography variant='h4'>{props.detailsHeader}</Typography>
                 </div>
 
                 {
