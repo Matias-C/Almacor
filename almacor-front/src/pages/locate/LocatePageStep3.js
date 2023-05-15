@@ -47,8 +47,8 @@ function LocatePageStep3() {
 
     const deposit = parseInt(Connected.currentDepositId);
     const zone = parseInt(Connected.currentZoneId);
-    const weight = location.state.n_tipopeso;
-    const height = location.state.n_tipoaltura;
+    const weight = location.state.pallet.n_tipopeso;
+    const height = location.state.pallet.n_tipoaltura;
     const [ub, setUb] = useState("")
     const [idHall, setIdHall] = useState("")
     const [hall, setHall] = useState("");
@@ -104,10 +104,7 @@ function LocatePageStep3() {
     }
 
     const locate = (e) => {
-        handleOpenAlert("Pallet ubicado correctamente", "success");
-        setTimeout(() => {
-            navigate(-2);
-        }, 1000);
+        navigate(-2);    
     }
     
     const locatePallet = async (hall, col, row) => {
@@ -121,7 +118,7 @@ function LocatePageStep3() {
             const id_pasillo = hall;
             const id_columna = col;
             const id_fila = row;
-            const id_partida = location.state.n_id_partida;
+            const id_partida = location.state.pallet.n_id_partida;
 
             var formdata = new FormData();
             formdata.append("id_empresa", id_empresa);
@@ -140,7 +137,7 @@ function LocatePageStep3() {
                 body: formdata
             })
             const data = await response.json();
-            data.success && locate();
+            data.success && navigate(-2);
 
         }
     };
@@ -285,7 +282,7 @@ function LocatePageStep3() {
                                     </>
                                 ) : (
                                     <>
-                                        <Typography variant='h4' className='add-page-card-header'>{location.state.c_tipo_contenido}{location.state.c_numero} <span>/ Ubicación</span></Typography>
+                                        <Typography variant='h4' className='add-page-card-header'>{location.state.pallet.c_tipo_contenido}{location.state.pallet.c_numero} <span>/ Ubicación</span></Typography>
                                         <hr className='separator' />
 
                                         <PalletDetails 

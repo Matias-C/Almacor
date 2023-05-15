@@ -60,12 +60,12 @@ function LocatePageStep1() {
         };
     };
 
-    const checkPallet = async (e, url) => {
+    const checkPallet = async (e, pallet) => {
         e.preventDefault();
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${url}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${pallet}`, {
                 method: "GET",
                 headers: {
                 "Content-Type": "application/json",
@@ -81,7 +81,7 @@ function LocatePageStep1() {
                 handleOpenAlert("Este pallet ya fue ubicado");
                 setValue("");
             } else if (data.status === "El Pallet ingresado no se encuentra en ninguna ubicacion") {
-                navigate(url, {state: url})
+                navigate(pallet, {state: {pallet: pallet, url: window.location.href.toString()}})
             }
         }
     };

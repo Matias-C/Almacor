@@ -49,7 +49,7 @@ function LocatePageStep2() {
         const getPallet = async () => {
           const token = await JSON.parse(localStorage.getItem("token"));
           if (token) {
-            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${location.state}`, {
+            const res = await fetch(`${Connected.currentURL}api/v1/deposito/partidas/?numero=${location.state.pallet}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -57,6 +57,7 @@ function LocatePageStep2() {
               },
             });
             const data = await res.json();
+            data.status === "El Pallet ingresado se encuentra en una ubicacion" && navigate(-1);
             setPallet(data.data[0]);
             setWeight(data.data[0].n_tipopeso);
             setHeight(data.data[0].n_tipoaltura);
@@ -65,7 +66,7 @@ function LocatePageStep2() {
           }
         };
         getPallet();
-    }, [Connected, location]);
+    }, [Connected, location, navigate]);
 
     const changePallet = async (e) => {
         e.preventDefault();
@@ -224,7 +225,7 @@ function LocatePageStep2() {
                                 className='add-page-button'
                                 onClick={(e) => {
                                     changePallet(e);
-                                    navigate("ubicacion", {state: pallet});
+                                    navigate("ubicacion", {state: {pallet: pallet, url: location.state.url}});
                                 }}
                             >
                                 Siguiente
