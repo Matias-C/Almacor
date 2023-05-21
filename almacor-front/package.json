@@ -2,7 +2,7 @@
   "name": "almacor-front",
   "version": "0.1.0",
   "proxy": "",
-  "alllowedHosts": [
+  "allowedHosts": [
     "127.0.0.1"
   ],
   "private": false,

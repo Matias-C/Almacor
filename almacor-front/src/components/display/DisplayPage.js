@@ -1,38 +1,35 @@
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 
 import "./Display.css";
 
 function DisplayPage(props) {
-
     const handleOpenDialog = () => {
         props.setOpenDialog(true);
-    }
+    };
 
     return (
         <>
-            <div className='display-page-header'>
+            <div className="display-page-header">
+                <Typography variant="h1">{props.displayPageHeader}</Typography>
 
-                <Typography variant='h1'>{props.displayPageHeader}</Typography>
-
-                {
-                    props.addButton &&
-                        <Fab color="primary" size="medium" onClick={handleOpenDialog} className='float-button'>
-                            <AddIcon />
-                        </Fab>
-                }
-
+                {props.addButton && (
+                    <Fab
+                        color="primary"
+                        size="medium"
+                        onClick={handleOpenDialog}
+                        className="float-button"
+                    >
+                        <AddIcon />
+                    </Fab>
+                )}
             </div>
 
-            <div className='display-page-cont'>
-
-                {props.children}
-
-            </div>
+            <div className="display-page-cont">{props.children}</div>
         </>
-    )
+    );
 }
 
 export default DisplayPage;

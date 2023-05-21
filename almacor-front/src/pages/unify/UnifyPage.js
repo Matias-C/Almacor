@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -15,19 +16,20 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import SectionPage from "../../components/section_page/SectionPage";
+import ListedPallet from "../../components/unify/ListedPallet";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
 
 import ContextConnected from "../../context/ContextConnected";
-
-import "./LocatePage.css";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function LocatePageStep1() {
+function UnifyPage() {
     const Connected = useContext(ContextConnected);
-    const navigate = useNavigate();
+
+    const [pallets, setPallets] = useState([]);
+    const [value, setValue] = useState("");
 
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
@@ -35,7 +37,12 @@ function LocatePageStep1() {
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
-    const [value, setValue] = useState("");
+    const [openAlert, setOpenAlert] = useState(false);
+    const state = {
+        vertical: "top",
+        horizontal: "center",
+    };
+    const { vertical, horizontal } = state;
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -58,52 +65,17 @@ function LocatePageStep1() {
         }
     };
 
-    const checkPallet = async (e, pallet) => {
-        e.preventDefault();
-
-        const token = await JSON.parse(localStorage.getItem("token"));
-        if (token) {
-            const res = await fetch(
-                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${pallet}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token.access_token}`,
-                    },
-                },
-            );
-            const data = await res.json();
-            if (data.error) {
-                handleOpenAlert("Este pallet no existe");
+    const addPallet = (newPallet) => {
+        if (!disabled) {
+            if (pallets.indexOf(newPallet.substr(2, 10)) > -1) {
+                handleOpenAlert("El pallet se encuentra duplicado", "error");
                 setValue("");
-            }
-            if (
-                data.status ===
-                "El Pallet ingresado se encuentra en una ubicacion"
-            ) {
-                handleOpenAlert("Este pallet ya fue ubicado");
+            } else {
+                setPallets([...pallets, newPallet.substr(2, 10)]);
                 setValue("");
-            } else if (
-                data.status ===
-                "El Pallet ingresado no se encuentra en ninguna ubicacion"
-            ) {
-                navigate(pallet, {
-                    state: {
-                        pallet: pallet,
-                        url: window.location.href.toString(),
-                    },
-                });
             }
         }
     };
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
 
     const handleOpenAlert = (error) => {
         setErrorAlert(error);
@@ -119,13 +91,48 @@ function LocatePageStep1() {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            checkPallet(e, value);
+            addPallet(e.target.value);
+        }
+    };
+
+    const unifyPallets = async (e) => {
+        e?.preventDefault();
+
+        const token = await JSON.parse(localStorage.getItem("token"));
+        if (token) {
+            const id_empresa = Connected.userInfo.n_id_empresa;
+            const pallet_codes = pallets;
+            console.log(
+                "🚀 ~ file: UnifyPage.js:105 ~ unifyPallets ~ pallet_codes:",
+                id_empresa,
+                pallet_codes,
+            );
+
+            var formdata = new FormData();
+            formdata.append("n_id_empresa", id_empresa);
+            formdata.append("pallet_codes", pallet_codes);
+
+            const response = await fetch(
+                `${Connected.currentURL}api/v1/deposito/agrupar_pallets/`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token.access_token}`,
+                    },
+                    body: formdata,
+                },
+            );
+            const data = await response.json();
+            console.log(
+                "🚀 ~ file: UnifyPage.js:118 ~ unifyPallets ~ data:",
+                data,
+            );
         }
     };
 
     return (
         <>
-            <SectionPage sectionHeader="Ubicar Pallet">
+            <SectionPage sectionHeader="Unificar Pallets">
                 <CardContent>
                     <Typography variant="h4">
                         Ingrese el código del pallet
@@ -171,13 +178,41 @@ function LocatePageStep1() {
                         size="medium"
                         disableElevation
                         className="add-page-button"
-                        onClick={(e) => {
-                            checkPallet(e, value);
+                        onClick={() => {
+                            addPallet(value);
                         }}
                     >
-                        Siguiente
+                        Añadir
+                    </Button>
+
+                    <Button
+                        disabled={pallets.length < 2 ? true : false}
+                        variant="outlined"
+                        size="medium"
+                        disableElevation
+                        className="add-page-button"
+                        onClick={(e) => {
+                            unifyPallets(e);
+                        }}
+                    >
+                        Unificar
                     </Button>
                 </CardActions>
+
+                {pallets?.length > 0 && (
+                    <CardContent>
+                        <Grid container spacing={1}>
+                            {pallets.map((pallet) => (
+                                <Grid key={pallet} xs={12} sm={12} md={6} lg={6} xl={4}>
+                                    <ListedPallet
+                                        key={pallet}
+                                        pallet={pallet}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </CardContent>
+                )}
             </SectionPage>
 
             <Snackbar
@@ -198,4 +233,4 @@ function LocatePageStep1() {
     );
 }
 
-export default LocatePageStep1;
+export default UnifyPage;

@@ -1,27 +1,30 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { Button } from '@mui/material';
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import { Button } from "@mui/material";
 
 import "./Display.css";
 
 function DisplayButton(props) {
-
     const navigate = useNavigate();
 
-    return(
-
+    return (
         <Grid xs={12} sm={12} md={6} lg={4}>
-
-            <Button variant='outlined' className="display-button-cont" onClick={() => { navigate(props.displayButtonURL, {state: props.object}); }}>
-
-                <div className="display-type">{props.displayButtonType} {props.displayButtonTypeDetail}</div>
-                <div className="display-detail">{props.displayButtonHeader}</div>
-
+            <Button
+                variant="outlined"
+                className="display-button-cont"
+                onClick={() => {
+                    navigate(props.displayButtonURL, { state: props.object });
+                }}
+            >
+                <div className="display-type">
+                    {props.displayButtonType} {props.displayButtonTypeDetail}
+                </div>
+                <div className="display-detail">
+                    {props.displayButtonHeader}
+                </div>
             </Button>
-
         </Grid>
-
     );
 }
 

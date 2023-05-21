@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 import Login from "./pages/login/Login.js";
@@ -27,6 +20,8 @@ import RemovePage from "./pages/remove/RemovePage.js";
 
 import SearchPage from "./pages/search/SearchPage.js";
 
+import UnifyPage from "./pages/unify/UnifyPage.js";
+
 import InventoryPage from "./pages/inventory/InventoryPage.js";
 import InventoryDetails from "./pages/inventory/InventoryDetails.js";
 
@@ -35,183 +30,240 @@ import ContextConnected from "./context/ContextConnected.js";
 import "./styles/styles.css";
 
 const theme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#009c7d",
+    palette: {
+        mode: "light",
+        primary: {
+            main: "#009c7d",
+        },
+        secondary: {
+            main: "#de1c47",
+        },
+        background: {
+            default: "#e9ecef",
+        },
     },
-    secondary: {
-      main: "#de1c47",
+    shape: {
+        borderRadius: 12,
     },
-    background: {
-      default: "#e9ecef",
+    typography: {
+        h1: {
+            fontWeight: 700,
+            fontSize: 32,
+        },
+        h2: {
+            fontSize: 28,
+            fontWeight: 700,
+        },
+        h3: {
+            fontSize: 24,
+            fontWeight: 700,
+        },
+        h4: {
+            fontSize: 20,
+            fontWeight: 500,
+        },
+        h5: {
+            fontSize: 16,
+            fontWeight: 500,
+        },
+        button: {
+            fontSize: 16,
+        },
+        body1: {
+            fontSize: 16,
+            fontWeight: 300,
+        },
+        body2: {
+            fontSize: 12,
+            fontWeight: 300,
+        },
     },
-  },
-  shape: {
-    borderRadius: 12,
-  },
-  typography: {
-    h1: {
-      fontWeight: 700,
-      fontSize: 32,
-    },
-    h2: {
-      fontSize: 28,
-      fontWeight: 700,
-    },
-    h3: {
-      fontSize: 24,
-      fontWeight: 700,
-    },
-    h4: {
-      fontSize: 20,
-      fontWeight: 500,
-    },
-    h5: {
-      fontSize: 16,
-      fontWeight: 500,
-    },
-    button: {
-      fontSize: 16,
-    },
-    body1: {
-      fontSize: 16,
-      fontWeight: 300,
-    },
-    body2: {
-      fontSize: 12,
-      fontWeight: 300,
-    },
-  },
 });
 
 function App() {
+    const testingURL = "https://apicdtesting.almacorweb.com/";
+    const productionURL = "https://apicd.almacorweb.com/";
+    const currentURL = testingURL;
 
-  const testingURL = "https://apicdtesting.almacorweb.com/";
-  const productionURL = "https://apicd.almacorweb.com/";
+    const [userInfo, setUserInfo] = useState(null);
 
-  const currentURL = testingURL;
-  
-  const [userInfo, setUserInfo] = useState(null);
+    const [openSideBar, setOpenSideBar] = useState();
 
-  const [openSideBar, setOpenSideBar] = useState();
+    const [currentDepositId, setCurrentDepositId] = useState(
+        localStorage.getItem("id-deposit"),
+    );
+    const [currentDeposit, setCurrentDeposit] = useState(
+        localStorage.getItem("deposit"),
+    );
 
-  const [currentDepositId, setCurrentDepositId] = useState(
-    localStorage.getItem("id-deposit")
-  );
-  const [currentDeposit, setCurrentDeposit] = useState(
-    localStorage.getItem("deposit")
-  );
-
-  const setLocalDeposit = (idKey, id, nameKey, name) => {
-    try {
-      setCurrentDepositId(id);
-      localStorage.setItem(idKey, id);
-      setCurrentDeposit(name);
-      localStorage.setItem(nameKey, name);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const [currentZoneId, setCurrentZoneId] = useState(
-    localStorage.getItem("id-zone")
-  );
-  const [currentZone, setCurrentZone] = useState(
-    localStorage.getItem("zone")
-  );
-
-  const setLocalZone = (idKey, id, nameKey, name) => {
-    try {
-      setCurrentZoneId(id);
-      localStorage.setItem(idKey, id);
-      setCurrentZone(name);
-      localStorage.setItem(nameKey, name);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const loadUserFromLocalStorage = async () => {
-      const token = await JSON.parse(localStorage.getItem("token"));
-      if (token) {
-        const res = await fetch(
-          `${currentURL}api/v1/auth/user/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token.access_token}`,
-            },
-          }
-        );
-        const data = await res.json();
-        setUserInfo(data);
-      }
+    const setLocalDeposit = (idKey, id, nameKey, name) => {
+        try {
+            setCurrentDepositId(id);
+            localStorage.setItem(idKey, id);
+            setCurrentDeposit(name);
+            localStorage.setItem(nameKey, name);
+        } catch (error) {
+            console.log(error);
+        }
     };
-    loadUserFromLocalStorage();
-  }, [currentURL]);
 
-  return (
-    <>
-      <ContextConnected.Provider
-        value={{
-          currentURL,
+    const [currentZoneId, setCurrentZoneId] = useState(
+        localStorage.getItem("id-zone"),
+    );
+    const [currentZone, setCurrentZone] = useState(
+        localStorage.getItem("zone"),
+    );
 
-          userInfo,
-          setUserInfo,
+    const setLocalZone = (idKey, id, nameKey, name) => {
+        try {
+            setCurrentZoneId(id);
+            localStorage.setItem(idKey, id);
+            setCurrentZone(name);
+            localStorage.setItem(nameKey, name);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-          openSideBar,
-          setOpenSideBar,
+    useEffect(() => {
+        const loadUserFromLocalStorage = async () => {
+            const token = await JSON.parse(localStorage.getItem("token"));
+            if (token) {
+                const res = await fetch(`${currentURL}api/v1/auth/user/`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token.access_token}`,
+                    },
+                });
+                const data = await res.json();
+                setUserInfo(data);
+            }
+        };
+        loadUserFromLocalStorage();
+    }, [currentURL]);
 
-          currentDepositId,
-          setCurrentDepositId,
-          currentDeposit,
-          setCurrentDeposit,
+    return (
+        <>
+            <ContextConnected.Provider
+                value={{
+                    currentURL,
 
-          currentZoneId,
-          setCurrentZoneId,
-          currentZone,
-          setCurrentZone,
+                    userInfo,
+                    setUserInfo,
 
-          setLocalDeposit,
-          setLocalZone,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <Routes>
+                    openSideBar,
+                    setOpenSideBar,
 
-              <Route exact path="/" element={<Navigate to={userInfo === null ? "/login" : "/depositos"} replace={true}/>} />
-              <Route exact path="/login" element={<Login />} />
-              <Route exact path="/depositos" element={<MainPage />} />
-              <Route exact path="/depositos/:deposit" element={<ZonesPage />} />
-              <Route exact path="/depositos/:deposit/:zone" element={<ZoneMenu />} >
+                    currentDepositId,
+                    setCurrentDepositId,
+                    currentDeposit,
+                    setCurrentDeposit,
 
-                <Route exact path="ordenes" element={<OrdersDisplay />} />
-                <Route exact path="ordenes/:order" element={<OrderDetails />} />
+                    currentZoneId,
+                    setCurrentZoneId,
+                    currentZone,
+                    setCurrentZone,
 
-                <Route exact path="ubicar" element={<LocatePageStep1 />} />
-                <Route exact path="ubicar/:pallet" element={<LocatePageStep2 />} />
-                <Route exact path="ubicar/:pallet/ubicacion" element={<LocatePageStep3 />} />
+                    setLocalDeposit,
+                    setLocalZone,
+                }}
+            >
+                <ThemeProvider theme={theme}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route
+                                exact
+                                path="/"
+                                element={
+                                    <Navigate
+                                        to={
+                                            userInfo === null
+                                                ? "/login"
+                                                : "/depositos"
+                                        }
+                                        replace={true}
+                                    />
+                                }
+                            />
+                            <Route exact path="/login" element={<Login />} />
+                            <Route
+                                exact
+                                path="/depositos"
+                                element={<MainPage />}
+                            />
+                            <Route
+                                exact
+                                path="/depositos/:deposit"
+                                element={<ZonesPage />}
+                            />
+                            <Route
+                                exact
+                                path="/depositos/:deposit/:zone"
+                                element={<ZoneMenu />}
+                            >
+                                <Route
+                                    exact
+                                    path="ordenes"
+                                    element={<OrdersDisplay />}
+                                />
+                                <Route
+                                    exact
+                                    path="ordenes/:order"
+                                    element={<OrderDetails />}
+                                />
 
-                <Route exact path="remover" element={<RemovePage />} />
+                                <Route
+                                    exact
+                                    path="ubicar"
+                                    element={<LocatePageStep1 />}
+                                />
+                                <Route
+                                    exact
+                                    path="ubicar/:pallet"
+                                    element={<LocatePageStep2 />}
+                                />
+                                <Route
+                                    exact
+                                    path="ubicar/:pallet/ubicacion"
+                                    element={<LocatePageStep3 />}
+                                />
 
-                <Route exact path="localizar" element={<SearchPage />} />
+                                <Route
+                                    exact
+                                    path="remover"
+                                    element={<RemovePage />}
+                                />
 
-                <Route exact path="inventario" element={<InventoryPage />} />
-                <Route exact path="inventario/:inventory" element={<InventoryDetails />} />
+                                <Route
+                                    exact
+                                    path="localizar"
+                                    element={<SearchPage />}
+                                />
 
-              </Route>
+                                <Route
+                                    exact
+                                    path="unificar"
+                                    element={<UnifyPage />}
+                                />
 
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </ContextConnected.Provider>
-    </>
-  );
-
+                                <Route
+                                    exact
+                                    path="inventario"
+                                    element={<InventoryPage />}
+                                />
+                                <Route
+                                    exact
+                                    path="inventario/:inventory"
+                                    element={<InventoryDetails />}
+                                />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </ThemeProvider>
+            </ContextConnected.Provider>
+        </>
+    );
 }
 
 export default App;

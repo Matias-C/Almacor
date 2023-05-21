@@ -1,10 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import PropTypes from 'prop-types';
-import { IMaskInput } from 'react-imask';
+import PropTypes from "prop-types";
+import { IMaskInput } from "react-imask";
 
 export const PalletMask = React.forwardRef(function PalletMask(props, ref) {
-
     const { onChange, ...other } = props;
 
     return (
@@ -12,7 +11,7 @@ export const PalletMask = React.forwardRef(function PalletMask(props, ref) {
             {...other}
             mask="##00000000"
             definitions={{
-                '#': /[A-Z]/,
+                "#": /[A-Z]/,
             }}
             inputRef={ref}
             onAccept={(value) => onChange({ target: { value } })}
@@ -20,7 +19,7 @@ export const PalletMask = React.forwardRef(function PalletMask(props, ref) {
         />
     );
 });
-  
+
 PalletMask.propTypes = {
     onChange: PropTypes.func.isRequired,
 };

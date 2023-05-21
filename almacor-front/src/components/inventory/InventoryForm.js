@@ -1,33 +1,34 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from "react";
 
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
-import { PalletMask } from '../masked-inputs/PalletMask';
-import { LocationMask } from '../masked-inputs/LocationMask';
+import { PalletMask } from "../masked-inputs/PalletMask";
+import { LocationMask } from "../masked-inputs/LocationMask";
 
-import ContextConnected from '../../context/ContextConnected';
+import ContextConnected from "../../context/ContextConnected";
 
 const UseFocus = () => {
-	const htmlElRef = useRef(null)
-	const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+    const htmlElRef = useRef(null);
+    const setFocus = () => {
+        htmlElRef.current && htmlElRef.current.focus();
+    };
 
-	return [ htmlElRef,  setFocus ] 
-}
+    return [htmlElRef, setFocus];
+};
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function InventoryForm(props) {
-
     const Connected = useContext(ContextConnected);
 
     const [inputPalletFocus, setInputPalletFocus] = UseFocus();
@@ -35,7 +36,7 @@ function InventoryForm(props) {
 
     useEffect(() => {
         setInputPalletFocus();
-    },[])
+    }, []);
 
     const [errorPallet, setErrorPallet] = useState(false);
     const [validPallet, setValidPallet] = useState(false);
@@ -45,8 +46,8 @@ function InventoryForm(props) {
 
     const handleChangePallet = (e) => {
         setPallet(e.target.value);
-        
-        if (e.target.value.substr(0,2) === "PL") {
+
+        if (e.target.value.substr(0, 2) === "PL") {
             setValidPallet(true);
             if (e.target.value.length > 9) {
                 setValidPalletLength(true);
@@ -64,7 +65,7 @@ function InventoryForm(props) {
         } else {
             setValidPallet(false);
             setErrorPallet(true);
-        };
+        }
     };
 
     const [errorLocation, setErrorLocation] = useState(false);
@@ -72,35 +73,33 @@ function InventoryForm(props) {
     const [validLocationLength, setValidLocationLength] = useState(false);
 
     const [location, setLocation] = useState("");
-    
+
     const handleChangeLocation = (e) => {
         setLocation(e.target.value);
-        
-        if (e.target.value.substr(0,2) === "UB") {
+
+        if (e.target.value.substr(0, 2) === "UB") {
             setValidLocation(true);
             if (e.target.value.length > 11) {
                 setValidLocationLength(true);
                 setErrorLocation(false);
                 if (e.target.value.length === 12) {
-                    addIncidence(e.target.value)
+                    addIncidence(e.target.value);
                 } else {
                     return null;
                 }
             } else {
                 setValidLocationLength(false);
                 setErrorLocation(true);
-            };
+            }
         } else {
             setValidLocation(false);
             setErrorLocation(true);
-        };
+        }
     };
 
     const addIncidence = async (loc) => {
-
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-
             const n_id_empresa = Connected.userInfo.n_id_empresa;
             const n_id_inventario = props.inventoryId;
             const ubicacion = loc;
@@ -112,48 +111,51 @@ function InventoryForm(props) {
             formdata.append("ubicacion", ubicacion);
             formdata.append("numero", numero);
 
-            const response = await fetch(`${Connected.currentURL}api/v1/deposito/inventarios_reales/`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token.access_token}`
+            const response = await fetch(
+                `${Connected.currentURL}api/v1/deposito/inventarios_reales/`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token.access_token}`,
+                    },
+                    body: formdata,
                 },
-                body: formdata
-            })
+            );
             const data = await response.json();
             if (data.error) {
-
-                if (data.error[0] === "Esta ubicacion ya se encuentra registrada en este inventario") {
-                    handleOpenAlert("Esta ubicación ya está en uso", "error")
-                } else if (data.error[0] === "Esta partida ya se encuentra registrada en este inventario") {
-                    handleOpenAlert("Este pallet ya está almacenado", "error")
+                if (
+                    data.error[0] ===
+                    "Esta ubicacion ya se encuentra registrada en este inventario"
+                ) {
+                    handleOpenAlert("Esta ubicación ya está en uso", "error");
+                } else if (
+                    data.error[0] ===
+                    "Esta partida ya se encuentra registrada en este inventario"
+                ) {
+                    handleOpenAlert("Este pallet ya está almacenado", "error");
                 } else if (data.error[0] === "El Pallet ingresado no existe") {
-                    handleOpenAlert("Este pallet no existe", "error")
+                    handleOpenAlert("Este pallet no existe", "error");
                 }
-
             } else if (data.status) {
-
                 if (data.status[0] === "Esta posicion no existe") {
-                    handleOpenAlert("Esta ubicación no existe", "error")
-                }
-                else if (data.info) {
+                    handleOpenAlert("Esta ubicación no existe", "error");
+                } else if (data.info) {
                     props.setRefresh(true);
                     setPallet("");
                     setLocation("");
                     setInputPalletFocus();
                     handleOpenAlert("Almacenado correctamente");
                 }
-                
             }
-
         }
     };
 
     const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("")
+    const [alertType, setAlertType] = useState("");
     const [alert, setAlert] = useState("");
     const state = {
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
     };
     const { vertical, horizontal } = state;
 
@@ -164,18 +166,22 @@ function InventoryForm(props) {
     };
 
     const handleCloseAlert = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
         setOpenAlert(false);
     };
 
-    return(
+    return (
         <>
             <Grid container spacing={2}>
                 <Grid xs={12} sm={12} md={12} lg={12}>
-
-                    <FormControl error={pallet === "" ? false : errorPallet} size="small" margin="dense" fullWidth>
+                    <FormControl
+                        error={pallet === "" ? false : errorPallet}
+                        size="small"
+                        margin="dense"
+                        fullWidth
+                    >
                         <InputLabel>Pallet</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
@@ -186,24 +192,25 @@ function InventoryForm(props) {
                             inputRef={inputPalletFocus}
                         />
                         <FormHelperText>
-                            {
-                                pallet === "" ?
-                                    "" 
-                                : errorPallet ? 
-                                    !validPallet ? 
-                                        "El código no es valido" 
-                                    : !validPalletLength ? 
-                                        "El código es demasiado corto" 
-                                    : "" 
-                                : ""
-                            }
+                            {pallet === ""
+                                ? ""
+                                : errorPallet
+                                ? !validPallet
+                                    ? "El código no es valido"
+                                    : !validPalletLength
+                                    ? "El código es demasiado corto"
+                                    : ""
+                                : ""}
                         </FormHelperText>
                     </FormControl>
-
                 </Grid>
 
                 <Grid xs={12} sm={12} md={12} lg={12}>
-                    <FormControl error={location === "" ? false : errorLocation} size="small" fullWidth>
+                    <FormControl
+                        error={location === "" ? false : errorLocation}
+                        size="small"
+                        fullWidth
+                    >
                         <InputLabel>Ubicación</InputLabel>
                         <OutlinedInput
                             id="pallet-code"
@@ -214,32 +221,30 @@ function InventoryForm(props) {
                             inputRef={inputLocationFocus}
                         />
                         <FormHelperText>
-                            {
-                                location === "" ?
-                                    "" 
-                                : errorLocation ? 
-                                    !validLocation ? 
-                                        "El código no es valido" 
-                                    : !validLocationLength ? 
-                                        "El código es demasiado corto" 
-                                    : "" 
-                                : ""
-                            }
+                            {location === ""
+                                ? ""
+                                : errorLocation
+                                ? !validLocation
+                                    ? "El código no es valido"
+                                    : !validLocationLength
+                                    ? "El código es demasiado corto"
+                                    : ""
+                                : ""}
                         </FormHelperText>
                     </FormControl>
                 </Grid>
             </Grid>
 
-            <Snackbar 
+            <Snackbar
                 open={openAlert}
-                autoHideDuration={2000}
+                autoHideDuration={2200}
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical, horizontal }}
             >
-                <Alert 
-                    onClose={handleCloseAlert} 
-                    severity={alertType} 
-                    sx={{ width: '100%' }}
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alertType}
+                    sx={{ width: "100%" }}
                 >
                     {alert}
                 </Alert>
