@@ -71,7 +71,8 @@ function UnifyPage() {
                 handleOpenAlert("El pallet se encuentra duplicado", "error");
                 setValue("");
             } else {
-                setPallets([...pallets, newPallet.substr(2, 10)]);
+                const newPalletToText = `\'${newPallet.substr(2, 10)}\'`;
+                setPallets([...pallets, newPalletToText]);
                 setValue("");
             }
         }
@@ -203,10 +204,17 @@ function UnifyPage() {
                     <CardContent>
                         <Grid container spacing={1}>
                             {pallets.map((pallet) => (
-                                <Grid key={pallet} xs={12} sm={12} md={6} lg={6} xl={4}>
+                                <Grid
+                                    key={pallet}
+                                    xs={12}
+                                    sm={12}
+                                    md={6}
+                                    lg={6}
+                                    xl={4}
+                                >
                                     <ListedPallet
                                         key={pallet}
-                                        pallet={pallet}
+                                        pallet={pallet.replace(/'/gi, "")}
                                     />
                                 </Grid>
                             ))}
