@@ -66,12 +66,12 @@ function UnifyPage() {
     };
 
     const addPallet = (newPallet) => {
+        const newPalletToText = `\'${newPallet.substr(2, 10)}\'`;
         if (!disabled) {
-            if (pallets.indexOf(newPallet.substr(2, 10)) > -1) {
+            if (pallets.indexOf(newPalletToText) > -1) {
                 handleOpenAlert("El pallet se encuentra duplicado", "error");
                 setValue("");
             } else {
-                const newPalletToText = `\'${newPallet.substr(2, 10)}\'`;
                 setPallets([...pallets, newPalletToText]);
                 setValue("");
             }
