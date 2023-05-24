@@ -65,19 +65,6 @@ function UnifyPage() {
         }
     };
 
-    const addPallet = (newPallet) => {
-        const newPalletToText = `\'${newPallet.substr(2, 10)}\'`;
-        if (!disabled) {
-            if (pallets.indexOf(newPalletToText) > -1) {
-                handleOpenAlert("El pallet se encuentra duplicado", "error");
-                setValue("");
-            } else {
-                setPallets([...pallets, newPalletToText]);
-                setValue("");
-            }
-        }
-    };
-
     const handleOpenAlert = (error) => {
         setErrorAlert(error);
         setOpenAlert(true);
@@ -94,6 +81,25 @@ function UnifyPage() {
         if (e.key === "Enter") {
             addPallet(e.target.value);
         }
+    };
+
+    const addPallet = (palletToAdd) => {
+        const palletIndexToAdd = `\'${palletToAdd.substr(2, 10)}\'`;
+        if (!disabled) {
+            if (pallets.indexOf(palletIndexToAdd) > -1) {
+                handleOpenAlert("El pallet se encuentra duplicado", "error");
+                setValue("");
+            } else {
+                setPallets([...pallets, palletIndexToAdd]);
+                setValue("");
+            }
+        }
+    };
+
+    const removePallet = (palletToRemove) => {
+        const newPalletArray = pallets;
+        newPalletArray.splice(palletToRemove, 1);
+        setPallets([...newPalletArray]);
     };
 
     const unifyPallets = async (e) => {
@@ -203,18 +209,20 @@ function UnifyPage() {
                 {pallets?.length > 0 && (
                     <CardContent>
                         <Grid container spacing={1}>
-                            {pallets.map((pallet) => (
+                            {pallets?.map((pallet, i) => (
                                 <Grid
-                                    key={pallet}
+                                    key={i}
                                     xs={12}
                                     sm={12}
-                                    md={6}
+                                    md={12}
                                     lg={6}
-                                    xl={4}
+                                    xl={6}
                                 >
                                     <ListedPallet
-                                        key={pallet}
+                                        key={i}
+                                        index={i}
                                         pallet={pallet.replace(/'/gi, "")}
+                                        removePallet={removePallet}
                                     />
                                 </Grid>
                             ))}
