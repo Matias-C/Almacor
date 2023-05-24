@@ -44,20 +44,10 @@ function UnifyPage() {
     };
     const { vertical, horizontal } = state;
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
-
-        if (e.target.value.substr(0, 2) === "PL") {
+    const checkValidPallet = (pallet) => {
+        if (pallet.substr(0, 2) === "PL") {
             setValidPallet(true);
-            if (e.target.value.length > 9) {
-                setValidLength(true);
-                setError(false);
-                setDisabled(false);
-            } else {
-                setValidLength(false);
-                setError(true);
-                setDisabled(true);
-            }
+            checkPalletLength(pallet);
         } else {
             setValidPallet(false);
             setError(true);
@@ -65,15 +55,30 @@ function UnifyPage() {
         }
     };
 
+    const checkPalletLength = (pallet) => {
+        if (pallet.length > 9) {
+            setValidLength(true);
+            setError(false);
+            setDisabled(false);
+        } else {
+            setValidLength(false);
+            setError(true);
+            setDisabled(true);
+        }
+    };
+
+    const handleChangePallet = (e) => {
+        const pallet = e.target.value;
+        setValue(pallet);
+        checkValidPallet(pallet);
+    };
+
     const handleOpenAlert = (error) => {
         setErrorAlert(error);
         setOpenAlert(true);
     };
 
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
+    const handleCloseAlert = () => {
         setOpenAlert(false);
     };
 
@@ -109,11 +114,6 @@ function UnifyPage() {
         if (token) {
             const id_empresa = Connected.userInfo.n_id_empresa;
             const pallet_codes = pallets;
-            console.log(
-                "🚀 ~ file: UnifyPage.js:105 ~ unifyPallets ~ pallet_codes:",
-                id_empresa,
-                pallet_codes,
-            );
 
             var formdata = new FormData();
             formdata.append("n_id_empresa", id_empresa);
@@ -130,6 +130,9 @@ function UnifyPage() {
                 },
             );
             const data = await response.json();
+            if (data.error) {
+                handleOpenAlert(data.error, "error");
+            }
             console.log(
                 "🚀 ~ file: UnifyPage.js:118 ~ unifyPallets ~ data:",
                 data,
@@ -157,7 +160,7 @@ function UnifyPage() {
                             id="pallet-code"
                             label="Código"
                             value={value}
-                            onChange={handleChange}
+                            onChange={handleChangePallet}
                             autoFocus
                             onKeyDown={(e) => {
                                 handleKeyDown(e);
