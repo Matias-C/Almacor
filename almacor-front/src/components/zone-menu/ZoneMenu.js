@@ -1,17 +1,17 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
 
-import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
-import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
-import WrongLocationRoundedIcon from "@mui/icons-material/WrongLocationRounded";
+import OrdersIcon from "@mui/icons-material/LocalShippingRounded";
+import LocateIcon from "@mui/icons-material/AddLocationAltRounded";
+import RemoveIcon from "@mui/icons-material/WrongLocationRounded";
 import SearchIcon from "@mui/icons-material/Search";
-import DnsIcon from "@mui/icons-material/Dns";
-import ViewQuiltRoundedIcon from "@mui/icons-material/ViewQuiltRounded";
+import UnifyIcon from "@mui/icons-material/Dns";
+import InventoryIcon from "@mui/icons-material/ViewQuiltRounded";
 
 import AppContainer from "../app_container/AppContainer";
+import SideBarButton from "./SideBarButton";
 import BackButton from "../back_button/BackButton";
 
 import ContextConnected from "../../context/ContextConnected";
@@ -20,11 +20,27 @@ import "./ZoneMenu.css";
 
 function ZoneMenu() {
     const Connected = useContext(ContextConnected);
-    const navigate = useNavigate();
 
     const [handleOpenSideBar, setHandleOpenSideBar] = useState(true);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [page, setPage] = useState("");
+
+    const handleOpen = (e) => {
+        e.stopPropagation();
+        Connected.setOpenSideBar(false);
+    };
+
+    const handleClose = () => {
+        if (windowWidth < 768) {
+            Connected.setOpenSideBar(false);
+        } else {
+            return null;
+        }
+    };
+
+    const stopPropagation = (e) => {
+        e.stopPropagation();
+    };
 
     useEffect(() => {
         const handleWindowResize = () => {
@@ -69,23 +85,6 @@ function ZoneMenu() {
         getUrl();
     }, []);
 
-    const handleOpen = (e) => {
-        e.stopPropagation();
-        Connected.setOpenSideBar(false);
-    };
-
-    const handleClose = () => {
-        if (windowWidth < 768) {
-            Connected.setOpenSideBar(false);
-        } else {
-            return null;
-        }
-    };
-
-    const stopPropagation = (e) => {
-        e.stopPropagation();
-    };
-
     return (
         <>
             <AppContainer>
@@ -110,21 +109,16 @@ function ZoneMenu() {
                                 stopPropagation(e);
                             }}
                         >
-                            <Button
-                                variant={
-                                    page === "orders" ? "contained" : "text"
-                                }
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("ordenes", { replace: true });
-                                    setPage("orders");
-                                }}
+                            {/* ORDERS BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="orders"
+                                urlPage="ordenes"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
-                                <LocalShippingRoundedIcon
+                                <OrdersIcon
                                     className={
                                         Connected.openSideBar
                                             ? "zone-menu-side-bar-icon open"
@@ -132,23 +126,18 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Órdenes" : ""}
-                            </Button>
+                            </SideBarButton>
 
-                            <Button
-                                variant={
-                                    page === "locate" ? "contained" : "text"
-                                }
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("ubicar", { replace: true });
-                                    setPage("locate");
-                                }}
+                            {/* LOCATE BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="locate"
+                                urlPage="ubicar"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
-                                <AddLocationAltRoundedIcon
+                                <LocateIcon
                                     className={
                                         Connected.openSideBar
                                             ? "zone-menu-side-bar-icon open"
@@ -156,23 +145,18 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Ubicar" : ""}
-                            </Button>
+                            </SideBarButton>
 
-                            <Button
-                                variant={
-                                    page === "remove" ? "contained" : "text"
-                                }
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("remover", { replace: true });
-                                    setPage("remove");
-                                }}
+                            {/* REMOVE BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="remove"
+                                urlPage="remover"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
-                                <WrongLocationRoundedIcon
+                                <RemoveIcon
                                     className={
                                         Connected.openSideBar
                                             ? "zone-menu-side-bar-icon open"
@@ -180,19 +164,16 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Remover" : ""}
-                            </Button>
+                            </SideBarButton>
 
-                            <Button
-                                variant={page === "find" ? "contained" : "text"}
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("localizar", { replace: true });
-                                    setPage("find");
-                                }}
+                            {/* FIND BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="find"
+                                urlPage="localizar"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
                                 <SearchIcon
                                     className={
@@ -202,23 +183,18 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Localizar" : ""}
-                            </Button>
+                            </SideBarButton>
 
-                            <Button
-                                variant={
-                                    page === "unify" ? "contained" : "text"
-                                }
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("unificar", { replace: true });
-                                    setPage("unify");
-                                }}
+                            {/* UNIFY BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="unify"
+                                urlPage="unificar"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
-                                <DnsIcon
+                                <UnifyIcon
                                     className={
                                         Connected.openSideBar
                                             ? "zone-menu-side-bar-icon open"
@@ -226,23 +202,18 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Unificar" : ""}
-                            </Button>
+                            </SideBarButton>
 
-                            <Button
-                                variant={
-                                    page === "inventory" ? "contained" : "text"
-                                }
-                                size="large"
-                                disableElevation
-                                fullWidth
-                                className="zone-menu-side-bar-button"
-                                onClick={() => {
-                                    handleClose();
-                                    navigate("inventario", { replace: true });
-                                    setPage("inventory");
-                                }}
+                            {/* INVENTORY BUTTON */}
+
+                            <SideBarButton
+                                page={page}
+                                currentPage="inventory"
+                                urlPage="inventario"
+                                handleClose={handleClose}
+                                setPage={setPage}
                             >
-                                <ViewQuiltRoundedIcon
+                                <InventoryIcon
                                     className={
                                         Connected.openSideBar
                                             ? "zone-menu-side-bar-icon open"
@@ -250,7 +221,7 @@ function ZoneMenu() {
                                     }
                                 />
                                 {Connected.openSideBar ? "Inventario" : ""}
-                            </Button>
+                            </SideBarButton>
                         </div>
                     </div>
 
