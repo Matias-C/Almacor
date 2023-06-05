@@ -1,0 +1,124 @@
+[
+    {
+        "n_id_partida": 200114452,
+        "n_id_orden_carga": 158,
+        "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+        "b_retirado": true,
+        "c_tipo_contenido": "PL",
+        "c_numero": "00114452",
+        "c_remito": "0000-00127383",
+        "n_local": 15,
+        "c_deposito_origen ": "  1",
+        "b_pedido": true,
+        "b_quitado": false,
+        "ubicacion": {
+            "n_id_deposito": 1,
+            "n_id_zona": 1,
+            "c_pasillo": "A",
+            "n_id_columna": 2,
+            "n_id_fila": 1
+        }
+    },
+    {
+        "n_id_partida": 200114434,
+        "n_id_orden_carga": 158,
+        "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+        "b_retirado": true,
+        "c_tipo_contenido": "PL",
+        "c_numero": "00114434",
+        "c_remito": "0000-00127240",
+        "n_local": 15,
+        "c_deposito_origen ": "  1",
+        "b_pedido": true,
+        "b_quitado": false,
+        "ubicacion": null
+    },
+    {
+        "n_id_grupo": 2,
+        "b_quitado": false,
+        "partidas": [
+            {
+                "n_id_partida": 200114530,
+                "n_id_orden_carga": 158,
+                "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+                "b_retirado": true,
+                "c_tipo_contenido": "PL",
+                "c_numero": "00114530",
+                "c_remito": "0000-00127386",
+                "n_local": 15,
+                "c_deposito_origen": "1",
+                "b_pedido": true,
+                "b_quitado": false,
+                "ubicacion": null
+            },
+            {
+                "n_id_partida": 200114839,
+                "n_id_orden_carga": 158,
+                "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+                "b_retirado": true,
+                "c_tipo_contenido": "PL",
+                "c_numero": "00114839",
+                "c_remito": "0000-00127460",
+                "n_local": 15,
+                "c_deposito_origen": "1",
+                "b_pedido": true,
+                "b_quitado": false,
+                "ubicacion": null
+            }
+        ]
+    },
+    {
+        "n_id_grupo": 1,
+        "b_quitado": false,
+        "partidas": [
+            {
+                "n_id_partida": 200114681,
+                "n_id_orden_carga": 158,
+                "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+                "b_retirado": true,
+                "c_tipo_contenido": "PL",
+                "c_numero": "00114681",
+                "c_remito": "0000-00127539",
+                "n_local": 15,
+                "c_deposito_origen": "1",
+                "b_pedido": true,
+                "b_quitado": false,
+                "ubicacion": {
+                    "n_id_deposito": 1,
+                    "n_id_zona": 1,
+                    "c_pasillo": "A",
+                    "n_id_columna": 1,
+                    "n_id_fila": 1
+                }
+            },
+            {
+                "n_id_partida": 100604113,
+                "n_id_orden_carga": 158,
+                "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+                "b_retirado": false,
+                "c_tipo_contenido": "PL",
+                "c_numero": "00604113",
+                "c_remito": "0003-00585620",
+                "n_local": 15,
+                "c_deposito_origen": "1",
+                "b_pedido": false,
+                "b_quitado": false,
+                "ubicacion": null
+            },
+            {
+                "n_id_partida": 100604946,
+                "n_id_orden_carga": 158,
+                "c_descripcion": "83- SUPER TEJADA S - 13/04/23 19:05",
+                "b_retirado": false,
+                "c_tipo_contenido": "PL",
+                "c_numero": "00604946",
+                "c_remito": "0003-00585622",
+                "n_local": 15,
+                "c_deposito_origen": "1",
+                "b_pedido": false,
+                "b_quitado": false,
+                "ubicacion": null
+            }
+        ]
+    }
+]

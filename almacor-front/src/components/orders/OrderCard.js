@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -140,7 +140,7 @@ function OrderCard(props) {
                 const data = await response.json();
                 data && props.setRefresh(true);
             } else {
-                handleOpenAlert("El código no coindice", "error");
+                handleOpenAlert("El código no coincide", "error");
             }
         }
     };
@@ -151,19 +151,9 @@ function OrderCard(props) {
                 variant="outlined"
                 className={props.orderDespacho ? "despachado" : "no-despachado"}
             >
-                <CardContent>
-                    <Typography variant="h4" className="order-card-header">
-                        PL{props.orderConteiner}
-                    </Typography>
-                    <hr className="separator" />
-
-                    <div className="order-card-table-item">
-                        <Typography variant="body" className="order-card-item">
-                            Remito
-                        </Typography>
-                        <Typography variant="body" className="number">
-                            {props.orderRemito}
-                        </Typography>
+                <CardContent className="card-content">
+                    <div className="order-card-header">
+                        <Typography variant="h5">Ubicación</Typography>
                     </div>
 
                     <PalletDetails
@@ -171,6 +161,30 @@ function OrderCard(props) {
                         col={props.orderCol}
                         row={props.orderRow}
                     />
+
+                    <Grid container spacing={1} className="order-card-grid">
+                        <Grid xs={4} sm={4} md={4} lg={4}>
+                            <div className="order-card-header">
+                                <Typography variant="h5">Pallet</Typography>
+                            </div>
+                        </Grid>
+
+                        <Grid xs={4} sm={4} md={4} lg={4}>
+                            <div className="order-card-header">
+                                <Typography variant="h5">Remito</Typography>
+                            </div>
+                        </Grid>
+
+                        <Grid xs={4} sm={4} md={4} lg={4}>
+                            <div className="order-card-header">
+                                <Typography variant="h5">Dep. origen</Typography>
+                            </div>
+                        </Grid>
+                    </Grid>
+
+                    <div className="order-card-pallet-display">
+                        {props.children}
+                    </div>
                 </CardContent>
 
                 <CardActions>
@@ -204,7 +218,7 @@ function OrderCard(props) {
 
                 <DialogContent>
                     <DialogContentText>
-                        Ingrese el código del pallet a quitar para confirmar.
+                        Ingrese el código del pallet para confirmar.
                     </DialogContentText>
 
                     <FormControl
