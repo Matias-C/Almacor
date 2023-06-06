@@ -12,7 +12,7 @@
 }
 
 .order-card-header{
-    border: 1px solid #e5e5e5;
+    border: 1px solid rgba(0, 0, 0, .1);
     border-radius: 8px;
 
     padding: 6px 8px;
@@ -33,8 +33,14 @@
 }
 
 .pallet-display-cont {
-    background-color: #e5e5e5;
+    background-color: rgba(0, 0, 0, .1);
     border-radius: 8px;
+}
+
+.pallet-display-item {
+    border-radius: 8px;
+
+    padding: 6px 8px;
 }
 
 

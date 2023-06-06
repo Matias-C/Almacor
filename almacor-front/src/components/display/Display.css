@@ -101,7 +101,7 @@
 .display-details-content-cont {
     border-radius: 12px;
 
-    height: calc(100vh - var(--nav-height) - 161px);
+    height: calc(100vh - var(--nav-height) - 145px);
     
     overflow-x: hidden;
     overflow-y: auto;

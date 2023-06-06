@@ -130,8 +130,7 @@ function LocatePageStep3() {
                     body: formdata,
                 },
             );
-            const data = await response.json();
-            data.success && navigate(-2);
+            response.status === 200 && navigate(-2);
         }
     };
 

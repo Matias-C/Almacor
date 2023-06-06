@@ -101,23 +101,42 @@ function OrderCard(props) {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            sendRemoved(e, value);
+            sendRemoved(value);
         }
     };
 
-    const sendRemoved = async (e, pallet) => {
-        e.preventDefault();
+    const checkPallet = (pallet) => {
+        const pallets = props.orderPallet;
+        const palletToCheck = pallet.substr(2, 10);
 
+        if (props.orderType === "group order") {
+            if (pallets.find((palletToCheck) => palletToCheck)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (props.orderType === "individual order") {
+            if (palletToCheck === pallets) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    const sendRemoved = async (pallet) => {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            if (pallet.substr(2, 8) === props.orderConteiner) {
+            const palletChecked = checkPallet(pallet);
+
+            if (palletChecked) {
                 const b_quitado = "true";
 
                 var formdata = new FormData();
                 formdata.append("b_quitado", b_quitado);
 
-                const result = await fetch(
-                    `${Connected.currentURL}api/v1/deposito/partidas/?id_numero_partida=${props.idPartida}`,
+                await fetch(
+                    `${Connected.currentURL}api/v1/deposito/partidas/?id_numero_partida=${props.orderIdPartida}`,
                     {
                         method: "POST",
                         headers: {
@@ -128,7 +147,7 @@ function OrderCard(props) {
                 );
 
                 const response = await fetch(
-                    `${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${props.orderConteiner}`,
+                    `${Connected.currentURL}api/v1/deposito/partidas/?numero=${pallet}`,
                     {
                         method: "DELETE",
                         headers: {
@@ -139,6 +158,7 @@ function OrderCard(props) {
 
                 const data = await response.json();
                 data && props.setRefresh(true);
+                handleOpenAlert("Se quitó la partida correctamente", "success");
             } else {
                 handleOpenAlert("El código no coincide", "error");
             }
@@ -146,7 +166,7 @@ function OrderCard(props) {
     };
 
     return (
-        <Grid xs={12} sm={6} md={6} lg={3}>
+        <Grid xs={12} sm={12} md={12} lg={6}>
             <Card
                 variant="outlined"
                 className={props.orderDespacho ? "despachado" : "no-despachado"}
@@ -177,7 +197,9 @@ function OrderCard(props) {
 
                         <Grid xs={4} sm={4} md={4} lg={4}>
                             <div className="order-card-header">
-                                <Typography variant="h5">Dep. origen</Typography>
+                                <Typography variant="h5">
+                                    Dep. origen
+                                </Typography>
                             </div>
                         </Grid>
                     </Grid>
@@ -194,7 +216,10 @@ function OrderCard(props) {
                             size="medium"
                             className="order-card-button"
                             disableElevation
-                            onClick={handleOpen}
+                            onClick={() => {
+                                handleOpen();
+                                setValue("");
+                            }}
                         >
                             Quitar
                         </Button>
