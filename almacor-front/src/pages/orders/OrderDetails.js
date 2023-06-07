@@ -10,11 +10,26 @@ import OrderCardPalletDisplay from "../../components/orders/OrderCardPalletDispl
 
 import ContextConnected from "../../context/ContextConnected";
 
-function Details({ details, setRefresh }) {
-    const createPalletArray = (partidas) => {
+function DeparturesDisplay({ departures, setRefresh }) {
+    const filteredDepartures = [];
+
+    const activeDepartures = departures?.filter((departure) =>
+        departure.b_quitado.toString().includes("f"),
+    );
+    const removedDepartures = departures?.filter((departure) =>
+        departure.b_quitado.toString().includes("t"),
+    );
+
+    Array.prototype.push.apply(
+        filteredDepartures,
+        activeDepartures,
+        removedDepartures,
+    );
+
+    const createPalletArrayForGroup = (departures) => {
         const pallets = [];
-        partidas.map((partida) => {
-            pallets.push(partida.c_numero);
+        departures.map((departure) => {
+            pallets.push(departure.c_numero);
         });
 
         return pallets;
@@ -22,52 +37,49 @@ function Details({ details, setRefresh }) {
 
     return (
         <>
-            {details?.map((filteredDetail) => {
+            {filteredDepartures?.map((departure) => {
                 return (
                     <OrderCard
                         key={
-                            filteredDetail.n_id_grupo
-                                ? filteredDetail.n_id_grupo
-                                : filteredDetail.n_id_partida
+                            departure.n_id_grupo
+                                ? departure.n_id_grupo
+                                : departure.n_id_partida
                         }
                         orderType={
-                            filteredDetail.n_id_grupo
+                            departure.n_id_grupo
                                 ? "group order"
                                 : "individual order"
                         }
                         orderIdPartida={
-                            filteredDetail.n_id_grupo
-                                ? filteredDetail.partidas[0].n_id_partida
-                                : filteredDetail.n_id_partida
+                            departure.n_id_grupo
+                                ? departure.partidas[0].n_id_partida
+                                : departure.n_id_partida
                         }
                         orderPallet={
-                            filteredDetail.n_id_grupo
-                                ? createPalletArray(filteredDetail.partidas)
-                                : filteredDetail.c_numero
+                            departure.n_id_grupo
+                                ? createPalletArrayForGroup(departure.partidas)
+                                : departure.c_numero
                         }
                         orderHall={
-                            filteredDetail.n_id_grupo
-                                ? filteredDetail.partidas[0].ubicacion
-                                    ?.c_pasillo
-                                : filteredDetail.ubicacion?.c_pasillo
+                            departure.n_id_grupo
+                                ? departure.partidas[0].ubicacion?.c_pasillo
+                                : departure.ubicacion?.c_pasillo
                         }
                         orderCol={
-                            filteredDetail.n_id_grupo
-                                ? filteredDetail.partidas[0].ubicacion
-                                    ?.n_id_columna
-                                : filteredDetail.ubicacion?.n_id_columna
+                            departure.n_id_grupo
+                                ? departure.partidas[0].ubicacion?.n_id_columna
+                                : departure.ubicacion?.n_id_columna
                         }
                         orderRow={
-                            filteredDetail.n_id_grupo
-                                ? filteredDetail.partidas[0].ubicacion
-                                    ?.n_id_fila
-                                : filteredDetail.ubicacion?.n_id_fila
+                            departure.n_id_grupo
+                                ? departure.partidas[0].ubicacion?.n_id_fila
+                                : departure.ubicacion?.n_id_fila
                         }
-                        orderDespacho={filteredDetail.b_quitado}
+                        orderDespacho={departure.b_quitado}
                         setRefresh={setRefresh}
                     >
-                        {filteredDetail.n_id_grupo ? (
-                            filteredDetail.partidas.map((partida) => (
+                        {departure.n_id_grupo ? (
+                            departure.partidas.map((partida) => (
                                 <OrderCardPalletDisplay
                                     key={partida.n_id_partida}
                                     pallet={partida.c_numero}
@@ -77,8 +89,8 @@ function Details({ details, setRefresh }) {
                             ))
                         ) : (
                             <OrderCardPalletDisplay
-                                pallet={filteredDetail.c_numero}
-                                remito={filteredDetail.c_remito}
+                                pallet={departure.c_numero}
+                                remito={departure.c_remito}
                                 originDeposit="-"
                             />
                         )}
@@ -95,11 +107,11 @@ function OrderDetails() {
 
     const [loading, setLoading] = useState(true);
 
-    const [details, setDetails] = useState([]);
+    const [departures, setDepartures] = useState([]);
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
-        const getDetails = async () => {
+        const getDepartures = async () => {
             const token = await JSON.parse(localStorage.getItem("token"));
             if (token) {
                 const res = await fetch(
@@ -113,13 +125,12 @@ function OrderDetails() {
                     },
                 );
                 const data = await res.json();
-                setDetails(data);
+                setDepartures(data);
                 setRefresh(false);
                 setLoading(false);
-                console.log(data);
             }
         };
-        getDetails();
+        getDepartures();
     }, [Connected, location, refresh]);
 
     return (
@@ -134,7 +145,10 @@ function OrderDetails() {
                         <OrderCardSkeleton />
                     </>
                 ) : (
-                    <Details details={details} setRefresh={setRefresh} />
+                    <DeparturesDisplay
+                        departures={departures}
+                        setRefresh={setRefresh}
+                    />
                 )}
             </Grid>
         </DisplayDetailsPage>
@@ -142,73 +156,3 @@ function OrderDetails() {
 }
 
 export default OrderDetails;
-
-/*
-import { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
-
-import Grid from "@mui/material/Unstable_Grid2";
-
-import DisplayDetailsPage from "../../components/display/DisplayDetailsPage";
-import OrderCardSkeleton from "../../components/orders/OrderCardSkeleton";
-import OrderCard from "../../components/orders/OrderCard";
-
-import ContextConnected from "../../context/ContextConnected";
-
-function Details({ details, setRefresh }) {
-    return (
-        <>
-            {details
-                .filter((detail) => detail.b_quitado.toString().includes("f"))
-                .map((filteredDetail) => {
-                    return (
-                        <OrderCard
-                            key={filteredDetail.n_id_pk}
-                            idPartida={filteredDetail.n_id_partida}
-                            orderConteiner={filteredDetail.c_numero}
-                            orderRemito={filteredDetail.c_remito}
-                            orderDeposit={filteredDetail.ubicacion.deposito}
-                            orderZone={filteredDetail.ubicacion.zona}
-                            orderHall={filteredDetail.ubicacion.c_pasillo}
-                            orderCol={filteredDetail.ubicacion.columna}
-                            orderRow={filteredDetail.ubicacion.fila}
-                            orderDespacho={filteredDetail.b_quitado}
-                            setRefresh={setRefresh}
-                        />
-                    );
-                })}
-            {details
-                .filter((detail) => detail.b_quitado.toString().includes("t"))
-                .map((filteredDetail) => {
-                    return (
-                        <OrderCard
-                            key={filteredDetail.n_id_pk}
-                            idPartida={filteredDetail.n_id_partida}
-                            orderConteiner={filteredDetail.c_numero}
-                            orderRemito={filteredDetail.c_remito}
-                            orderDeposit={filteredDetail.ubicacion.deposito}
-                            orderZone={filteredDetail.ubicacion.zona}
-                            orderHall={
-                                filteredDetail.ubicacion.info
-                                    ? "-"
-                                    : filteredDetail.ubicacion.c_pasillo
-                            }
-                            orderCol={
-                                filteredDetail.ubicacion.info
-                                    ? "-"
-                                    : filteredDetail.ubicacion.columna
-                            }
-                            orderRow={
-                                filteredDetail.ubicacion.info
-                                    ? "-"
-                                    : filteredDetail.ubicacion.fila
-                            }
-                            orderDespacho={filteredDetail.b_quitado}
-                        />
-                    );
-                })}
-        </>
-    );
-}
-
-*/

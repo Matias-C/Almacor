@@ -101,7 +101,7 @@ function LocatePageStep2() {
 
     return (
         <>
-            <SectionPage sectionHeader="Ubicar Pallet">
+            <SectionPage sectionHeader="Ubicar">
                 <CardContent>
                     {loading ? (
                         <>

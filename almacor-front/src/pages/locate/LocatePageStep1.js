@@ -125,7 +125,7 @@ function LocatePageStep1() {
 
     return (
         <>
-            <SectionPage sectionHeader="Ubicar Pallet">
+            <SectionPage sectionHeader="Ubicar">
                 <CardContent>
                     <Typography variant="h4">
                         Ingrese el código del pallet

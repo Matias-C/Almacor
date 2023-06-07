@@ -244,7 +244,7 @@ function LocatePageStep3() {
 
     return (
         <>
-            <SectionPage sectionHeader="Ubicar Pallet">
+            <SectionPage sectionHeader="Ubicar">
                 <CardContent>
                     {loading ? (
                         <>
