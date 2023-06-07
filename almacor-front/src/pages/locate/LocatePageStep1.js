@@ -16,6 +16,7 @@ import MuiAlert from "@mui/material/Alert";
 
 import SectionPage from "../../components/section_page/SectionPage";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import usePalletValidation from "../../hooks/usePalletValidation";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -29,34 +30,16 @@ function LocatePageStep1() {
     const Connected = useContext(ContextConnected);
     const navigate = useNavigate();
 
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
+    const {
+        value,
+        setValue,
+        error,
+        disabled,
+        validPallet,
+        validPalletLength,
+        handleChange,
+    } = usePalletValidation();
     const [errorAlert, setErrorAlert] = useState("");
-    const [validPallet, setValidPallet] = useState(false);
-    const [validPalletLength, setValidLength] = useState(false);
-
-    const [value, setValue] = useState("");
-
-    const handleChange = (e) => {
-        setValue(e.target.value);
-
-        if (e.target.value.substr(0, 2) === "PL") {
-            setValidPallet(true);
-            if (e.target.value.length > 9) {
-                setValidLength(true);
-                setError(false);
-                setDisabled(false);
-            } else {
-                setValidLength(false);
-                setError(true);
-                setDisabled(true);
-            }
-        } else {
-            setValidPallet(false);
-            setError(true);
-            setDisabled(true);
-        }
-    };
 
     const checkPallet = async (e, pallet) => {
         e.preventDefault();
