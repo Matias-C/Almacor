@@ -17,6 +17,7 @@ import MuiAlert from "@mui/material/Alert";
 import SectionPage from "../../components/section_page/SectionPage";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
 import usePalletValidation from "../../hooks/usePalletValidation";
+import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -31,8 +32,8 @@ function LocatePageStep1() {
     const navigate = useNavigate();
 
     const {
-        value,
-        setValue,
+        inputPalletValue,
+        setInputPalletValue,
         error,
         disabled,
         validPallet,
@@ -40,30 +41,19 @@ function LocatePageStep1() {
         handleChange,
     } = usePalletValidation();
 
-    const [openAlert, setOpenAlert] = useState(false);
-    const [errorAlert, setErrorAlert] = useState("");
-
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenAlert = (error) => {
-        setErrorAlert(error);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
-    };
+    const {
+        openAlert,
+        alertType,
+        alertText,
+        vertical,
+        horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
+    } = useAlert();
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            checkPallet(e, value);
+            checkPallet(e, inputPalletValue);
         }
     };
 
@@ -82,17 +72,18 @@ function LocatePageStep1() {
                     },
                 },
             );
+            console.log(res.status);
             const data = await res.json();
             if (data.error) {
-                handleOpenAlert("Este pallet no existe");
-                setValue("");
+                handleOpenAlert("Este pallet no existe", "error");
+                setInputPalletValue("");
             }
             if (
                 data.status ===
                 "El Pallet ingresado se encuentra en una ubicacion"
             ) {
-                handleOpenAlert("Este pallet ya fue ubicado");
-                setValue("");
+                handleOpenAlert("Este pallet ya fue ubicado", "error");
+                setInputPalletValue("");
             } else if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
@@ -117,7 +108,7 @@ function LocatePageStep1() {
                     <hr className="separator" />
 
                     <FormControl
-                        error={value === "" ? false : error}
+                        error={inputPalletValue === "" ? false : error}
                         size="small"
                         fullWidth
                         className="add-page-input"
@@ -126,7 +117,7 @@ function LocatePageStep1() {
                         <OutlinedInput
                             id="pallet-code"
                             label="Código"
-                            value={value}
+                            value={inputPalletValue}
                             onChange={handleChange}
                             autoFocus
                             onKeyDown={(e) => {
@@ -135,7 +126,7 @@ function LocatePageStep1() {
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
-                            {value === ""
+                            {inputPalletValue === ""
                                 ? ""
                                 : error
                                 ? !validPallet
@@ -156,7 +147,7 @@ function LocatePageStep1() {
                         disableElevation
                         className="add-page-button"
                         onClick={(e) => {
-                            checkPallet(e, value);
+                            checkPallet(e, inputPalletValue);
                         }}
                     >
                         Siguiente
@@ -172,10 +163,10 @@ function LocatePageStep1() {
             >
                 <Alert
                     onClose={handleCloseAlert}
-                    severity="error"
+                    severity={alertType}
                     sx={{ width: "100%" }}
                 >
-                    {errorAlert}
+                    {alertText}
                 </Alert>
             </Snackbar>
         </>

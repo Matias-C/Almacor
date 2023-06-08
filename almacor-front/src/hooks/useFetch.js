@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 
+import ContextConnected from "../context/ContextConnected";
+
 const useFetch = (url) => {
+    const Connected = useContext(ContextConnected);
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -10,16 +13,13 @@ const useFetch = (url) => {
         const getData = async () => {
             const token = await JSON.parse(localStorage.getItem("token"));
             if (token) {
-                fetch(
-                    url,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token.access_token}`,
-                        },
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token.access_token}`,
                     },
-                )
+                })
                     .then((res) => {
                         if (!res.ok) {
                             throw Error("No se pudo completar la petición");
@@ -37,7 +37,7 @@ const useFetch = (url) => {
             }
         };
         getData();
-    }, [url]);
+    }, [Connected, url]);
 
     return { data, loading, error };
 };

@@ -25,6 +25,9 @@ import SectionPage from "../../components/section_page/SectionPage";
 import PalletDetails from "../../components/pallet_details/PalletDetails";
 import PalletDetailsSkeleton from "../../components/pallet_details/PalletDetailsSkeleton";
 import { LocationMask } from "../../components/masked-inputs/LocationMask";
+import useLocationValidation from "../../hooks/useLocationValidation";
+import useDialog from "../../hooks/useDialog";
+import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -41,8 +44,6 @@ function LocatePageStep3() {
 
     const [loading, setLoading] = useState(true);
 
-    const deposit = parseInt(Connected.currentDepositId);
-    const zone = parseInt(Connected.currentZoneId);
     const weight = location.state.pallet.n_tipopeso;
     const height = location.state.pallet.n_tipoaltura;
     const [ub, setUb] = useState("");
@@ -50,6 +51,36 @@ function LocatePageStep3() {
     const [hall, setHall] = useState("");
     const [col, setCol] = useState("");
     const [row, setRow] = useState("");
+
+    const {
+        inputLocationValue,
+        setInputLocationValue,
+        error,
+        disabled,
+        validLocation,
+        validLocationLength,
+        validDeposit,
+        validZone,
+        deposit,
+        zone,
+        handleChange,
+    } = useLocationValidation();
+
+    const {
+        openDialog,
+        handleOpenDialog,
+        handleCloseDialog,
+    } = useDialog();
+
+    const {
+        openAlert,
+        alertType,
+        alertText,
+        vertical,
+        horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
+    } = useAlert();
 
     useEffect(() => {
         const generateLocation = async () => {
@@ -93,9 +124,9 @@ function LocatePageStep3() {
     const newLocation = (e) => {
         e.preventDefault();
 
-        const newHall = parseInt(value.substr(6, 2));
-        const newCol = parseInt(value.substr(8, 2));
-        const newRow = parseInt(value.substr(10, 2));
+        const newHall = parseInt(inputLocationValue.substr(6, 2));
+        const newCol = parseInt(inputLocationValue.substr(8, 2));
+        const newRow = parseInt(inputLocationValue.substr(10, 2));
 
         locatePallet(newHall, newCol, newRow);
     };
@@ -157,88 +188,16 @@ function LocatePageStep3() {
                 }
             } else {
                 handleOpenAlert("Ubicación no disponible", "error");
+                setInputLocationValue("");
             }
-        }
-    };
-
-    const [openDialog, setOpenDialog] = useState(false);
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("");
-    const [alert, setAlert] = useState("");
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenDialog = () => {
-        setOpenDialog(true);
-    };
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    };
-
-    const handleOpenAlert = (alert, type) => {
-        setAlertType(type);
-        setAlert(alert);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
-    };
-
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
-    const [validPallet, setValidPallet] = useState(false);
-    const [validDeposit, setValidDeposit] = useState(false);
-    const [validZone, setValidZone] = useState(false);
-    const [validPalletLength, setValidLength] = useState(false);
-
-    const [value, setValue] = useState("");
-
-    const handleChange = (e) => {
-        setValue(e.target.value);
-
-        if (e.target.value.substr(0, 2) === "UB") {
-            setValidPallet(true);
-            if (parseInt(e.target.value.substr(2, 2)) === deposit) {
-                setValidDeposit(true);
-                if (parseInt(e.target.value.substr(4, 2)) === zone) {
-                    setValidZone(true);
-                    if (e.target.value.length > 11) {
-                        setValidLength(true);
-                        setDisabled(false);
-                        setError(false);
-                    } else {
-                        setValidLength(false);
-                        setDisabled(true);
-                        setError(true);
-                    }
-                } else {
-                    setValidZone(false);
-                    setDisabled(true);
-                    setError(true);
-                }
-            } else {
-                setValidDeposit(false);
-                setDisabled(true);
-                setError(true);
-            }
-        } else {
-            setValidPallet(false);
-            setDisabled(true);
-            setError(true);
         }
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            checkLocation(e.target.value);
+            if (!error) {
+                checkLocation(e.target.value);
+            }
         }
     };
 
@@ -298,13 +257,15 @@ function LocatePageStep3() {
                                 variant="outlined"
                                 size="small"
                                 fullWidth
-                                error={value === "" ? false : error}
+                                error={
+                                    inputLocationValue === "" ? false : error
+                                }
                             >
                                 <InputLabel>Ubicación</InputLabel>
                                 <OutlinedInput
                                     id="pallet-code"
                                     label="Ubicación"
-                                    value={value}
+                                    value={inputLocationValue}
                                     autoFocus
                                     onChange={handleChange}
                                     onKeyDown={(e) => {
@@ -313,16 +274,16 @@ function LocatePageStep3() {
                                     inputComponent={LocationMask}
                                 />
                                 <FormHelperText>
-                                    {value === ""
+                                    {inputLocationValue === ""
                                         ? ""
                                         : error
-                                        ? !validPallet
+                                        ? !validLocation
                                             ? "Código no válido"
                                             : !validDeposit
                                             ? "El depósito no coincide con tu depósito actual"
                                             : !validZone
                                             ? "La zona no coincide con tu zona actual"
-                                            : !validPalletLength
+                                            : !validLocationLength
                                             ? "El código es demasiado corto"
                                             : ""
                                         : ""}
@@ -378,7 +339,7 @@ function LocatePageStep3() {
                     severity={alertType}
                     sx={{ width: "100%" }}
                 >
-                    {alert}
+                    {alertText}
                 </Alert>
             </Snackbar>
         </>

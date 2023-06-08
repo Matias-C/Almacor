@@ -3,7 +3,7 @@ import { useState } from "react";
 const useAlert = () => {
     const [openAlert, setOpenAlert] = useState(false);
     const [alertType, setAlertType] = useState("");
-    const [alert, setAlert] = useState("");
+    const [alertText, setAlertText] = useState("");
     const state = {
         vertical: "top",
         horizontal: "center",
@@ -12,7 +12,7 @@ const useAlert = () => {
 
     const handleOpenAlert = (alert, type) => {
         setAlertType(type);
-        setAlert(alert);
+        setAlertText(alert);
         setOpenAlert(true);
     };
 
@@ -28,10 +28,12 @@ const useAlert = () => {
         setOpenAlert,
         alertType,
         setAlertType,
-        alert,
-        setAlert,
+        alertText,
+        setAlertText,
         vertical,
         horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
     };
 };
 

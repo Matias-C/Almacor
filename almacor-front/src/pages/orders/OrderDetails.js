@@ -23,8 +23,6 @@ function DeparturesDisplay({ departures, setRefresh }) {
     Array.prototype.push.apply(filteredDepartures, activeDepartures);
     Array.prototype.push.apply(filteredDepartures, removedDepartures);
 
-    console.log(filteredDepartures);
-
     const createPalletArrayForGroup = (departures) => {
         const pallets = [];
         departures.map((departure) => {
@@ -90,7 +88,7 @@ function DeparturesDisplay({ departures, setRefresh }) {
                             <OrderCardPalletDisplay
                                 pallet={departure.c_numero}
                                 remito={departure.c_remito}
-                                originDeposit="-"
+                                originDeposit={departure.c_deposito_origen}
                             />
                         )}
                     </OrderCard>
@@ -127,7 +125,6 @@ function OrderDetails() {
                 setDepartures(data);
                 setRefresh(false);
                 setLoading(false);
-                console.log(data);
             }
         };
         getDepartures();

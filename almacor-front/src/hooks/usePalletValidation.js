@@ -1,19 +1,20 @@
 import { useState } from "react";
 
 const usePalletValidation = () => {
+    const [inputPalletValue, setInputPalletValue] = useState("");
+
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);
     const [validPalletLength, setValidLength] = useState(false);
 
-    const [value, setValue] = useState("");
-
     const handleChange = (e) => {
-        setValue(e.target.value);
+        const newInputValue = e.target.value;
+        setInputPalletValue(newInputValue);
 
-        if (e.target.value.substr(0, 2) === "PL") {
+        if (newInputValue.substr(0, 2) === "PL") {
             setValidPallet(true);
-            if (e.target.value.length > 9) {
+            if (newInputValue.length > 9) {
                 setValidLength(true);
                 setError(false);
                 setDisabled(false);
@@ -30,8 +31,8 @@ const usePalletValidation = () => {
     };
 
     return {
-        value,
-        setValue,
+        inputPalletValue,
+        setInputPalletValue,
         error,
         disabled,
         validPallet,
