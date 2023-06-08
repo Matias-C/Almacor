@@ -39,7 +39,33 @@ function LocatePageStep1() {
         validPalletLength,
         handleChange,
     } = usePalletValidation();
+
+    const [openAlert, setOpenAlert] = useState(false);
     const [errorAlert, setErrorAlert] = useState("");
+
+    const state = {
+        vertical: "top",
+        horizontal: "center",
+    };
+    const { vertical, horizontal } = state;
+
+    const handleOpenAlert = (error) => {
+        setErrorAlert(error);
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenAlert(false);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            checkPallet(e, value);
+        }
+    };
 
     const checkPallet = async (e, pallet) => {
         e.preventDefault();
@@ -78,31 +104,6 @@ function LocatePageStep1() {
                     },
                 });
             }
-        }
-    };
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenAlert = (error) => {
-        setErrorAlert(error);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            checkPallet(e, value);
         }
     };
 

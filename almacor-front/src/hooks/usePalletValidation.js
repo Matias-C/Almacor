@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const usePalletValidation = (url) => {
+const usePalletValidation = () => {
     const [error, setError] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [validPallet, setValidPallet] = useState(false);

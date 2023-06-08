@@ -20,11 +20,10 @@ function DeparturesDisplay({ departures, setRefresh }) {
         departure.b_quitado.toString().includes("t"),
     );
 
-    Array.prototype.push.apply(
-        filteredDepartures,
-        activeDepartures,
-        removedDepartures,
-    );
+    Array.prototype.push.apply(filteredDepartures, activeDepartures);
+    Array.prototype.push.apply(filteredDepartures, removedDepartures);
+
+    console.log(filteredDepartures);
 
     const createPalletArrayForGroup = (departures) => {
         const pallets = [];
@@ -128,6 +127,7 @@ function OrderDetails() {
                 setDepartures(data);
                 setRefresh(false);
                 setLoading(false);
+                console.log(data);
             }
         };
         getDepartures();
