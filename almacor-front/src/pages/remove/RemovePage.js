@@ -26,10 +26,10 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import SectionPage from "../../components/section_page/SectionPage";
+import useDialog from "../../hooks/useDialog";
+import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
-
-import "./RemovePage.css";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -66,6 +66,18 @@ function RemovePage() {
 
     const [value, setValue] = useState("");
     const [numero, setNumero] = useState("");
+
+    const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
+
+    const {
+        openAlert,
+        alertType,
+        alertText,
+        vertical,
+        horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
+    } = useAlert();
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -111,37 +123,6 @@ function RemovePage() {
             setDisabled(true);
             setError(true);
         }
-    };
-
-    const [openDialog, setOpenDialog] = useState(false);
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("");
-    const [alert, setAlert] = useState("");
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenDialog = () => {
-        setOpenDialog(true);
-    };
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    };
-
-    const handleOpenAlert = (alert, type) => {
-        setAlertType(type);
-        setAlert(alert);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
     };
 
     const removePallet = async (e) => {
@@ -353,7 +334,7 @@ function RemovePage() {
                     severity={alertType}
                     sx={{ width: "100%" }}
                 >
-                    {alert}
+                    {alertText}
                 </Alert>
             </Snackbar>
         </>

@@ -25,11 +25,8 @@ const useAlert = () => {
 
     return {
         openAlert,
-        setOpenAlert,
         alertType,
-        setAlertType,
         alertText,
-        setAlertText,
         vertical,
         horizontal,
         handleOpenAlert,
