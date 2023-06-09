@@ -1,11 +1,5 @@
 import React, { useState, useContext } from "react";
 
-import PropTypes from "prop-types";
-import { IMaskInput } from "react-imask";
-
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
-
-import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
@@ -26,6 +20,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import SectionPage from "../../components/section_page/SectionPage";
+import { LocationMask } from "../../components/masked-inputs/LocationMask";
+import { PalletMask } from "../../components/masked-inputs/PalletMask";
 import useDialog from "../../hooks/useDialog";
 import useAlert from "../../hooks/useAlert";
 
@@ -34,27 +30,6 @@ import ContextConnected from "../../context/ContextConnected";
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const InputMask = React.forwardRef(function InputMask(props, ref) {
-    const { onChange, ...other } = props;
-
-    return (
-        <IMaskInput
-            {...other}
-            mask="##0000000000"
-            definitions={{
-                "#": /[A-Z]/,
-            }}
-            inputRef={ref}
-            onAccept={(value) => onChange({ target: { value } })}
-            overwrite
-        />
-    );
-});
-
-InputMask.propTypes = {
-    onChange: PropTypes.func.isRequired,
-};
 
 function RemovePage() {
     const Connected = useContext(ContextConnected);
@@ -80,20 +55,21 @@ function RemovePage() {
     } = useAlert();
 
     const handleChange = (e) => {
-        setValue(e.target.value);
+        const newInputValue = e.target.value;
+        setValue(newInputValue);
 
         if (
-            e.target.value.substr(0, 2) === "PL" ||
-            e.target.value.substr(0, 2) === "UB"
+            newInputValue.substr(0, 2) === "PL" ||
+            newInputValue.substr(0, 2) === "UB"
         ) {
-            if (e.target.value.substr(0, 2) === "PL") {
+            if (newInputValue.substr(0, 2) === "PL") {
                 setType("PL");
 
-                if (e.target.value.length > 9) {
+                if (newInputValue.length > 9) {
                     setError(false);
                     setDisabled(false);
 
-                    if (e.target.value.length > 10) {
+                    if (newInputValue.length > 10) {
                         setMessage("El código es demasiado largo");
                         setError(true);
                         setDisabled(true);
@@ -106,10 +82,10 @@ function RemovePage() {
                     setDisabled(true);
                     setError(true);
                 }
-            } else if (e.target.value.substr(0, 2) === "UB") {
+            } else if (newInputValue.substr(0, 2) === "UB") {
                 setType("UB");
 
-                if (e.target.value.length > 11) {
+                if (newInputValue.length > 11) {
                     setError(false);
                     setDisabled(false);
                 } else {
@@ -257,7 +233,13 @@ function RemovePage() {
                             value={value}
                             onChange={handleChange}
                             autoFocus
-                            inputComponent={InputMask}
+                            inputComponent={
+                                type
+                                    ? type === "PL"
+                                        ? PalletMask
+                                        : LocationMask
+                                    : PalletMask
+                            }
                         />
                         <FormHelperText>
                             {value === "" ? "" : error ? message : ""}
