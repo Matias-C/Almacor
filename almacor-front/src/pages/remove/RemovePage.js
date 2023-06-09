@@ -22,6 +22,7 @@ import MuiAlert from "@mui/material/Alert";
 import SectionPage from "../../components/section_page/SectionPage";
 import { LocationMask } from "../../components/masked-inputs/LocationMask";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import usePalletLocationValidation from "../../hooks/usePalletLocationValidation";
 import useDialog from "../../hooks/useDialog";
 import useAlert from "../../hooks/useAlert";
 
@@ -34,13 +35,17 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 function RemovePage() {
     const Connected = useContext(ContextConnected);
 
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
-    const [type, setType] = useState("");
-    const [message, setMessage] = useState("");
+    const [palletInLocation, setPalletInLocation] = useState("");
 
-    const [value, setValue] = useState("");
-    const [numero, setNumero] = useState("");
+    const {
+        inputValue,
+        setInputValue,
+        codeType,
+        helperText,
+        error,
+        disabled,
+        handleChange,
+    } = usePalletLocationValidation();
 
     const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
 
@@ -54,74 +59,24 @@ function RemovePage() {
         handleCloseAlert,
     } = useAlert();
 
-    const handleChange = (e) => {
-        const newInputValue = e.target.value;
-        setValue(newInputValue);
-
-        if (
-            newInputValue.substr(0, 2) === "PL" ||
-            newInputValue.substr(0, 2) === "UB"
-        ) {
-            if (newInputValue.substr(0, 2) === "PL") {
-                setType("PL");
-
-                if (newInputValue.length > 9) {
-                    setError(false);
-                    setDisabled(false);
-
-                    if (newInputValue.length > 10) {
-                        setMessage("El código es demasiado largo");
-                        setError(true);
-                        setDisabled(true);
-                    } else {
-                        setError(false);
-                        setDisabled(false);
-                    }
-                } else {
-                    setMessage("El código es demasiado corto");
-                    setDisabled(true);
-                    setError(true);
-                }
-            } else if (newInputValue.substr(0, 2) === "UB") {
-                setType("UB");
-
-                if (newInputValue.length > 11) {
-                    setError(false);
-                    setDisabled(false);
-                } else {
-                    setMessage("El código es demasiado corto");
-                    setDisabled(true);
-                    setError(true);
-                }
-            }
-        } else {
-            setMessage("El código no es válido");
-            setDisabled(true);
-            setError(true);
-        }
-    };
-
     const removePallet = async (e) => {
         e.preventDefault();
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            var formdata = new FormData();
-
             const response = await fetch(
-                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`,
+                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${inputValue}`,
                 {
                     method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token.access_token}`,
                     },
-                    body: formdata,
                 },
             );
             const data = await response.json();
             if (data.succes) {
                 handleOpenAlert("Pallet removido correctamente", "success");
-                setValue("");
+                setInputValue("");
             }
         }
     };
@@ -131,16 +86,13 @@ function RemovePage() {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            var formdata = new FormData();
-
             const response = await fetch(
-                `${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${numero}`,
+                `${Connected.currentURL}api/v1/deposito/partidas/?numero=PL${palletInLocation}`,
                 {
                     method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token.access_token}`,
                     },
-                    body: formdata,
                 },
             );
             const data = await response.json();
@@ -149,16 +101,18 @@ function RemovePage() {
                     "Ubicación desocupada correctamente",
                     "success",
                 );
-                setValue("");
+                setInputValue("");
             }
         }
     };
 
     const getPallet = async (e) => {
+        e.preventDefault();
+
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             const res = await fetch(
-                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`,
+                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${inputValue}`,
                 {
                     method: "GET",
                     headers: {
@@ -168,16 +122,17 @@ function RemovePage() {
                 },
             );
             const data = await res.json();
+            console.log(res);
             if (data.error) {
                 handleOpenAlert("Este pallet no existe", "error");
-                setValue("");
+                setInputValue("");
             }
             if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
             ) {
                 handleOpenAlert("Este pallet no se encuentra ubicado", "error");
-                setValue("");
+                setInputValue("");
             } else if (
                 data.status ===
                 "El Pallet ingresado se encuentra en una ubicacion"
@@ -187,16 +142,18 @@ function RemovePage() {
         }
     };
 
-    const locationData = (data) => {
-        setNumero(data);
+    const getPalletInLocation = (palletInLocation) => {
+        setPalletInLocation(palletInLocation);
         handleOpenDialog();
     };
 
     const getLocation = async (e) => {
+        e.preventDefault();
+
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             const res = await fetch(
-                `${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${value}`,
+                `${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${inputValue}`,
                 {
                     method: "GET",
                     headers: {
@@ -209,7 +166,7 @@ function RemovePage() {
             data.error && handleOpenAlert("Esta ubicación no existe", "error");
             data.status === "Esta posicion se encuentra vacia" &&
                 handleOpenAlert("Esta ubicación se encuentra vacía", "error");
-            data[0].numero !== null && locationData(data[0].numero);
+            data[0].numero && getPalletInLocation(data[0].numero);
         }
     };
 
@@ -222,7 +179,7 @@ function RemovePage() {
 
                     <FormControl
                         size="small"
-                        error={value === "" ? false : error}
+                        error={inputValue === "" ? false : error}
                         fullWidth
                         className="remove-page-input"
                     >
@@ -230,19 +187,19 @@ function RemovePage() {
                         <OutlinedInput
                             id="pallet-code"
                             label="Código"
-                            value={value}
+                            value={inputValue}
                             onChange={handleChange}
                             autoFocus
                             inputComponent={
-                                type
-                                    ? type === "PL"
+                                codeType
+                                    ? codeType === "PL"
                                         ? PalletMask
                                         : LocationMask
                                     : PalletMask
                             }
                         />
                         <FormHelperText>
-                            {value === "" ? "" : error ? message : ""}
+                            {inputValue === "" ? "" : error ? helperText : ""}
                         </FormHelperText>
                     </FormControl>
                 </CardContent>
@@ -255,9 +212,9 @@ function RemovePage() {
                         disableElevation
                         className="add-page-button"
                         onClick={(e) => {
-                            type === "PL"
+                            codeType === "PL"
                                 ? getPallet(e)
-                                : type === "UB" && getLocation(e);
+                                : codeType === "UB" && getLocation(e);
                         }}
                     >
                         Remover
@@ -270,9 +227,9 @@ function RemovePage() {
                 <DialogContent>
                     <DialogContentText>
                         Estás por{" "}
-                        {type === "PL"
+                        {codeType === "PL"
                             ? "remover un pallet"
-                            : type === "UB" && "desocupar una ubicación"}
+                            : codeType === "UB" && "desocupar una ubicación"}
                         , estás seguro?
                     </DialogContentText>
                 </DialogContent>
@@ -283,9 +240,9 @@ function RemovePage() {
                         disabled={disabled}
                         className="add-page-button"
                         onClick={(e) => {
-                            type === "PL"
+                            codeType === "PL"
                                 ? removePallet(e)
-                                : type === "UB" && removeLocation(e);
+                                : codeType === "UB" && removeLocation(e);
                             handleCloseDialog();
                         }}
                     >

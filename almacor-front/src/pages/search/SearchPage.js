@@ -1,8 +1,5 @@
 import React, { useState, useContext } from "react";
 
-import PropTypes from "prop-types";
-import { IMaskInput } from "react-imask";
-
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
@@ -22,6 +19,11 @@ import MuiAlert from "@mui/material/Alert";
 
 import SectionPage from "../../components/section_page/SectionPage";
 import PalletDetails from "../../components/pallet_details/PalletDetails";
+import { LocationMask } from "../../components/masked-inputs/LocationMask";
+import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import usePalletLocationValidation from "../../hooks/usePalletLocationValidation";
+import useDialog from "../../hooks/useDialog";
+import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -29,84 +31,32 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InputMask = React.forwardRef(function InputMask(props, ref) {
-    const { onChange, ...other } = props;
-
-    return (
-        <IMaskInput
-            {...other}
-            mask="##0000000000"
-            definitions={{
-                "#": /[A-Z]/,
-            }}
-            inputRef={ref}
-            onAccept={(value) => onChange({ target: { value } })}
-            overwrite
-        />
-    );
-});
-
-InputMask.propTypes = {
-    onChange: PropTypes.func.isRequired,
-};
-
 function SearchPalletPage() {
     const Connected = useContext(ContextConnected);
 
     const [pallet, setPallet] = useState([]);
 
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
-    const [type, setType] = useState("");
-    const [message, setMessage] = useState("");
+    const {
+        inputValue,
+        setInputValue,
+        codeType,
+        helperText,
+        error,
+        disabled,
+        handleChange,
+    } = usePalletLocationValidation();
 
-    const [value, setValue] = useState("");
+    const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
-
-        if (
-            e.target.value.substr(0, 2) === "PL" ||
-            e.target.value.substr(0, 2) === "UB"
-        ) {
-            if (e.target.value.substr(0, 2) === "PL") {
-                setType("PL");
-
-                if (e.target.value.length > 9) {
-                    setError(false);
-                    setDisabled(false);
-
-                    if (e.target.value.length > 10) {
-                        setMessage("El código es demasiado largo");
-                        setError(true);
-                        setDisabled(true);
-                    } else {
-                        setError(false);
-                        setDisabled(false);
-                    }
-                } else {
-                    setMessage("El código es demasiado corto");
-                    setDisabled(true);
-                    setError(true);
-                }
-            } else if (e.target.value.substr(0, 2) === "UB") {
-                setType("UB");
-
-                if (e.target.value.length > 11) {
-                    setError(false);
-                    setDisabled(false);
-                } else {
-                    setMessage("El código es demasiado corto");
-                    setDisabled(true);
-                    setError(true);
-                }
-            }
-        } else {
-            setMessage("El código no es válido");
-            setDisabled(true);
-            setError(true);
-        }
-    };
+    const {
+        openAlert,
+        alertType,
+        alertText,
+        vertical,
+        horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
+    } = useAlert();
 
     const searchPallet = async (e) => {
         e.preventDefault();
@@ -114,7 +64,7 @@ function SearchPalletPage() {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             const res = await fetch(
-                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${value}`,
+                `${Connected.currentURL}api/v1/deposito/partidas/?numero=${inputValue}`,
                 {
                     method: "GET",
                     headers: {
@@ -126,7 +76,7 @@ function SearchPalletPage() {
             const data = await res.json();
             if (data.error) {
                 handleOpenAlert("Este pallet no existe", "error");
-                setValue("");
+                setInputValue("");
             }
             if (
                 data.status ===
@@ -134,13 +84,13 @@ function SearchPalletPage() {
             ) {
                 handleOpenAlert("Se encontró el pallet", "success");
                 setPallet(data.data[0]);
-                setOpenDialog(true);
+                handleOpenDialog();
             } else if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
             ) {
                 handleOpenAlert("Este pallet no fue ubicado", "error");
-                setValue("");
+                setInputValue("");
             }
         }
     };
@@ -151,7 +101,7 @@ function SearchPalletPage() {
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
             const res = await fetch(
-                `${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${value}`,
+                `${Connected.currentURL}api/v1/deposito/ubic_pallet/?ubic=${inputValue}`,
                 {
                     method: "GET",
                     headers: {
@@ -163,45 +113,16 @@ function SearchPalletPage() {
             const data = await res.json();
             if (data.error) {
                 handleOpenAlert("Esta ubicación no existe", "error");
-                setValue("");
+                setInputValue("");
             } else if (data.status === "Esta posicion se encuentra vacia") {
                 handleOpenAlert("Esta posición está vacía", "error");
-                setValue("");
+                setInputValue("");
             } else if (data) {
                 handleOpenAlert("Se encontró la ubicación", "success");
                 setPallet(data[0]);
-                setOpenDialog(true);
+                handleOpenDialog();
             }
         }
-    };
-
-    const [openDialog, setOpenDialog] = useState(false);
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-        setValue("");
-    };
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("");
-    const [alert, setAlert] = useState("");
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenAlert = (alert, type) => {
-        setAlertType(type);
-        setAlert(alert);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
     };
 
     return (
@@ -212,7 +133,7 @@ function SearchPalletPage() {
                     <hr className="separator" />
 
                     <FormControl
-                        error={value === "" ? false : error}
+                        error={inputValue === "" ? false : error}
                         size="small"
                         fullWidth
                         className="add-page-input"
@@ -221,13 +142,19 @@ function SearchPalletPage() {
                         <OutlinedInput
                             id="pallet-code"
                             label="Código"
-                            value={value}
+                            value={inputValue}
                             onChange={handleChange}
                             autoFocus
-                            inputComponent={InputMask}
+                            inputComponent={
+                                codeType
+                                    ? codeType === "PL"
+                                        ? PalletMask
+                                        : LocationMask
+                                    : PalletMask
+                            }
                         />
                         <FormHelperText>
-                            {value === "" ? "" : error ? message : ""}
+                            {inputValue === "" ? "" : error ? helperText : ""}
                         </FormHelperText>
                     </FormControl>
                 </CardContent>
@@ -240,9 +167,9 @@ function SearchPalletPage() {
                         disableElevation
                         className="add-page-button"
                         onClick={(e) => {
-                            type === "PL"
+                            codeType === "PL"
                                 ? searchPallet(e)
-                                : type === "UB" && searchLocation(e);
+                                : codeType === "UB" && searchLocation(e);
                         }}
                     >
                         Localizar
@@ -289,7 +216,7 @@ function SearchPalletPage() {
                     severity={alertType}
                     sx={{ width: "100%" }}
                 >
-                    {alert}
+                    {alertText}
                 </Alert>
             </Snackbar>
         </>

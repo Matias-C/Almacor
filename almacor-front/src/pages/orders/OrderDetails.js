@@ -26,7 +26,7 @@ function DeparturesDisplay({ departures, setRefresh }) {
     const createPalletArrayForGroup = (departures) => {
         const pallets = [];
         departures.map((departure) => {
-            pallets.push(departure.c_numero);
+            return pallets.push(departure.c_numero);
         });
 
         return pallets;
