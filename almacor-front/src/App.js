@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material";
+
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 import Login from "./pages/login/Login.js";
 
@@ -24,6 +27,8 @@ import UnifyPage from "./pages/unify/UnifyPage.js";
 
 import InventoryPage from "./pages/inventory/InventoryPage.js";
 import InventoryDetails from "./pages/inventory/InventoryDetails.js";
+
+import useAlert from "./hooks/useAlert.js";
 
 import ContextConnected from "./context/ContextConnected.js";
 
@@ -80,6 +85,10 @@ const theme = createTheme({
     },
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function App() {
     const testingURL = "https://apicdtesting.almacorweb.com/";
     const productionURL = "https://apicd.almacorweb.com/";
@@ -95,6 +104,16 @@ function App() {
     const [currentDeposit, setCurrentDeposit] = useState(
         localStorage.getItem("deposit"),
     );
+
+    const {
+        openAlert,
+        alertType,
+        alertText,
+        vertical,
+        horizontal,
+        handleOpenAlert,
+        handleCloseAlert,
+    } = useAlert();
 
     const setLocalDeposit = (idKey, id, nameKey, name) => {
         try {
@@ -156,20 +175,33 @@ function App() {
                     setOpenSideBar,
 
                     currentDepositId,
-                    setCurrentDepositId,
                     currentDeposit,
-                    setCurrentDeposit,
 
                     currentZoneId,
-                    setCurrentZoneId,
                     currentZone,
-                    setCurrentZone,
 
                     setLocalDeposit,
                     setLocalZone,
+
+                    handleOpenAlert,
                 }}
             >
                 <ThemeProvider theme={theme}>
+                    <Snackbar
+                        open={openAlert}
+                        autoHideDuration={2200}
+                        onClose={handleCloseAlert}
+                        anchorOrigin={{ vertical, horizontal }}
+                    >
+                        <Alert
+                            onClose={handleCloseAlert}
+                            severity={alertType}
+                            sx={{ width: "100%" }}
+                        >
+                            {alertText}
+                        </Alert>
+                    </Snackbar>
+
                     <BrowserRouter>
                         <Routes>
                             <Route

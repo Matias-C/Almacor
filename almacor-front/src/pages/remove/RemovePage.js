@@ -16,21 +16,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import SectionPage from "../../components/section_page/SectionPage";
 import { LocationMask } from "../../components/masked-inputs/LocationMask";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import { AlertMessage } from "../../constants/constants";
 import usePalletLocationValidation from "../../hooks/usePalletLocationValidation";
 import useDialog from "../../hooks/useDialog";
-import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function RemovePage() {
     const Connected = useContext(ContextConnected);
@@ -49,16 +42,6 @@ function RemovePage() {
 
     const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
 
-    const {
-        openAlert,
-        alertType,
-        alertText,
-        vertical,
-        horizontal,
-        handleOpenAlert,
-        handleCloseAlert,
-    } = useAlert();
-
     const removePallet = async (e) => {
         e.preventDefault();
 
@@ -75,7 +58,10 @@ function RemovePage() {
             );
             const data = await response.json();
             if (data.succes) {
-                handleOpenAlert("Pallet removido correctamente", "success");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.success.removedPallet,
+                    "success",
+                );
                 setInputValue("");
             }
         }
@@ -97,8 +83,8 @@ function RemovePage() {
             );
             const data = await response.json();
             if (data.succes) {
-                handleOpenAlert(
-                    "Ubicación desocupada correctamente",
+                Connected.handleOpenAlert(
+                    AlertMessage.location.success.emptiedLocation,
                     "success",
                 );
                 setInputValue("");
@@ -122,16 +108,21 @@ function RemovePage() {
                 },
             );
             const data = await res.json();
-            console.log(res);
             if (data.error) {
-                handleOpenAlert("Este pallet no existe", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unexistingPallet,
+                    "error",
+                );
                 setInputValue("");
             }
             if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
             ) {
-                handleOpenAlert("Este pallet no se encuentra ubicado", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unlocatedPallet,
+                    "error",
+                );
                 setInputValue("");
             } else if (
                 data.status ===
@@ -163,9 +154,20 @@ function RemovePage() {
                 },
             );
             const data = await res.json();
-            data.error && handleOpenAlert("Esta ubicación no existe", "error");
-            data.status === "Esta posicion se encuentra vacia" &&
-                handleOpenAlert("Esta ubicación se encuentra vacía", "error");
+            if (data.error) {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.unexistingLocation,
+                    "error",
+                );
+            }
+
+            if (data.status === "Esta posicion se encuentra vacia") {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.emptyLocation,
+                    "error",
+                );
+            }
+
             data[0].numero && getPalletInLocation(data[0].numero);
         }
     };
@@ -261,21 +263,6 @@ function RemovePage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity={alertType}
-                    sx={{ width: "100%" }}
-                >
-                    {alertText}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

@@ -11,21 +11,14 @@ import FormHelperText from "@mui/material/FormHelperText";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import SectionPage from "../../components/section_page/SectionPage";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import { AlertMessage } from "../../constants/constants";
 import usePalletValidation from "../../hooks/usePalletValidation";
-import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
 
 import "./LocatePage.css";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function LocatePageStep1() {
     const Connected = useContext(ContextConnected);
@@ -41,19 +34,11 @@ function LocatePageStep1() {
         handleChange,
     } = usePalletValidation();
 
-    const {
-        openAlert,
-        alertType,
-        alertText,
-        vertical,
-        horizontal,
-        handleOpenAlert,
-        handleCloseAlert,
-    } = useAlert();
-
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            checkPallet(e, inputPalletValue);
+            if (!error) {
+                checkPallet(e, inputPalletValue);
+            }
         }
     };
 
@@ -72,17 +57,22 @@ function LocatePageStep1() {
                     },
                 },
             );
-            console.log(res.status);
             const data = await res.json();
             if (data.error) {
-                handleOpenAlert("Este pallet no existe", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unexistingPallet,
+                    "error",
+                );
                 setInputPalletValue("");
             }
             if (
                 data.status ===
                 "El Pallet ingresado se encuentra en una ubicacion"
             ) {
-                handleOpenAlert("Este pallet ya fue ubicado", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.alreadyLocatedPallet,
+                    "error",
+                );
                 setInputPalletValue("");
             } else if (
                 data.status ===
@@ -154,21 +144,6 @@ function LocatePageStep1() {
                     </Button>
                 </CardActions>
             </SectionPage>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity={alertType}
-                    sx={{ width: "100%" }}
-                >
-                    {alertText}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

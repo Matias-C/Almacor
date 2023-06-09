@@ -16,26 +16,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import Skeleton from "@mui/material/Skeleton";
 
 import SectionPage from "../../components/section_page/SectionPage";
 import PalletDetails from "../../components/pallet_details/PalletDetails";
 import PalletDetailsSkeleton from "../../components/pallet_details/PalletDetailsSkeleton";
 import { LocationMask } from "../../components/masked-inputs/LocationMask";
+import { AlertMessage } from "../../constants/constants";
 import useLocationValidation from "../../hooks/useLocationValidation";
 import useDialog from "../../hooks/useDialog";
-import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
 
 import "./LocatePage.css";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function LocatePageStep3() {
     const Connected = useContext(ContextConnected);
@@ -66,21 +59,7 @@ function LocatePageStep3() {
         handleChange,
     } = useLocationValidation();
 
-    const {
-        openDialog,
-        handleOpenDialog,
-        handleCloseDialog,
-    } = useDialog();
-
-    const {
-        openAlert,
-        alertType,
-        alertText,
-        vertical,
-        horizontal,
-        handleOpenAlert,
-        handleCloseAlert,
-    } = useAlert();
+    const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
 
     useEffect(() => {
         const generateLocation = async () => {
@@ -161,7 +140,13 @@ function LocatePageStep3() {
                     body: formdata,
                 },
             );
-            response.status === 200 && navigate(-2);
+            if (response.status === 200) {
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.success.locatedPallet,
+                    "success",
+                );
+                navigate(-2);
+            }
         }
     };
 
@@ -183,11 +168,17 @@ function LocatePageStep3() {
                 if (location === ub) {
                     locatePallet(idHall, col, row);
                 } else {
-                    handleOpenAlert("La ubicación no coincide", "warning");
+                    Connected.handleOpenAlert(
+                        AlertMessage.location.waring.unmatchedLocation,
+                        "warning",
+                    );
                     handleOpenDialog();
                 }
             } else {
-                handleOpenAlert("Ubicación no disponible", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.alreadyFilledLocation,
+                    "error",
+                );
                 setInputLocationValue("");
             }
         }
@@ -327,21 +318,6 @@ function LocatePageStep3() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity={alertType}
-                    sx={{ width: "100%" }}
-                >
-                    {alertText}
-                </Alert>
-            </Snackbar>
         </>
     );
 }
