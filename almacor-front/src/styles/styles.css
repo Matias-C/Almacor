@@ -50,6 +50,17 @@ html, body {
     width: 30px;
 }
 
+.input-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between !important;
+}
+
 .MuiSkeleton-rounded {
     border-radius: 8px !important;
 }

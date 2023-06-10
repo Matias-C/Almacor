@@ -15,6 +15,7 @@ import DisplayDetailsPage from "../../components/display/DisplayDetailsPage";
 import InventoryCardSkeleton from "../../components/inventory/InventoryCardSkeleton";
 import InventoryCard from "../../components/inventory/InventoryCard";
 import InventoryForm from "../../components/inventory/InventoryForm";
+import useDialog from "../../hooks/useDialog";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -28,16 +29,17 @@ function InventoryDetails() {
     const [inventoryDetails, setInventoryDetails] = useState([]);
     const [refresh, setRefresh] = useState(false);
 
-    const [openDialog, setOpenDialog] = useState(false);
+    const {
+        openDialog,
+        setOpenDialog,
+        handleCloseDialog,
+    } = useDialog();
 
     const setInventory = (data) => {
         setEmpty(false);
         setInventoryDetails(data);
     };
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-    };
 
     useEffect(() => {
         const getInventoryDetails = async () => {
@@ -114,7 +116,7 @@ function InventoryDetails() {
                 >
                     <DialogTitle>Añadir Incidencia</DialogTitle>
 
-                    <DialogContent className="inventory-dialog">
+                    <DialogContent>
                         <InventoryForm
                             inventoryId={location.state.n_id_inventario}
                             inventoryDetails={inventoryDetails}

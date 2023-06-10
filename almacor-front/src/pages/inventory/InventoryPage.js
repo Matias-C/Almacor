@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import DisplayPage from "../../components/display/DisplayPage";
 import DisplaySkeleton from "../../components/display/DisplaySkeleton";
 import DisplayButton from "../../components/display/DisplayButton";
+import useDialog from "../../hooks/useDialog";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -30,18 +31,18 @@ function InventoryPage() {
     const [currentCompany, setCurrentCompany] = useState("");
     const [inventoryType, setInventoryType] = useState("T");
 
+    const {
+        openDialog,
+        setOpenDialog,
+        handleCloseDialog,
+    } = useDialog();
+
     const handleCurrentCompany = (e) => {
         setCurrentCompany(e.target.value);
     };
 
     const handleInventoryType = (e) => {
         setInventoryType(e.target.value);
-    };
-
-    const [openDialog, setOpenDialog] = useState(false);
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
     };
 
     useEffect(() => {
@@ -132,10 +133,7 @@ function InventoryPage() {
                         )}
                     </Grid>
                 ) : (
-                    <Typography
-                        variant="h3"
-                        className="inv-details-empty-alert"
-                    >
+                    <Typography variant="h4">
                         No se encontraron Inventarios
                     </Typography>
                 )}
@@ -150,21 +148,18 @@ function InventoryPage() {
                 <DialogTitle>Añadir Inventario</DialogTitle>
 
                 <DialogContent>
-                    <div className="add-page-inputs-cont">
-                        <div className="add-page-input-label-cont">
-                            <Typography variant="h5" className="label">
-                                Empresa
-                            </Typography>
-                        </div>
+                    <div className="input-cont">
+                        <Typography variant="h5">
+                            Empresa
+                        </Typography>
 
                         <FormControl variant="outlined" fullWidth>
                             <Select
-                                id="pallet-weight"
+                                id="current-company"
                                 value={currentCompany}
                                 size="small"
                                 disabled
                                 onChange={handleCurrentCompany}
-                                className="inventory-form-input"
                             >
                                 <MenuItem value={currentCompany}>
                                     {currentCompany}
@@ -172,11 +167,11 @@ function InventoryPage() {
                             </Select>
                         </FormControl>
 
-                        <div className="add-page-input-label-cont">
-                            <Typography variant="h5" className="label">
+                        <div className="space-between">
+                            <Typography variant="h5">
                                 Tipo
                             </Typography>
-                            <Typography variant="h5" className="detail">
+                            <Typography variant="h5">
                                 Se puede cambiar
                             </Typography>
                         </div>

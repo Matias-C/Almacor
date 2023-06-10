@@ -13,6 +13,7 @@ const useDialog = () => {
 
     return {
         openDialog,
+        setOpenDialog,
         handleOpenDialog,
         handleCloseDialog,
     }
