@@ -140,6 +140,11 @@ function LocatePageStep3() {
                     body: formdata,
                 },
             );
+            const data = await response.json();
+            console.log(response);
+            console.log(data);
+            console.log(id_zona, id_pasillo, id_columna, id_fila);
+            
             if (response.status === 200) {
                 Connected.handleOpenAlert(
                     AlertMessage.pallet.success.locatedPallet,
@@ -164,6 +169,8 @@ function LocatePageStep3() {
                 },
             );
             const data = await res.json();
+            console.log(res);
+            console.log(data);
             if (data.status === "Esta posicion se encuentra vacia") {
                 if (location === ub) {
                     locatePallet(idHall, col, row);

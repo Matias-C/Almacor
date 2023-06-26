@@ -59,6 +59,7 @@ function LocatePageStep2() {
                     },
                 );
                 const data = await res.json();
+                console.log(data);
                 data.status ===
                     "El Pallet ingresado se encuentra en una ubicacion" &&
                     navigate(-1);
@@ -268,7 +269,6 @@ function LocatePageStep2() {
                             navigate("ubicacion", {
                                 state: {
                                     pallet: pallet,
-                                    url: location.state.url,
                                 },
                             });
                         }}

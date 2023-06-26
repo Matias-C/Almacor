@@ -108,14 +108,13 @@ function RemovePage() {
                 },
             );
             const data = await res.json();
-            if (data.error) {
+            if (data.status === "El Pallet ingresado no existe") {
                 Connected.handleOpenAlert(
                     AlertMessage.pallet.error.unexistingPallet,
                     "error",
                 );
                 setInputValue("");
-            }
-            if (
+            } else if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
             ) {
@@ -154,18 +153,20 @@ function RemovePage() {
                 },
             );
             const data = await res.json();
-            if (data.error) {
+            if (res.status === 400) {
                 Connected.handleOpenAlert(
                     AlertMessage.location.error.unexistingLocation,
                     "error",
                 );
+                setInputValue("");
             }
 
-            if (data.status === "Esta posicion se encuentra vacia") {
+            if (res.status === 200) {
                 Connected.handleOpenAlert(
                     AlertMessage.location.error.emptyLocation,
                     "error",
                 );
+                setInputValue("");
             }
 
             data[0].numero && getPalletInLocation(data[0].numero);
@@ -239,7 +240,6 @@ function RemovePage() {
                 <DialogActions>
                     <Button
                         variant="outlined"
-                        disabled={disabled}
                         className="add-page-button"
                         onClick={(e) => {
                             codeType === "PL"

@@ -58,7 +58,7 @@ function LocatePageStep1() {
                 },
             );
             const data = await res.json();
-            if (data.error) {
+            if (data.status === "El Pallet ingresado no existe") {
                 Connected.handleOpenAlert(
                     AlertMessage.pallet.error.unexistingPallet,
                     "error",
@@ -81,7 +81,6 @@ function LocatePageStep1() {
                 navigate(pallet, {
                     state: {
                         pallet: pallet,
-                        url: window.location.href.toString(),
                     },
                 });
             }
