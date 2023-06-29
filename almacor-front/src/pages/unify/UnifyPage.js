@@ -12,79 +12,33 @@ import FormHelperText from "@mui/material/FormHelperText";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import SectionPage from "../../components/section_page/SectionPage";
 import ListedPallet from "../../components/unify/ListedPallet";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import { AlertMessage } from "../../constants/constants";
+import usePalletValidation from "../../hooks/usePalletValidation";
 
 import ContextConnected from "../../context/ContextConnected";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function UnifyPage() {
     const Connected = useContext(ContextConnected);
 
     const [pallets, setPallets] = useState([]);
-    const [value, setValue] = useState("");
-
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
-    const [errorAlert, setErrorAlert] = useState("");
-    const [validPallet, setValidPallet] = useState(false);
-    const [validPalletLength, setValidLength] = useState(false);
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const checkValidPallet = (pallet) => {
-        if (pallet.substr(0, 2) === "PL") {
-            setValidPallet(true);
-            checkPalletLength(pallet);
-        } else {
-            setValidPallet(false);
-            setError(true);
-            setDisabled(true);
-        }
-    };
-
-    const checkPalletLength = (pallet) => {
-        if (pallet.length > 9) {
-            setValidLength(true);
-            setError(false);
-            setDisabled(false);
-        } else {
-            setValidLength(false);
-            setError(true);
-            setDisabled(true);
-        }
-    };
-
-    const handleChangePallet = (e) => {
-        const pallet = e.target.value;
-        setValue(pallet);
-        checkValidPallet(pallet);
-    };
-
-    const handleOpenAlert = (error) => {
-        setErrorAlert(error);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = () => {
-        setOpenAlert(false);
-    };
+    const {
+        inputPalletValue,
+        setInputPalletValue,
+        error,
+        disabled,
+        validPallet,
+        validPalletLength,
+        handleChange,
+    } = usePalletValidation();
 
     const handleKeyDown = (e) => {
+        const newPallet = e.target.value;
+
         if (e.key === "Enter") {
-            addPallet(e.target.value);
+            addPallet(newPallet);
         }
     };
 
@@ -92,11 +46,14 @@ function UnifyPage() {
         const palletIndexToAdd = `\'${palletToAdd.substr(2, 10)}\'`;
         if (!disabled) {
             if (pallets.indexOf(palletIndexToAdd) > -1) {
-                handleOpenAlert("El pallet se encuentra duplicado", "error");
-                setValue("");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.duplicatePallet,
+                    "error",
+                );
+                setInputPalletValue("");
             } else {
                 setPallets([...pallets, palletIndexToAdd]);
-                setValue("");
+                setInputPalletValue("");
             }
         }
     };
@@ -130,13 +87,20 @@ function UnifyPage() {
                 },
             );
             const data = await response.json();
-            if (data.error) {
-                handleOpenAlert(data.error, "error");
+            console.log(data);
+            console.log(response);
+            if (response.status === 400) {
+                Connected.handleOpenAlert(
+                    data.status,
+                    "error",
+                );
             }
-            console.log(
-                "🚀 ~ file: UnifyPage.js:118 ~ unifyPallets ~ data:",
-                data,
-            );
+            if (response.status === 200) {
+                Connected.handleOpenAlert(
+                    data.status,
+                    "success",
+                );
+            }
         }
     };
 
@@ -150,7 +114,7 @@ function UnifyPage() {
                     <hr className="separator" />
 
                     <FormControl
-                        error={value === "" ? false : error}
+                        error={inputPalletValue === "" ? false : error}
                         size="small"
                         fullWidth
                         className="add-page-input"
@@ -159,8 +123,8 @@ function UnifyPage() {
                         <OutlinedInput
                             id="pallet-code"
                             label="Código"
-                            value={value}
-                            onChange={handleChangePallet}
+                            value={inputPalletValue}
+                            onChange={handleChange}
                             autoFocus
                             onKeyDown={(e) => {
                                 handleKeyDown(e);
@@ -168,7 +132,7 @@ function UnifyPage() {
                             inputComponent={PalletMask}
                         />
                         <FormHelperText>
-                            {value === ""
+                            {inputPalletValue === ""
                                 ? ""
                                 : error
                                 ? !validPallet
@@ -189,7 +153,7 @@ function UnifyPage() {
                         disableElevation
                         className="add-page-button"
                         onClick={() => {
-                            addPallet(value);
+                            addPallet(inputPalletValue);
                         }}
                     >
                         Añadir
@@ -233,21 +197,6 @@ function UnifyPage() {
                     </CardContent>
                 )}
             </SectionPage>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
-                    {errorAlert}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

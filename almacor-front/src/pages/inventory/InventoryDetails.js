@@ -56,7 +56,6 @@ function InventoryDetails() {
                     },
                 );
                 const data = await res.json();
-                console.log(data);
                 data.error ? setEmpty(true) : setInventory(data);
                 setRefresh(false);
                 setLoading(false);
