@@ -87,8 +87,6 @@ function UnifyPage() {
                 },
             );
             const data = await response.json();
-            console.log(data);
-            console.log(response);
             if (response.status === 400) {
                 Connected.handleOpenAlert(
                     data.status,
