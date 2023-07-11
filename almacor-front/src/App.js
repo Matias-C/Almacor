@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Offline, Online } from "react-detect-offline";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import Login from "./pages/login/Login.js";
-
-import LostConnection from "./components/lost_connection/LostConnection.js";
 
 import MainPage from "./pages/main/MainPage.js";
 import ZonesPage from "./pages/zones/ZonesPage.js";
@@ -205,104 +202,96 @@ function App() {
                         </Alert>
                     </Snackbar>
 
-                    <Offline>
-                        <LostConnection />
-                    </Offline>
-
-                    <Online>
-                        <BrowserRouter>
-                            <Routes>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route
+                                exact
+                                path="/"
+                                element={
+                                    <Navigate
+                                        to={
+                                            userInfo === null
+                                                ? "/login"
+                                                : "/depositos"
+                                        }
+                                        replace={true}
+                                    />
+                                }
+                            />
+                            <Route exact path="/login" element={<Login />} />
+                            <Route
+                                exact
+                                path="/depositos"
+                                element={<MainPage />}
+                            />
+                            <Route
+                                exact
+                                path="/depositos/:deposit"
+                                element={<ZonesPage />}
+                            />
+                            <Route
+                                exact
+                                path="/depositos/:deposit/:zone"
+                                element={<ZoneMenu />}
+                            >
                                 <Route
                                     exact
-                                    path="/"
-                                    element={
-                                        <Navigate
-                                            to={
-                                                userInfo === null
-                                                    ? "/login"
-                                                    : "/depositos"
-                                            }
-                                            replace={true}
-                                        />
-                                    }
+                                    path="ordenes"
+                                    element={<OrdersDisplay />}
                                 />
-                                <Route exact path="/login" element={<Login />} />
                                 <Route
                                     exact
-                                    path="/depositos"
-                                    element={<MainPage />}
+                                    path="ordenes/:order"
+                                    element={<OrderDetails />}
+                                />
+
+                                <Route
+                                    exact
+                                    path="ubicar"
+                                    element={<LocatePageStep1 />}
                                 />
                                 <Route
                                     exact
-                                    path="/depositos/:deposit"
-                                    element={<ZonesPage />}
+                                    path="ubicar/:pallet"
+                                    element={<LocatePageStep2 />}
                                 />
                                 <Route
                                     exact
-                                    path="/depositos/:deposit/:zone"
-                                    element={<ZoneMenu />}
-                                >
-                                    <Route
-                                        exact
-                                        path="ordenes"
-                                        element={<OrdersDisplay />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="ordenes/:order"
-                                        element={<OrderDetails />}
-                                    />
+                                    path="ubicar/:pallet/ubicacion"
+                                    element={<LocatePageStep3 />}
+                                />
 
-                                    <Route
-                                        exact
-                                        path="ubicar"
-                                        element={<LocatePageStep1 />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="ubicar/:pallet"
-                                        element={<LocatePageStep2 />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="ubicar/:pallet/ubicacion"
-                                        element={<LocatePageStep3 />}
-                                    />
+                                <Route
+                                    exact
+                                    path="remover"
+                                    element={<RemovePage />}
+                                />
 
-                                    <Route
-                                        exact
-                                        path="remover"
-                                        element={<RemovePage />}
-                                    />
+                                <Route
+                                    exact
+                                    path="localizar"
+                                    element={<SearchPage />}
+                                />
 
-                                    <Route
-                                        exact
-                                        path="localizar"
-                                        element={<SearchPage />}
-                                    />
+                                <Route
+                                    exact
+                                    path="unificar"
+                                    element={<UnifyPage />}
+                                />
 
-                                    <Route
-                                        exact
-                                        path="unificar"
-                                        element={<UnifyPage />}
-                                    />
-
-                                    <Route
-                                        exact
-                                        path="inventario"
-                                        element={<InventoryPage />}
-                                    />
-                                    <Route
-                                        exact
-                                        path="inventario/:inventory"
-                                        element={<InventoryDetails />}
-                                    />
-                                </Route>
-                            </Routes>
-                        </BrowserRouter>
-                    </Online>
-
-                    
+                                <Route
+                                    exact
+                                    path="inventario"
+                                    element={<InventoryPage />}
+                                />
+                                <Route
+                                    exact
+                                    path="inventario/:inventory"
+                                    element={<InventoryDetails />}
+                                />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
                 </ThemeProvider>
             </ContextConnected.Provider>
         </>
