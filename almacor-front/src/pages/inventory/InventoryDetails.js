@@ -56,7 +56,6 @@ function InventoryDetails() {
                     },
                 );
                 const data = await res.json();
-                console.log(data);
                 if (data.status === "No existen registros con el numero de inventario especificado") {
                     setEmpty(true)
                 } else {

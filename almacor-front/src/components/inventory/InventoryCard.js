@@ -45,7 +45,6 @@ function InventoryCard(props) {
                 },
             );
             const data = await response.json();
-            console.log(data);
             if (response.status === 400) {
                 Connected.handleOpenAlert(
                     "Error al quitar la incidencia",

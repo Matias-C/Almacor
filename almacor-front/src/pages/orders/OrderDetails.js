@@ -127,7 +127,6 @@ function OrderDetails() {
                     },
                 );
                 const data = await res.json();
-                console.log(data);
                 setDepartures(data);
                 setRefresh(false);
                 setLoading(false);

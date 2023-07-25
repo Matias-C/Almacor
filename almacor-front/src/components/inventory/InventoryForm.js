@@ -116,7 +116,6 @@ function InventoryForm(props) {
                 },
             );
             const data = await response.json();
-            console.log(data);
             if (data.status[0] === "Esta posicion no existe") {
                 Connected.handleOpenAlert(
                     AlertMessage.location.error.unexistingLocation,

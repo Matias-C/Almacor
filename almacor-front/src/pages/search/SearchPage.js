@@ -112,7 +112,6 @@ function SearchPalletPage() {
                 },
             );
             const data = await res.json();
-            console.log(data, res);
             if (res.status === 400) {
                 Connected.handleOpenAlert(
                     AlertMessage.location.error.unexistingLocation,
