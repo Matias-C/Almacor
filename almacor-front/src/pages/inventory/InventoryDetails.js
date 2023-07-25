@@ -56,7 +56,12 @@ function InventoryDetails() {
                     },
                 );
                 const data = await res.json();
-                data.error ? setEmpty(true) : setInventory(data);
+                console.log(data);
+                if (data.status === "No existen registros con el numero de inventario especificado") {
+                    setEmpty(true)
+                } else {
+                    setInventory(data)
+                }
                 setRefresh(false);
                 setLoading(false);
             }
@@ -88,7 +93,7 @@ function InventoryDetails() {
                                 return (
                                     <InventoryCard
                                         key={item.n_id_pk}
-                                        itemId={item.n_id_pk}
+                                        itemId={item.n_id_partida}
                                         itemPL={item.c_numero}
                                         itemHall={item.c_pasillo}
                                         itemCol={item.n_id_columna}

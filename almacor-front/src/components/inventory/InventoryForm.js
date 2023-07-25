@@ -7,11 +7,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import { PalletMask } from "../masked-inputs/PalletMask";
 import { LocationMask } from "../masked-inputs/LocationMask";
+import { AlertMessage } from "../../constants/constants";
 
 import ContextConnected from "../../context/ContextConnected";
 
@@ -23,10 +21,6 @@ const UseFocus = () => {
 
     return [htmlElRef, setFocus];
 };
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function InventoryForm(props) {
     const Connected = useContext(ContextConnected);
@@ -122,54 +116,52 @@ function InventoryForm(props) {
                 },
             );
             const data = await response.json();
-            if (data.error) {
-                if (
-                    data.error[0] ===
-                    "Esta ubicacion ya se encuentra registrada en este inventario"
-                ) {
-                    handleOpenAlert("Esta ubicación ya está en uso", "error");
-                } else if (
-                    data.error[0] ===
-                    "Esta partida ya se encuentra registrada en este inventario"
-                ) {
-                    handleOpenAlert("Este pallet ya está almacenado", "error");
-                } else if (data.error[0] === "El Pallet ingresado no existe") {
-                    handleOpenAlert("Este pallet no existe", "error");
-                }
-            } else if (data.status) {
-                if (data.status[0] === "Esta posicion no existe") {
-                    handleOpenAlert("Esta ubicación no existe", "error");
-                } else if (data.info) {
-                    props.setRefresh(true);
-                    setPallet("");
-                    setLocation("");
-                    setInputPalletFocus();
-                    handleOpenAlert("Almacenado correctamente");
-                }
+            console.log(data);
+            if (data.status[0] === "Esta posicion no existe") {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.unexistingLocation,
+                    "error",
+                );
+                setLocation("");
+            } else if (
+                data.status[0] ===
+                "Esta ubicacion ya se encuentra registrada en este inventario"
+            ) {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.alreadyFilledLocation,
+                    "error",
+                );
+                setLocation("");
+            } else if (
+                data.status[0] ===
+                "Esta partida ya se encuentra registrada en este inventario"
+            ) {
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.alreadyStoredPallet,
+                    "error",
+                );
+                setPallet("");
+                setLocation("");
+                setInputPalletFocus();
+            } else if (data.status[0] === "El Pallet ingresado no existe") {
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unexistingPallet,
+                    "error",
+                );
+                setPallet("");
+                setLocation("");
+                setInputPalletFocus();
+            } else if (data.info) {
+                props.setRefresh(true);
+                setPallet("");
+                setLocation("");
+                setInputPalletFocus();
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.success.storedPallet,
+                    "success",
+                );
             }
         }
-    };
-
-    const [openAlert, setOpenAlert] = useState(false);
-    const [alertType, setAlertType] = useState("");
-    const [alert, setAlert] = useState("");
-    const state = {
-        vertical: "top",
-        horizontal: "center",
-    };
-    const { vertical, horizontal } = state;
-
-    const handleOpenAlert = (alert, type) => {
-        setAlertType(type);
-        setAlert(alert);
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpenAlert(false);
     };
 
     return (
@@ -234,21 +226,6 @@ function InventoryForm(props) {
                     </FormControl>
                 </Grid>
             </Grid>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity={alertType}
-                    sx={{ width: "100%" }}
-                >
-                    {alert}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

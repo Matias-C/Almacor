@@ -183,23 +183,31 @@ function OrderCard(props) {
                     />
 
                     <Grid container spacing={1} className="order-card-grid">
-                        <Grid xs={4} sm={4} md={4} lg={4}>
+                        <Grid xs={12} sm={12} md={12} lg={12}>
+                            <div className="order-card-header">
+                                <Typography variant="h5">
+                                    Dep. origen
+                                </Typography>
+                            </div>
+                        </Grid>
+
+                        <Grid xs={12} sm={12} md={12} lg={12}>
+                            <div className="pallet-display-cont pallet-display-item">
+                                <Typography variant="h5">
+                                    {props.orderOrigin}
+                                </Typography>
+                            </div>
+                        </Grid>
+
+                        <Grid xs={6} sm={6} md={6} lg={6}>
                             <div className="order-card-header">
                                 <Typography variant="h5">Pallet</Typography>
                             </div>
                         </Grid>
 
-                        <Grid xs={4} sm={4} md={4} lg={4}>
+                        <Grid xs={6} sm={6} md={6} lg={6}>
                             <div className="order-card-header">
                                 <Typography variant="h5">Remito</Typography>
-                            </div>
-                        </Grid>
-
-                        <Grid xs={4} sm={4} md={4} lg={4}>
-                            <div className="order-card-header">
-                                <Typography variant="h5">
-                                    Dep. origen
-                                </Typography>
                             </div>
                         </Grid>
                     </Grid>

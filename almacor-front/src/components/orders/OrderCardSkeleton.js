@@ -13,7 +13,7 @@ import OrderCardPalletDisplay from "./OrderCardPalletDisplay";
 
 import "./OrderCard.css";
 
-function OrderCardSkeleton(props) {
+function OrderCardSkeleton() {
     return (
         <Grid xs={12} sm={12} md={12} lg={6}>
             <Card variant="outlined">
@@ -27,7 +27,7 @@ function OrderCardSkeleton(props) {
                     <PalletDetailsSkeleton />
 
                     <Grid container spacing={1} className="order-card-grid">
-                        <Grid xs={4} sm={4} md={4} lg={4}>
+                        <Grid xs={12} sm={12} md={12} lg={12}>
                             <Skeleton
                                 variant="rounded"
                                 animation="wave"
@@ -39,7 +39,7 @@ function OrderCardSkeleton(props) {
                             </Skeleton>
                         </Grid>
 
-                        <Grid xs={4} sm={4} md={4} lg={4}>
+                        <Grid xs={12} sm={12} md={12} lg={12}>
                             <Skeleton
                                 variant="rounded"
                                 animation="wave"
@@ -51,7 +51,19 @@ function OrderCardSkeleton(props) {
                             </Skeleton>
                         </Grid>
 
-                        <Grid xs={4} sm={4} md={4} lg={4}>
+                        <Grid xs={6} sm={6} md={6} lg={6}>
+                            <Skeleton
+                                variant="rounded"
+                                animation="wave"
+                                width="100%"
+                            >
+                                <div className="order-card-header">
+                                    <Typography variant="h5">-</Typography>
+                                </div>
+                            </Skeleton>
+                        </Grid>
+
+                        <Grid xs={6} sm={6} md={6} lg={6}>
                             <Skeleton
                                 variant="rounded"
                                 animation="wave"
@@ -64,7 +76,7 @@ function OrderCardSkeleton(props) {
                         </Grid>
                     </Grid>
 
-                    <Skeleton  variant="rounded" animation="wave" width="100%">
+                    <Skeleton variant="rounded" animation="wave" width="100%">
                         <OrderCardPalletDisplay />
                     </Skeleton>
                 </CardContent>

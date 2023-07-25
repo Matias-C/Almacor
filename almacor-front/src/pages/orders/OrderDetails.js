@@ -57,6 +57,11 @@ function DeparturesDisplay({ departures, setRefresh }) {
                                 ? createPalletArrayForGroup(departure.partidas)
                                 : departure.c_numero
                         }
+                        orderOrigin={
+                            departure.n_id_grupo
+                                ? departure.partidas[0].c_deposito_origen
+                                : departure.c_deposito_origen
+                        }
                         orderHall={
                             departure.n_id_grupo
                                 ? departure.partidas[0].ubicacion?.c_pasillo
@@ -122,6 +127,7 @@ function OrderDetails() {
                     },
                 );
                 const data = await res.json();
+                console.log(data);
                 setDepartures(data);
                 setRefresh(false);
                 setLoading(false);

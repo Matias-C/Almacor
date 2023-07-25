@@ -14,22 +14,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
 import SectionPage from "../../components/section_page/SectionPage";
 import PalletDetails from "../../components/pallet_details/PalletDetails";
 import { LocationMask } from "../../components/masked-inputs/LocationMask";
 import { PalletMask } from "../../components/masked-inputs/PalletMask";
+import { AlertMessage } from "../../constants/constants";
 import usePalletLocationValidation from "../../hooks/usePalletLocationValidation";
 import useDialog from "../../hooks/useDialog";
-import useAlert from "../../hooks/useAlert";
 
 import ContextConnected from "../../context/ContextConnected";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function SearchPalletPage() {
     const Connected = useContext(ContextConnected);
@@ -48,15 +41,15 @@ function SearchPalletPage() {
 
     const { openDialog, handleOpenDialog, handleCloseDialog } = useDialog();
 
-    const {
-        openAlert,
-        alertType,
-        alertText,
-        vertical,
-        horizontal,
-        handleOpenAlert,
-        handleCloseAlert,
-    } = useAlert();
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            if (!error) {
+                codeType === "PL"
+                    ? searchPallet(e)
+                    : codeType === "UB" && searchLocation(e);
+            }
+        }
+    };
 
     const searchPallet = async (e) => {
         e.preventDefault();
@@ -74,23 +67,31 @@ function SearchPalletPage() {
                 },
             );
             const data = await res.json();
-            if (data.error) {
-                handleOpenAlert("Este pallet no existe", "error");
+            if (data.status === "El Pallet ingresado no existe") {
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unexistingPallet,
+                    "error",
+                );
                 setInputValue("");
-            }
-            if (
-                data.status ===
-                "El Pallet ingresado se encuentra en una ubicacion"
-            ) {
-                handleOpenAlert("Se encontró el pallet", "success");
-                setPallet(data.data[0]);
-                handleOpenDialog();
             } else if (
                 data.status ===
                 "El Pallet ingresado no se encuentra en ninguna ubicacion"
             ) {
-                handleOpenAlert("Este pallet no fue ubicado", "error");
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.error.unlocatedPallet,
+                    "error",
+                );
                 setInputValue("");
+            } else if (
+                data.status ===
+                "El Pallet ingresado se encuentra en una ubicacion"
+            ) {
+                Connected.handleOpenAlert(
+                    AlertMessage.pallet.success.foundPallet,
+                    "success",
+                );
+                setPallet(data.data[0]);
+                handleOpenDialog();
             }
         }
     };
@@ -111,14 +112,24 @@ function SearchPalletPage() {
                 },
             );
             const data = await res.json();
-            if (data.error) {
-                handleOpenAlert("Esta ubicación no existe", "error");
+            console.log(data, res);
+            if (res.status === 400) {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.unexistingLocation,
+                    "error",
+                );
                 setInputValue("");
-            } else if (data.status === "Esta posicion se encuentra vacia") {
-                handleOpenAlert("Esta posición está vacía", "error");
+            } else if (data.status === "Esta posicion se encuentra vacia" && res.status === 400) {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.error.emptyLocation,
+                    "error",
+                );
                 setInputValue("");
-            } else if (data) {
-                handleOpenAlert("Se encontró la ubicación", "success");
+            } else if (data && res.status === 200) {
+                Connected.handleOpenAlert(
+                    AlertMessage.location.success.foundLocation,
+                    "success",
+                );
                 setPallet(data[0]);
                 handleOpenDialog();
             }
@@ -145,6 +156,9 @@ function SearchPalletPage() {
                             value={inputValue}
                             onChange={handleChange}
                             autoFocus
+                            onKeyDown={(e) => {
+                                handleKeyDown(e);
+                            }}
                             inputComponent={
                                 codeType
                                     ? codeType === "PL"
@@ -204,21 +218,6 @@ function SearchPalletPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbar
-                open={openAlert}
-                autoHideDuration={2200}
-                onClose={handleCloseAlert}
-                anchorOrigin={{ vertical, horizontal }}
-            >
-                <Alert
-                    onClose={handleCloseAlert}
-                    severity={alertType}
-                    sx={{ width: "100%" }}
-                >
-                    {alertText}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

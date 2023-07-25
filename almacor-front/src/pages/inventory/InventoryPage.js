@@ -111,8 +111,6 @@ function InventoryPage() {
                             <>
                                 <DisplaySkeleton />
                                 <DisplaySkeleton />
-                                <DisplaySkeleton />
-                                <DisplaySkeleton />
                             </>
                         ) : (
                             inventory.map((item) => {

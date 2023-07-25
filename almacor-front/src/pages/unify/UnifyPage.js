@@ -86,7 +86,10 @@ function UnifyPage() {
                     body: formdata,
                 },
             );
+            
             const data = await response.json();
+            console.log(response, data);
+            
             if (response.status === 400) {
                 Connected.handleOpenAlert(
                     data.status,
@@ -95,7 +98,7 @@ function UnifyPage() {
             }
             if (response.status === 200) {
                 Connected.handleOpenAlert(
-                    data.status,
+                    AlertMessage.pallet.success.unifiedPallets,
                     "success",
                 );
             }

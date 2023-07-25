@@ -5,11 +5,14 @@ export const AlertMessage = {
             duplicatePallet: "Este pallet está duplicado",
             unlocatedPallet: "Este pallet no fue ubicado",
             alreadyLocatedPallet: "Este pallet ya fue ubicado",
+            alreadyStoredPallet: "Este pallet ya fue almacenado",
         },
         success: {
             locatedPallet: "Pallet ubicado correctamente",
             removedPallet: "Pallet removido correctamente",
+            foundPallet: "Se encontró el pallet",
             unifiedPallets: "Pallets unificados correctamente",
+            storedPallet: "Pallet almacenado correctamente",
         },
     },
     location: {
@@ -23,6 +26,7 @@ export const AlertMessage = {
         },
         success: {
             emptiedLocation: "Ubicación desocupada correctamente",
+            foundLocation: "Se encontró la ubicación",
         },
     },
 };

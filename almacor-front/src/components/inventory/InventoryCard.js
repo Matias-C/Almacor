@@ -35,20 +35,24 @@ function InventoryCard(props) {
 
         const token = await JSON.parse(localStorage.getItem("token"));
         if (token) {
-            var formdata = new FormData();
-
             const response = await fetch(
-                `${Connected.currentURL}api/v1/deposito/inventarios_reales/?id=${props.itemId}`,
+                `${Connected.currentURL}api/v1/deposito/inventarios_reales/?pallet_id=${props.itemId}`,
                 {
                     method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token.access_token}`,
                     },
-                    body: formdata,
                 },
             );
             const data = await response.json();
-            if (data.succes) {
+            console.log(data);
+            if (response.status === 400) {
+                Connected.handleOpenAlert(
+                    "Error al quitar la incidencia",
+                    "error",
+                );
+            } else if (response.status === 200) {
+                Connected.handleOpenAlert(data.status, "success");
                 props.setRefresh(true);
             }
         }

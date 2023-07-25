@@ -8,21 +8,15 @@ function OrderCardPalletDisplay(props) {
     return (
         <div className="pallet-display-cont">
             <Grid container spacing={1} className="order-card-grid">
-                <Grid xs={4} sm={4} md={4} lg={4}>
+                <Grid xs={6} sm={6} md={6} lg={6}>
                     <div className="pallet-display-item">
                         <Typography variant="h5">PL{props.pallet}</Typography>
                     </div>
                 </Grid>
 
-                <Grid xs={4} sm={4} md={4} lg={4}>
+                <Grid xs={6} sm={6} md={6} lg={6}>
                     <div className="pallet-display-item">
                         <Typography variant="h5">{props.remito}</Typography>
-                    </div>
-                </Grid>
-
-                <Grid xs={4} sm={4} md={4} lg={4}>
-                    <div className="pallet-display-item">
-                        <Typography variant="h5">{props.originDeposit}</Typography>
                     </div>
                 </Grid>
             </Grid>
